@@ -40,13 +40,7 @@ export function StaffDaySalesModal({
   events,
   activeSlug,
 }: Props) {
-  const [scope, setScope] = useState<'active' | 'all'>( 'active')
   const [tick, setTick] = useState(0)
-
-  useEffect(() => {
-    if (!open) return
-    setScope('active')
-  }, [open, activeSlug])
 
   useEffect(() => {
     const onChange = () => setTick((t) => t + 1)
@@ -56,29 +50,21 @@ export function StaffDaySalesModal({
 
   const records = useMemo(() => {
     void tick
-    return scope === 'all' ? listDaySales() : listDaySales(activeSlug)
-  }, [scope, activeSlug, tick])
+    return listDaySales(activeSlug)
+  }, [activeSlug, tick])
 
   const byZone = useMemo(() => {
     void tick
-    if (scope === 'all') {
-      const m: Record<string, number> = {}
-      for (const r of records) m[r.zone] = (m[r.zone] ?? 0) + 1
-      return m
-    }
     return daySalesByZone(activeSlug)
-  }, [scope, activeSlug, records, tick])
+  }, [activeSlug, tick])
 
   if (!open) return null
 
   const activeEvent = events.find((e) => e.slug === activeSlug)
-  const eventTitle = activeEvent
-    ? eventTabLabel(activeEvent)
-    : activeSlug
+  const eventTitle = activeEvent ? eventTabLabel(activeEvent) : activeSlug
 
   const exportCsv = () => {
-    const slugPart = scope === 'all' ? 'all-events' : activeSlug
-    downloadDaySalesCsv(records, `day-sales-${slugPart}.csv`)
+    downloadDaySalesCsv(records, `day-sales-${activeSlug}.csv`)
   }
 
   return (
@@ -88,38 +74,13 @@ export function StaffDaySalesModal({
           <div>
             <h2 className="text-lg font-bold text-slate-800">当日券の集計</h2>
             <p className="mt-1 text-sm text-slate-600">
-              窓口で「当日券を販売した」と記録した席の一覧です（取り消ししてもログは残ります）。
+              {eventTitle} — この端末で記録した販売のみ（取り消ししてもログは残ります）
             </p>
           </div>
           <ModalCloseButton onClose={onClose} />
         </div>
 
         <div className="space-y-3 overflow-auto p-5">
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => setScope('active')}
-              className={`rounded-full px-3 py-1 text-sm ${
-                scope === 'active'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-200 text-slate-700'
-              }`}
-            >
-              表示中の試合（{eventTitle}）
-            </button>
-            <button
-              type="button"
-              onClick={() => setScope('all')}
-              className={`rounded-full px-3 py-1 text-sm ${
-                scope === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-200 text-slate-700'
-              }`}
-            >
-              全試合
-            </button>
-          </div>
-
           <p className="text-2xl font-bold text-slate-800">
             合計 <span className="text-blue-700">{records.length}</span> 席
           </p>
@@ -143,7 +104,6 @@ export function StaffDaySalesModal({
             <table className="w-full text-left text-xs">
               <thead className="sticky top-0 bg-slate-100 text-slate-600">
                 <tr>
-                  {scope === 'all' && <th className="p-2">試合</th>}
                   <th className="p-2">席</th>
                   <th className="p-2">日時</th>
                 </tr>
@@ -151,19 +111,13 @@ export function StaffDaySalesModal({
               <tbody>
                 {records.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={scope === 'all' ? 3 : 2}
-                      className="p-4 text-center text-slate-500"
-                    >
+                    <td colSpan={2} className="p-4 text-center text-slate-500">
                       まだ記録がありません
                     </td>
                   </tr>
                 ) : (
                   records.map((r: DaySaleRecord) => (
                     <tr key={r.id} className="border-t border-slate-100">
-                      {scope === 'all' && (
-                        <td className="p-2 whitespace-nowrap">{r.event_slug}</td>
-                      )}
                       <td className="max-w-[10rem] truncate p-2">
                         {saleLine(r)}
                       </td>
