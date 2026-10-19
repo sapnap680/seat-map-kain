@@ -108,7 +108,6 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <span><i style="background:#ccc2dd"></i>コートサイドB</span>
       <span><i style="background:#4f81bd"></i>コートエンド</span>
       <span><i style="background:#bf9000"></i>スペシャルシート</span>
-      <span><i style="background:#92d050"></i>チーム券席</span>
     </div>
   </aside>
 </div>
@@ -235,7 +234,7 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
     R.forEach((r,ri)=>{ for(let i=0;i<n;i++){
       if(skip&&skip(name,i,n)) continue;
       const [x,z,face]=place(side,r.d,t+SW/2+i*SW);
-      seats.push({p:new THREE.Vector3(x,r.y,z),face,block:name,cat,row:ri+1,num:numbering(i,n),color,selectable:cat!=='チーム券席'});
+      seats.push({p:new THREE.Vector3(x,r.y,z),face,block:name,cat,row:ri+1,num:numbering(i,n),color,selectable:true});
     }});
     t+=n*SW; if(bi<blocks.length-1){ aisleStrip(side,R,t+AISLE/2,AISLE); aisles.push(t+AISLE/2); t+=AISLE; }
   });
@@ -245,9 +244,9 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
 stand1F('L',[['I',3],['H',17],['G',17],['F',17],['E',3]],'1階指定席',COL.pink,(i,n)=>i+1);
 stand1F('T',[['K',12],['L',17],['M',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>n-i);
 stand1F('B',[['C',12],['B',17],['A',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>i+1);
-// ベンチ側：真ん中（Qの5〜13番の位置）は選手の入口
+// ベンチ側：チーム券席は3Dに表示しない（通路のみ）
 const qGap=[-2.03,2.03];
-stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,(name,i)=>name==='Q'&&i>=4&&i<13,[[qGap[0],qGap[1]]]);
+AISLES.R=[[qGap[0], qGap[1]]];
 // 真ん中は床の高さの通路。奥（1階スタンドのいちばん後ろの下）に出入口がある
 (function(){
   const w=qGap[1]-qGap[0], x0=SL+FS, x1=SL+FS+7*RD, side=mat(0x8a6c48);
