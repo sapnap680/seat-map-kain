@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { INCARE_LABELS } from '../lib/incarePalette'
+import {
+  mergeOptionsForOverlay,
+  mergeSeatRectsByZone,
+  NON_SELLABLE_ZONE_LABEL,
+  nonSellableZonesForEvent,
+  nonSellableZoneStyle,
+  seatsForNonSellableOverlay,
+} from '../lib/nonSellableRegions'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
 
@@ -135,6 +143,21 @@ export function SeatMap({
   const bgSrc =
     event.background_path ?? `/backgrounds/${event.slug}.png`
 
+  const nonSellableRegions = useMemo(() => {
+    const zones = nonSellableZonesForEvent(event.slug)
+    return zones.flatMap((zone) => {
+      const subset = seatsForNonSellableOverlay(event.slug, zone, seats)
+      const { gap, maxVerticalSep } = mergeOptionsForOverlay(event.slug, zone)
+      return mergeSeatRectsByZone(subset, zone, gap, maxVerticalSep)
+        .filter((rect) => rect.w > 0.01 && rect.h > 0.008)
+        .map((rect) => ({
+          zone,
+          rect,
+          label: NON_SELLABLE_ZONE_LABEL[zone] ?? '販売しません',
+        }))
+    })
+  }, [event.slug, seats])
+
   return (
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
       <p className="border-b border-slate-200 px-3 py-1.5 text-xs text-slate-500">
@@ -174,6 +197,28 @@ export function SeatMap({
             )}
 
             <div className="pointer-events-none absolute inset-0">
+              {!moveLayoutMode &&
+                nonSellableRegions.map((region, idx) => {
+                  const style = nonSellableZoneStyle(region.zone)
+                  return (
+                    <div
+                      key={`ns-${region.zone}-${idx}`}
+                      className="absolute box-border border-2 border-dashed bg-transparent"
+                      style={{
+                        left: `${region.rect.x * 100}%`,
+                        top: `${region.rect.y * 100}%`,
+                        width: `${region.rect.w * 100}%`,
+                        height: `${region.rect.h * 100}%`,
+                        borderColor: style.borderColor,
+                      }}
+                    >
+                      <span className="absolute left-1/2 top-1 z-10 max-w-[96%] -translate-x-1/2 whitespace-nowrap rounded bg-white/95 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-slate-800 shadow-sm">
+                        {region.label}
+                      </span>
+                    </div>
+                  )
+                })}
+
               {seats.map((seat) => {
                 const preview = movePreview?.[seat.id]
                 const sx = preview?.x ?? seat.x

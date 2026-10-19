@@ -86,6 +86,29 @@ def redact_map_labels(page: fitz.Page, path: Path, _slug: str, scale: float = 2.
     im.save(path)
 
 
+def strip_pdf_red_boxes(path: Path) -> None:
+    """PDF に描かれた赤い囲い線だけ白にする（席の色は残す）"""
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    im = Image.open(path).convert("RGB")
+    px = im.load()
+    w, h = im.size
+    changed = 0
+    for y in range(h):
+        for x in range(w):
+            if x / w < 0.68:
+                continue
+            r, g, b = px[x, y]
+            if r >= 170 and g <= 90 and b <= 90 and r - max(g, b) >= 80:
+                px[x, y] = (255, 255, 255)
+                changed += 1
+    if changed:
+        im.save(path)
+        print(f"  stripped {changed} red-box px on {path.name}")
+
+
 def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
     try:
         from PIL import Image
@@ -146,6 +169,8 @@ def main() -> None:
         pix.save(out)
         doc.close()
         recolor_floor1_to_pptx_pink(out, slug)
+        if slug in ("2025-12-12", "2025-12-13"):
+            strip_pdf_red_boxes(out)
         doc = fitz.open(pdf)
         redact_map_labels(doc[0], out, slug, scale=2.0)
         doc.close()

@@ -10,22 +10,11 @@ export const NON_SELLABLE_ZONE_LABEL: Partial<Record<SeatZone, string>> = {
 
 export function nonSellableZoneStyle(zone: SeatZone): {
   borderColor: string
-  background: string
-  stripe: string
 } {
   if (zone === 'team_ticket') {
-    return {
-      borderColor: INCARE.teamTicket,
-      background: `rgba(${INCARE.teamTicketRgb}, 0.22)`,
-      stripe: `repeating-linear-gradient(135deg, rgba(${INCARE.teamTicketRgb}, 0.18) 0 6px, transparent 6px 14px)`,
-    }
+    return { borderColor: INCARE.teamTicket }
   }
-  return {
-    borderColor: INCARE.floor2,
-    background: `rgba(${INCARE.floor2Rgb}, 0.35)`,
-    stripe:
-      'repeating-linear-gradient(135deg, rgba(127, 127, 127, 0.14) 0 6px, transparent 6px 14px)',
-  }
+  return { borderColor: INCARE.seatGray }
 }
 
 function otaTeamZone(cx: number, cy: number): boolean {
