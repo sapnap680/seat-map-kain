@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  mergeSeatRectsByZone,
+  NON_SELLABLE_ZONE_LABEL,
+  nonSellableZonesForEvent,
+} from '../lib/nonSellableRegions'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
 
@@ -134,10 +139,21 @@ export function SeatMap({
   const bgSrc =
     event.background_path ?? `/backgrounds/${event.slug}.png`
 
+  const nonSellableRegions = useMemo(() => {
+    const zones = nonSellableZonesForEvent(event.slug)
+    return zones.flatMap((zone) =>
+      mergeSeatRectsByZone(seats, zone).map((rect) => ({
+        zone,
+        rect,
+        label: NON_SELLABLE_ZONE_LABEL[zone] ?? '販売しません',
+      })),
+    )
+  }, [event.slug, seats])
+
   return (
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
       <p className="border-b border-slate-200 px-3 py-1.5 text-xs text-slate-500">
-        図面は PDF から書き出した PNG（ピンク＝1階・灰色＝非販売）。空席に色は付けません。案内時のみ「空席のみ表示」で枠を出します。
+        ピンク＝1階（販売対象）。2階・チーム席は点線枠で「販売しません」表示。空席に色は付けません。
       </p>
       <div className="flex-1 overflow-auto p-2">
         {/* inline-block で img の表示サイズと席オーバーレイを完全一致 */}
@@ -173,6 +189,26 @@ export function SeatMap({
             )}
 
             <div className="pointer-events-none absolute inset-0">
+              {!moveLayoutMode &&
+                nonSellableRegions.map((region, idx) => (
+                  <div
+                    key={`ns-${region.zone}-${idx}`}
+                    className="absolute flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-600/80 bg-slate-100/35"
+                    style={{
+                      left: `${region.rect.x * 100}%`,
+                      top: `${region.rect.y * 100}%`,
+                      width: `${region.rect.w * 100}%`,
+                      height: `${region.rect.h * 100}%`,
+                      backgroundImage:
+                        'repeating-linear-gradient(135deg, rgba(100,116,139,0.12) 0 6px, transparent 6px 14px)',
+                    }}
+                  >
+                    <span className="max-w-[92%] rounded-md bg-white/90 px-2 py-1 text-center text-[10px] font-bold leading-tight text-slate-700 shadow-sm sm:text-xs">
+                      {region.label}
+                    </span>
+                  </div>
+                ))}
+
               {seats.map((seat) => {
                 const preview = movePreview?.[seat.id]
                 const sx = preview?.x ?? seat.x

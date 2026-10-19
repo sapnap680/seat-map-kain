@@ -185,13 +185,13 @@ function App() {
                 </span>
               </div>
               <p className="text-xs text-violet-700">
-                水色枠＝1階（終日） / 紫枠＝男女切替対象エリア
+                ピンク＝1階（終日・男女共通） / 点線枠＝チーム席（販売なし）
               </p>
             </div>
           )}
 
           <p className="text-sm text-slate-600">
-            1階席（<strong>ピンク</strong>）だけ販売・案内対象。PDF 上<strong>灰色</strong>の席・エリアはそのまま（販売なし）。販売済みだけ薄いグレーを重ねます。
+            1階席（<strong>ピンク</strong>）だけ販売・案内対象。2階・チーム席は図面上で「販売しません」と表示。販売済みだけ薄いグレーを重ねます。
           </p>
 
           <div className="flex flex-wrap items-center gap-2">

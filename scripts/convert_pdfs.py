@@ -25,6 +25,36 @@ DATE_MAP = {
 }
 
 
+# 駒オリ 1階ピンク（PDF 塗り）
+KOMORI_PINK = (255, 183, 209)
+
+
+def is_ota_floor1_blue(r: int, g: int, b: int) -> bool:
+    """会場総合図の水色 1 階席塗り → ピンクに置換"""
+    return 140 <= r <= 175 and 188 <= g <= 225 and b >= 238
+
+
+def recolor_ota_floor1_to_pink(path: Path) -> None:
+    try:
+        from PIL import Image
+    except ImportError:
+        print("Pillow が無いため水色→ピンク変換をスキップ: pip install pillow", file=sys.stderr)
+        return
+    im = Image.open(path).convert("RGB")
+    px = im.load()
+    w, h = im.size
+    changed = 0
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            if is_ota_floor1_blue(r, g, b):
+                px[x, y] = KOMORI_PINK
+                changed += 1
+    if changed:
+        im.save(path)
+        print(f"  recolored {changed} px to pink on {path.name}")
+
+
 def slug_from_name(name: str) -> str | None:
     for key, slug in DATE_MAP.items():
         if key in name:
@@ -60,6 +90,8 @@ def main() -> None:
         )
         pix.save(out)
         doc.close()
+        if slug in ("2025-12-12", "2025-12-13"):
+            recolor_ota_floor1_to_pink(out)
         meta = {
             "slug": slug,
             "page_width": pw,
