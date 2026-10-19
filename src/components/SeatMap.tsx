@@ -38,9 +38,47 @@ export function SeatMap({
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [bgFailed, setBgFailed] = useState(false)
+  const [bgCacheKey, setBgCacheKey] = useState<string>('')
 
   useEffect(() => {
     setBgFailed(false)
+    let cancelled = false
+    fetch(`/backgrounds/${event.slug}.meta.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((meta: { asset_sha?: string } | null) => {
+        if (cancelled) return
+        const key =
+          typeof meta?.asset_sha === 'string' && meta.asset_sha
+            ? meta.asset_sha
+            : event.slug
+        setBgCacheKey(key)
+        // #region agent log
+        fetch(
+          'http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Debug-Session-Id': '0c7e1f',
+            },
+            body: JSON.stringify({
+              sessionId: '0c7e1f',
+              hypothesisId: 'H6',
+              location: 'SeatMap.tsx:bg-meta',
+              message: 'background cache key loaded',
+              data: { slug: event.slug, assetSha: key },
+              timestamp: Date.now(),
+            }),
+          },
+        ).catch(() => {})
+        // #endregion
+      })
+      .catch(() => {
+        if (!cancelled) setBgCacheKey(event.slug)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [event.background_path, event.slug])
 
   const [moving, setMoving] = useState<{
@@ -131,8 +169,9 @@ export function SeatMap({
     })
   }
 
-  const bgSrc =
+  const bgBase =
     event.background_path ?? `/backgrounds/${event.slug}.png`
+  const bgSrc = bgCacheKey ? `${bgBase}?v=${bgCacheKey}` : bgBase
 
   return (
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">

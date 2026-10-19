@@ -1,6 +1,7 @@
 """Convert parent-folder venue PDFs to public/backgrounds/*.png"""
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -346,13 +347,20 @@ def main() -> None:
                 "asIs": not legacy,
             },
         )
+        asset_sha = hashlib.sha256(out.read_bytes()).hexdigest()[:16]
         meta = {
             "slug": slug,
             "page_width": pw,
             "page_height": ph,
             "image_width": pix.width,
             "image_height": pix.height,
+            "asset_sha": asset_sha,
         }
+        _agent_log(
+            "H6",
+            "asset published",
+            {"slug": slug, "assetSha": asset_sha, "bytes": out.stat().st_size},
+        )
         (META_DIR / f"{slug}.meta.json").write_text(
             json.dumps(meta, indent=2), encoding="utf-8"
         )
