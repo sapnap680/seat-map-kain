@@ -19,17 +19,11 @@ PDF_DIR = ROOT.parent
 OUT_DIR = ROOT / "public" / "seats"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-DATE_MAP = {"12.11": "2025-12-11", "12.12": "2025-12-12", "12.13": "2025-12-13"}
+from pdf_slug import slug_from_pdf_stem  # noqa: E402
 
 
 def slug_from_name(name: str) -> str | None:
-    for key, slug in DATE_MAP.items():
-        if key in name:
-            return slug
-    m = re.search(r"(\d{1,2})\.(\d{1,2})", name)
-    if m:
-        return f"2025-{int(m.group(1)):02d}-{int(m.group(2)):02d}"
-    return None
+    return slug_from_pdf_stem(name)
 
 
 def seat_size_ok(slug: str, w: float, h: float) -> bool:

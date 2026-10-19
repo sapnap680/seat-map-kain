@@ -21,13 +21,8 @@ OUT_DIR = ROOT / "public" / "backgrounds"
 META_DIR = ROOT / "public" / "backgrounds"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-DATE_MAP = {
-    "12.11": "2025-12-11",
-    "12.12": "2025-12-12",
-    "12.13": "2025-12-13",
-}
-
 from incare_palette import FLOOR1_PINK, TEAM_GREEN  # noqa: E402
+from pdf_slug import slug_from_pdf_stem  # noqa: E402
 from extract_seats_from_pdf import is_ota_team_zone, ota_stroke_team_rects  # noqa: E402
 
 DEBUG_LOG = ROOT.parent / "debug-0c7e1f.log"
@@ -274,13 +269,7 @@ def _pixmap_vs_file_diff(pdf: Path, png: Path, mat: fitz.Matrix) -> int:
 
 
 def slug_from_name(name: str) -> str | None:
-    for key, slug in DATE_MAP.items():
-        if key in name:
-            return slug
-    m = re.search(r"(\d{1,2})\.(\d{1,2})", name)
-    if m:
-        return f"2025-{int(m.group(1)):02d}-{int(m.group(2)):02d}"
-    return None
+    return slug_from_pdf_stem(name)
 
 
 def main() -> None:
