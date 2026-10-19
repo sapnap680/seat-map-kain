@@ -161,14 +161,15 @@ const floor=new THREE.Mesh(new THREE.PlaneGeometry(HX*2,HZ*2),mat(0xd8bb8a)); fl
   m.rotation.x=-Math.PI/2;m.position.y=0.01;scene.add(m);
 })();
 
-// ゴール（赤い支柱）
+// ゴール（赤い支柱・実物に近い太さ）
 function hoop(dir){
   const red=mat(0xc8322b), white=mat(0xf2f2f2);
-  box(1.0,0.5,1.6,0,0.25,dir*(BL+1.6),red);
-  box(0.25,3.2,0.25,0,1.85,dir*(BL+1.4),red);
-  const arm=box(0.18,0.18,1.9,0,3.3,dir*(BL+0.25),white); arm.rotation.x=dir*0.35;
-  box(1.8,1.05,0.05,0,3.45,dir*(BL-1.2),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:0.8}));
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(0.23,0.02,8,24),mat(0xe0612b));rim.rotation.x=Math.PI/2;rim.position.set(0,3.05,dir*(BL-1.575));scene.add(rim);
+  const pole=0.42;
+  box(1.25,0.55,1.85,0,0.28,dir*(BL+1.65),red);
+  box(pole,3.25,pole,0,1.88,dir*(BL+1.35),red);
+  const arm=box(0.28,0.28,2.0,0,3.32,dir*(BL+0.2),white); arm.rotation.x=dir*0.35;
+  box(2.05,1.15,0.1,0,3.48,dir*(BL-1.18),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:0.85}));
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(0.23,0.045,12,32),mat(0xe0612b));rim.rotation.x=Math.PI/2;rim.position.set(0,3.08,dir*(BL-1.575));scene.add(rim);
 }
 hoop(-1);hoop(1);
 
