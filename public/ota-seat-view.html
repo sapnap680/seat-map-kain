@@ -38,9 +38,7 @@ body{background:var(--bg);color:var(--ink);font-family:"Zen Kaku Gothic New","Hi
 #c:active{cursor:grabbing}
 .seatcard{position:absolute;left:16px;bottom:16px;max-width:calc(100% - 32px);background:rgba(15,20,28,.8);color:#fff;border-radius:10px;padding:10px 14px;backdrop-filter:blur(6px)}
 .seatcard b{display:block;font-size:1.25rem;font-weight:900}
-.seatcard .dist{display:block;font-size:.95rem;margin-top:4px}
 .seatcard .sub{display:block;font-size:.78rem;opacity:.8;margin-top:2px}
-.hint{position:absolute;right:16px;top:16px;background:rgba(15,20,28,.6);color:#fff;font-size:.78rem;border-radius:8px;padding:6px 10px}
 .panel{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:20px 20px 28px}
 h1{font-size:1.15rem;font-weight:900;margin:0 0 4px;line-height:1.4}
 .lead{font-size:.82rem;color:var(--sub);margin:0 0 14px;line-height:1.6}
@@ -79,7 +77,6 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   <div class="stage">
     <canvas id="c" aria-label="1階席から見たアリーナの3D表示"></canvas>
     <div class="seatcard" id="seatcard"><b>全体</b><span class="sub">席を押すか、右の図からブロックを選ぶと、その席からの見え方に切り替わります</span></div>
-    <div class="hint" id="hint">ドラッグで見回す・席を押して選ぶ</div>
   </div>
   <aside class="panel">
     <h1>12/12・12/13<br>大田区総合体育館</h1>
@@ -464,14 +461,14 @@ function showSeat(s){
   document.getElementById('rowBox').style.display=isStand?'':'none';
   rowBtns.forEach((b,i)=>b.setAttribute('aria-pressed',String(isStand&&i+1===s.row)));
   { const L=rowList(s), i=L.indexOf(s); document.getElementById('prev').disabled=i<=0; document.getElementById('next').disabled=i>=L.length-1; }
-  const dx=Math.max(Math.abs(s.p.x)-SL,0), dz=Math.max(Math.abs(s.p.z)-BL,0);
-  const toLine=Math.hypot(dx,dz), toCenter=Math.hypot(s.p.x,s.p.z);
   card.innerHTML='';
   const b=document.createElement('b'); b.textContent=isStand?`${s.cat}　${s.block}ブロック ${s.row}列 ${s.num}番`:`${s.cat}　${s.num}番`;
-  const d=document.createElement('span'); d.className='dist'; d.textContent=`コートのラインまで 約${toLine.toFixed(1)}m ／ センターサークルまで 約${toCenter.toFixed(0)}m`;
-  const sub=document.createElement('span'); sub.className='sub';
-  sub.textContent=s.unsold?'12/12・13は販売しない席です':`目の高さ 床から約${(s.p.y+(s.chair?1.15:1.2)).toFixed(1)}m　ドラッグで見回せます`;
-  card.append(b,d,sub);
+  card.append(b);
+  if(s.unsold){
+    const sub=document.createElement('span'); sub.className='sub';
+    sub.textContent='12/12・13は販売しない席です';
+    card.append(sub);
+  }
   move(false);
 }
 // 列ボタン・左右の席ボタン
@@ -481,7 +478,7 @@ for(let r=1;r<=7;r++){ const b=document.createElement('button'); b.textContent=r
 function step(d){ if(!state.seat) return; const L=rowList(state.seat); const i=Math.max(0,Math.min(L.length-1,L.indexOf(state.seat)+d)); chooseSeat(L[i]); }
 document.getElementById('prev').onclick=()=>step(-1);
 document.getElementById('next').onclick=()=>step(1);
-document.getElementById('overview').onclick=()=>{state.mode='overview';card.innerHTML='<b>全体</b><span class="sub">ドラッグで回転、ホイールで拡大縮小。席を押すとその席からの見え方に切り替わります（選んだ席は黄色）</span>';move(false);};
+document.getElementById('overview').onclick=()=>{state.mode='overview';card.innerHTML='<b>全体</b><span class="sub">席を押すか、右の図からブロックを選んでください</span>';move(false);};
 
 // ---------- 描画 ----------
 function resize(){const w=canvas.clientWidth,h=canvas.clientHeight,pr=renderer.getPixelRatio();if(canvas.width!==Math.floor(w*pr)||canvas.height!==Math.floor(h*pr)){renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<h?75:62;camera.updateProjectionMatrix();}}
