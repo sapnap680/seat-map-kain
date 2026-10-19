@@ -35,12 +35,7 @@ export function StaffLoginModal({ open, onClose, onSignIn, isDemo }: Props) {
         <p className="mt-1 text-sm text-slate-500">
           席の状態を変更するにはログインしてください。
         </p>
-        <p className="mt-2 rounded bg-amber-50 px-2 py-1 text-xs text-amber-800">
-          共有スタッフ用パスワード:{' '}
-          <code className="font-mono">staff-demo</code>
-          {isDemo ? '（メールは空でOK）' : '（Supabase アカウントが無い場合）'}
-        </p>
-        <form onSubmit={submit} className="mt-4 space-y-3">
+        <form onSubmit={submit} className="mt-3 space-y-3">
           {!isDemo && (
             <label className="block text-sm">
               <span className="text-slate-600">メール（Supabase 利用時）</span>

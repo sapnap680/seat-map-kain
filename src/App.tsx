@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
-import { SharePublicLink } from './components/SharePublicLink'
 import { StaffDaySalesModal } from './components/StaffDaySalesModal'
 import { OtaStaffSeatChoiceModal } from './components/OtaStaffSeatChoiceModal'
 import { OtaSeatViewModal } from './components/OtaSeatViewModal'
@@ -29,7 +28,7 @@ function App() {
     return events.find((e) => e.slug === slug) ?? events[0]
   }, [events, activeSlug])
 
-  const { isStaff, signIn, signOut, isDemo, email, loading: authLoading } =
+  const { isStaff, signIn, signOut, isDemo, loading: authLoading } =
     useAuth()
   const [genderView, setGenderView] = useState<GenderView>('men')
   const swapActive = activeEvent
@@ -208,17 +207,9 @@ function App() {
               <span className="font-normal text-slate-500"> 会場席状況</span>
             </h1>
             <div className="flex flex-wrap items-center justify-end gap-1.5 text-xs">
-              <SharePublicLink />
-              {isStaff && isDemo && (
-                <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-900">
-                  デモ
-                </span>
-              )}
               {isStaff ? (
                 <>
-                  <span className="text-emerald-700">
-                    編集中{email ? ` (${email})` : ''}
-                  </span>
+                  <span className="text-emerald-700">編集中</span>
                   <button
                     type="button"
                     onClick={() => signOut()}

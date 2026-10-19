@@ -20,10 +20,7 @@ export function useAuth() {
 
     supabase.auth.getSession().then(({ data }) => {
       setIsStaff(!!data.session || demoStaff)
-      setEmail(
-        data.session?.user.email ??
-          (demoStaff ? 'スタッフ（デモ）' : null),
-      )
+      setEmail(data.session?.user.email ?? null)
       setLoading(false)
     })
 
@@ -32,9 +29,7 @@ export function useAuth() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       const demo = sessionStorage.getItem(DEMO_STAFF_KEY) === '1'
       setIsStaff(!!session || demo)
-      setEmail(
-        session?.user.email ?? (demo ? 'スタッフ（デモ）' : null),
-      )
+      setEmail(session?.user.email ?? null)
     })
 
     return () => subscription.unsubscribe()
@@ -44,12 +39,12 @@ export function useAuth() {
     if (password === DEMO_PASSWORD) {
       sessionStorage.setItem(DEMO_STAFF_KEY, '1')
       setIsStaff(true)
-      setEmail(staffEmail.trim() || 'スタッフ（デモ）')
+      setEmail(staffEmail.trim() || null)
       return { error: null }
     }
 
     if (!isSupabaseConfigured || !supabase) {
-      return { error: new Error('パスワードは staff-demo です（共有スタッフ用）') }
+      return { error: new Error('パスワードが正しくありません') }
     }
 
     const { error } = await supabase.auth.signInWithPassword({
