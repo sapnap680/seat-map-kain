@@ -77,41 +77,6 @@ export function daySalesByCategory(
   return groupDaySalesByCategory(listDaySales(eventSlug))
 }
 
-function csvEscape(value: string): string {
-  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`
-  return value
-}
-
-export function daySalesToCsv(records: DaySaleRecord[]): string {
-  const header = ['試合slug', '席', '券種', 'ゾーン', '在庫区分', '販売日時', 'メモ']
-  const rows = records.map((r) =>
-    [
-      r.event_slug,
-      r.label,
-      r.category ?? '',
-      r.zone,
-      r.allocation,
-      r.sold_at,
-      r.note ?? '',
-    ]
-      .map(csvEscape)
-      .join(','),
-  )
-  const summary = groupDaySalesByCategory(records)
-  const summaryRows =
-    summary.length === 0
-      ? []
-      : [
-          '',
-          '席種別集計',
-          ['券種', '枚数'].map(csvEscape).join(','),
-          ...summary.map(({ category, count }) =>
-            [category, String(count)].map(csvEscape).join(','),
-          ),
-        ]
-  return `\uFEFF${header.join(',')}\n${rows.join('\n')}${summaryRows.length ? `\n${summaryRows.join('\n')}` : ''}`
-}
-
 export function downloadCsvBlob(content: string, filename: string) {
   const blob = new Blob([content], {
     type: 'text/csv;charset=utf-8',
@@ -124,6 +89,6 @@ export function downloadCsvBlob(content: string, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-export function downloadDaySalesCsv(records: DaySaleRecord[], filename: string) {
-  downloadCsvBlob(daySalesToCsv(records), filename)
+export function downloadDaySalesCsv(content: string, filename: string) {
+  downloadCsvBlob(content, filename)
 }

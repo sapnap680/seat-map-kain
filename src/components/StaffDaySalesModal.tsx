@@ -1,27 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
-import { eventTabLabel, seatDisplayWithCategory } from '../lib/allocation'
+import { eventTabLabel } from '../lib/allocation'
+import { downloadDaySalesCsv, listDaySales } from '../lib/daySaleLog'
+import { downloadPresoldCsv, presoldSeatsForEvent } from '../lib/presoldExport'
 import {
-  daySalesByCategory,
-  downloadDaySalesCsv,
-  listDaySales,
-  type DaySaleRecord,
-} from '../lib/daySaleLog'
-import {
-  downloadPresoldCsv,
-  presoldSeatsForEvent,
-} from '../lib/presoldExport'
-import { groupBySeatCategory } from '../lib/seatCategorySummary'
+  formatTicketPrice,
+  salesSummaryToCsv,
+  summarizeDaySales,
+  summarizePresoldSeats,
+  type SalesSummary,
+} from '../lib/salesSummary'
 import type { SeatWithState, VenueEvent } from '../types'
 import { ModalCloseButton } from './ModalCloseButton'
-
-function saleLine(r: DaySaleRecord): string {
-  if (r.category) return `${r.category} ${r.label}`
-  return r.label
-}
-
-function presoldLine(seat: SeatWithState): string {
-  return seatDisplayWithCategory(seat) ?? seat.label
-}
 
 type Props = {
   open: boolean
@@ -31,39 +20,97 @@ type Props = {
   seats: SeatWithState[]
 }
 
-function formatWhen(iso: string): string {
-  try {
-    return new Date(iso).toLocaleString('ja-JP', {
-      month: 'numeric',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return iso
-  }
-}
-
-function CategoryTotals({
-  items,
+function SalesBlock({
+  title,
+  hint,
+  summary,
+  csvLabel,
+  onCsv,
+  csvDisabled,
+  tone,
 }: {
-  items: { category: string; count: number }[]
+  title: string
+  hint: string
+  summary: SalesSummary
+  csvLabel: string
+  onCsv: () => void
+  csvDisabled: boolean
+  tone: 'day' | 'presold'
 }) {
-  if (items.length === 0) return null
+  const btnClass =
+    tone === 'day'
+      ? 'border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100'
+      : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
+
   return (
-    <ul className="space-y-1.5 text-sm text-slate-800">
-      {items.map(({ category, count }) => (
-        <li
-          key={category}
-          className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2"
-        >
-          <span>{category}</span>
-          <span className="shrink-0 tabular-nums font-semibold text-blue-700">
-            {count} 席
-          </span>
-        </li>
-      ))}
-    </ul>
+    <section>
+      <h3 className="text-sm font-bold text-slate-800">{title}</h3>
+      <p className="mt-0.5 text-xs text-slate-500">{hint}</p>
+
+      {summary.rows.length === 0 ? (
+        <p className="mt-3 text-sm text-slate-500">データなし</p>
+      ) : (
+        <>
+          <div className="mt-3 overflow-hidden rounded-lg border border-slate-200 text-sm">
+            <table className="w-full text-left">
+              <thead className="bg-slate-100 text-xs text-slate-600">
+                <tr>
+                  <th className="p-2 font-medium">席種</th>
+                  <th className="p-2 text-right font-medium">枚数</th>
+                  <th className="p-2 text-right font-medium">単価</th>
+                  <th className="p-2 text-right font-medium">小計</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summary.rows.map((r) => (
+                  <tr key={r.category} className="border-t border-slate-100">
+                    <td className="p-2 text-slate-800">{r.category}</td>
+                    <td className="p-2 text-right tabular-nums">{r.count}</td>
+                    <td className="p-2 text-right tabular-nums text-slate-600">
+                      {r.unitYen != null ? formatTicketPrice(r.unitYen) : '—'}
+                    </td>
+                    <td className="p-2 text-right tabular-nums font-medium">
+                      {formatTicketPrice(r.subtotalYen)}
+                      {r.hasUnknownPrice && (
+                        <span className="ml-1 text-xs font-normal text-amber-700">
+                          ※
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot className="border-t-2 border-slate-200 bg-slate-50 font-semibold">
+                <tr>
+                  <td className="p-2">合計</td>
+                  <td className="p-2 text-right tabular-nums">
+                    {summary.totalSeats}
+                  </td>
+                  <td className="p-2" />
+                  <td className="p-2 text-right tabular-nums text-blue-800">
+                    {formatTicketPrice(summary.totalYen)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          {summary.hasUnknownPrice && (
+            <p className="mt-1 text-xs text-amber-800">
+              ※ 料金が未設定の席は小計に含めていません
+            </p>
+          )}
+        </>
+      )}
+
+      <button
+        type="button"
+        onClick={onCsv}
+        disabled={csvDisabled}
+        className={`mt-3 w-full rounded-lg border py-2 text-sm font-medium disabled:opacity-40 ${btnClass}`}
+      >
+        {csvLabel}
+      </button>
+    </section>
   )
 }
 
@@ -92,14 +139,14 @@ export function StaffDaySalesModal({
     [seats],
   )
 
-  const dayByCategory = useMemo(() => {
-    void tick
-    return daySalesByCategory(activeSlug)
-  }, [activeSlug, tick])
+  const daySummary = useMemo(
+    () => summarizeDaySales(activeSlug, dayRecords),
+    [activeSlug, dayRecords],
+  )
 
-  const presoldByCategory = useMemo(
-    () => groupBySeatCategory(presoldSeats),
-    [presoldSeats],
+  const presoldSummary = useMemo(
+    () => summarizePresoldSeats(activeSlug, presoldSeats),
+    [activeSlug, presoldSeats],
   )
 
   if (!open) return null
@@ -119,123 +166,37 @@ export function StaffDaySalesModal({
         </div>
 
         <div className="space-y-6 overflow-auto p-5">
-          <section>
-            <h3 className="text-sm font-bold text-slate-800">当日券</h3>
-            <p className="mt-0.5 text-xs text-slate-500">
-              この端末で「当日券を販売した」と記録した分（取り消ししてもログは残ります）
-            </p>
-            <p className="mt-2 text-xl font-bold text-slate-800">
-              合計{' '}
-              <span className="text-blue-700">{dayRecords.length}</span> 席
-            </p>
-            <div className="mt-2">
-              <CategoryTotals items={dayByCategory} />
-            </div>
-            <div className="mt-3 max-h-36 overflow-auto rounded-lg border border-slate-200">
-              <table className="w-full text-left text-xs">
-                <thead className="sticky top-0 bg-slate-100 text-slate-600">
-                  <tr>
-                    <th className="p-2">席</th>
-                    <th className="p-2">日時</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dayRecords.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={2}
-                        className="p-3 text-center text-slate-500"
-                      >
-                        記録なし
-                      </td>
-                    </tr>
-                  ) : (
-                    dayRecords.map((r) => (
-                      <tr key={r.id} className="border-t border-slate-100">
-                        <td className="max-w-[10rem] truncate p-2">
-                          {saleLine(r)}
-                        </td>
-                        <td className="p-2 whitespace-nowrap text-slate-600">
-                          {formatWhen(r.sold_at)}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <button
-              type="button"
-              onClick={() =>
-                downloadDaySalesCsv(dayRecords, `day-sales-${activeSlug}.csv`)
-              }
-              disabled={dayRecords.length === 0}
-              className="mt-3 w-full rounded-lg border border-blue-200 bg-blue-50 py-2 text-sm font-medium text-blue-800 hover:bg-blue-100 disabled:opacity-40"
-            >
-              当日券 CSV
-            </button>
-          </section>
+          <SalesBlock
+            title="当日券"
+            hint="この端末で記録した分（取り消ししてもログは残ります）"
+            summary={daySummary}
+            csvLabel="当日券 CSV"
+            csvDisabled={dayRecords.length === 0}
+            tone="day"
+            onCsv={() =>
+              downloadDaySalesCsv(
+                salesSummaryToCsv('当日券', daySummary),
+                `day-sales-${activeSlug}.csv`,
+              )
+            }
+          />
 
-          <section className="border-t border-slate-100 pt-5">
-            <h3 className="text-sm font-bold text-slate-800">前売り</h3>
-            <p className="mt-0.5 text-xs text-slate-500">
-              CSV取込などで席状態が「前売り済」になっている分（全端末で共有）
-            </p>
-            <p className="mt-2 text-xl font-bold text-slate-800">
-              合計{' '}
-              <span className="text-blue-700">{presoldSeats.length}</span> 席
-            </p>
-            <div className="mt-2">
-              <CategoryTotals items={presoldByCategory} />
-            </div>
-            <div className="mt-3 max-h-36 overflow-auto rounded-lg border border-slate-200">
-              <table className="w-full text-left text-xs">
-                <thead className="sticky top-0 bg-slate-100 text-slate-600">
-                  <tr>
-                    <th className="p-2">席</th>
-                    <th className="p-2">更新</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {presoldSeats.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={2}
-                        className="p-3 text-center text-slate-500"
-                      >
-                        前売り済の席なし
-                      </td>
-                    </tr>
-                  ) : (
-                    presoldSeats.map((s) => (
-                      <tr key={`${s.id}-${s.effectiveAllocation}`} className="border-t border-slate-100">
-                        <td className="max-w-[10rem] truncate p-2">
-                          {presoldLine(s)}
-                        </td>
-                        <td className="p-2 whitespace-nowrap text-slate-600">
-                          {formatWhen(s.state.updated_at)}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <button
-              type="button"
-              onClick={() =>
+          <div className="border-t border-slate-100 pt-5">
+            <SalesBlock
+              title="前売り"
+              hint="席状態が「前売り済」の分（全端末で共有）"
+              summary={presoldSummary}
+              csvLabel="前売り CSV"
+              csvDisabled={presoldSeats.length === 0}
+              tone="presold"
+              onCsv={() =>
                 downloadPresoldCsv(
-                  seats,
-                  activeSlug,
+                  salesSummaryToCsv('前売り', presoldSummary),
                   `presold-${activeSlug}.csv`,
                 )
               }
-              disabled={presoldSeats.length === 0}
-              className="mt-3 w-full rounded-lg border border-slate-300 bg-white py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-40"
-            >
-              前売り CSV
-            </button>
-          </section>
+            />
+          </div>
         </div>
 
         <div className="border-t border-slate-100 p-4">
