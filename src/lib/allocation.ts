@@ -60,20 +60,16 @@ export const GENDER_VIEW_LABELS: Record<GenderView, string> = {
   women: '女子',
 }
 
-/** 3D（ota-seat-view）と同じ表記: 「券種　Gブロック 3列 12番」など */
+/** モーダル・ツールチップ用（1行・短い表記） */
 export function seatDisplayTitle(seat: Seat, _eventSlug: string): string {
-  if (
-    seat.sellable !== false &&
-    seat.category &&
-    seat.label &&
-    seat.label !== '—'
-  ) {
-    return `${seat.category}　${seat.label}`
-  }
-  if (seat.section && seat.label.includes('ブロック')) {
-    return seat.label
-  }
+  if (seat.label && seat.label !== '—') return seat.label
   return seat.label
+}
+
+/** 券種付き（詳細行・在庫表示） */
+export function seatDisplayWithCategory(seat: Seat): string | null {
+  if (!seat.category || !seat.label || seat.label === '—') return null
+  return `${seat.category} ${seat.label}`
 }
 
 export function allocationDisplayLabel(
@@ -82,17 +78,17 @@ export function allocationDisplayLabel(
   genderView: GenderView,
   allocation: AllocationContext,
 ): string {
-  if (seat.category && seat.label && seat.label !== '—') {
-    const base = seatDisplayTitle(seat, eventSlug)
+  const withCat = seatDisplayWithCategory(seat)
+  if (withCat) {
     if (eventHasGenderSwap(eventSlug)) {
       if (allocation === 'all_day' || !isSwappableZone(seat.zone)) {
-        if (seat.zone === 'floor1') return `${base}（男女共通・終日）`
-        return base
+        if (seat.zone === 'floor1') return `${withCat}（終日）`
+        return withCat
       }
-      return `${GENDER_VIEW_LABELS[genderView]} / ${base}`
+      return `${GENDER_VIEW_LABELS[genderView]} ${withCat}`
     }
-    if (allocation === 'all_day') return base
-    return `${GENDER_VIEW_LABELS[genderView]} / ${base}`
+    if (allocation === 'all_day') return withCat
+    return `${GENDER_VIEW_LABELS[genderView]} ${withCat}`
   }
 
   const zoneLabel = ZONE_LABELS[seat.zone]

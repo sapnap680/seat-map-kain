@@ -24,9 +24,12 @@ export function OtaStaffSeatChoiceModal({
       <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">
+            <h2 className="max-w-full truncate text-lg font-bold text-slate-800">
               {seatDisplayTitle(seat, eventSlug)}
             </h2>
+            {seat.category && (
+              <p className="truncate text-sm text-slate-500">{seat.category}</p>
+            )}
             <p className="mt-1 text-sm text-slate-600">
               現在: {STATUS_LABELS[seat.state.status]}
             </p>

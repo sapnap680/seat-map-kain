@@ -411,7 +411,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         )
     if slug == "2025-12-11":
         refine_komori_12_11_zones(seats)
-        apply_komori_seat_labels(seats)
+        apply_komori_seat_labels(seats, page, pw, ph)
     elif slug in ("2025-12-12", "2025-12-13"):
         refine_ota_team_zones(seats)
         # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外

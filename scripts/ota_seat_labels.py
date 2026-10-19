@@ -111,7 +111,7 @@ def label_stand_rows(
             for s, i in items:
                 num = num_fn(i, n) if num_fn else i + 1
                 s["section"] = block
-                s["label"] = f"{block}ブロック {row_num}列 {num}番"
+                s["label"] = f"{block}{row_num}列{num}番"
                 s["category"] = cat
 
 
@@ -131,7 +131,7 @@ def label_courtside(seats: list[SeatDict]) -> None:
         ):
             for i, s in enumerate(sorted(band, key=_cy)):
                 s["section"] = cat_a
-                s["label"] = f"{i + 1}番"
+                s["label"] = f"A{i + 1}番"
                 s["category"] = cat_a
 
     sizes = [11, 12, 11]
@@ -141,7 +141,7 @@ def label_courtside(seats: list[SeatDict]) -> None:
         idx += size
         for i, s in enumerate(band):
             s["section"] = cat_b
-            s["label"] = f"{i + 1}番"
+            s["label"] = f"B{i + 1}番"
             s["category"] = cat_b
     for s in group_b[idx:]:
         s["section"] = cat_b

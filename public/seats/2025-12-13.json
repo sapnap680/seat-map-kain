@@ -3,7 +3,7 @@
   "map_width": 1199,
   "map_height": 1583,
   "seat_count": 1187,
-  "catalog_revision": "9abfa025bf344200",
+  "catalog_revision": "10ce59dca56a55e0",
   "seats": [
     {
       "id": "c8e5d72c-bdcd-5d6a-9a2d-78dca6987f0d",
@@ -451,7 +451,7 @@
     },
     {
       "id": "8dfaab98-4719-5383-b7fc-9d29b801422c",
-      "label": "1番",
+      "label": "B1番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -463,7 +463,7 @@
     },
     {
       "id": "529be98e-8351-5a8c-b4f1-f0701145650c",
-      "label": "2番",
+      "label": "B2番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -475,7 +475,7 @@
     },
     {
       "id": "03e3a6c1-b115-5aa3-9218-16badc4fdef5",
-      "label": "3番",
+      "label": "B3番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -487,7 +487,7 @@
     },
     {
       "id": "3db34c46-303d-5cc5-97b0-bdac914751fd",
-      "label": "4番",
+      "label": "B4番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -499,7 +499,7 @@
     },
     {
       "id": "6d5fd365-a78d-54c8-bd7f-51b962a1e62f",
-      "label": "5番",
+      "label": "B5番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -511,7 +511,7 @@
     },
     {
       "id": "4105f35a-7c68-5ab3-a56f-ab28caaf9cf2",
-      "label": "6番",
+      "label": "B6番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -523,7 +523,7 @@
     },
     {
       "id": "f62bc271-d535-5824-9aea-bea41e7d0a58",
-      "label": "7番",
+      "label": "B7番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -535,7 +535,7 @@
     },
     {
       "id": "d8171edf-8a9e-5065-a325-19a4fa1d20bf",
-      "label": "8番",
+      "label": "B8番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -547,7 +547,7 @@
     },
     {
       "id": "998036ec-78a9-5dc4-a1d9-4c7116a3ffff",
-      "label": "9番",
+      "label": "B9番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -559,7 +559,7 @@
     },
     {
       "id": "913a17e7-183c-5b8f-93f1-29627b453073",
-      "label": "10番",
+      "label": "B10番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -571,7 +571,7 @@
     },
     {
       "id": "3d8ab35b-c281-58c5-b6d6-1abce692caf5",
-      "label": "11番",
+      "label": "B11番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -583,7 +583,7 @@
     },
     {
       "id": "4de909e2-fd2f-55b2-a9e0-c798de2adb37",
-      "label": "1番",
+      "label": "B1番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -595,7 +595,7 @@
     },
     {
       "id": "43d890a7-2dd2-5d5b-920d-fac43b405679",
-      "label": "2番",
+      "label": "B2番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -607,7 +607,7 @@
     },
     {
       "id": "9eb4ba55-dea8-5818-a10f-63177bed84dd",
-      "label": "3番",
+      "label": "B3番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -619,7 +619,7 @@
     },
     {
       "id": "14d41bdb-807d-5402-a30c-4722efadb5c9",
-      "label": "4番",
+      "label": "B4番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -631,7 +631,7 @@
     },
     {
       "id": "66eaadf0-66aa-5153-829b-4185778d7cbc",
-      "label": "5番",
+      "label": "B5番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -643,7 +643,7 @@
     },
     {
       "id": "3129e514-9408-5ceb-b1f3-329db04d14c4",
-      "label": "6番",
+      "label": "B6番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -655,7 +655,7 @@
     },
     {
       "id": "57857c29-4299-5eb7-b09e-c274cdec8581",
-      "label": "7番",
+      "label": "B7番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -667,7 +667,7 @@
     },
     {
       "id": "f599c9fa-94d6-54d4-82a2-41cb4037230d",
-      "label": "8番",
+      "label": "B8番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -679,7 +679,7 @@
     },
     {
       "id": "1615fb12-217c-5ad6-b226-4d6495313f31",
-      "label": "9番",
+      "label": "B9番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -691,7 +691,7 @@
     },
     {
       "id": "7948bfb7-243a-53d6-af2e-914cb03745c0",
-      "label": "10番",
+      "label": "B10番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -703,7 +703,7 @@
     },
     {
       "id": "fb0b30dc-adef-5bcb-bbc6-0881b6474c11",
-      "label": "11番",
+      "label": "B11番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -715,7 +715,7 @@
     },
     {
       "id": "73aa7ab0-725f-5ad0-9f44-8d1dfeba8660",
-      "label": "12番",
+      "label": "B12番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -727,7 +727,7 @@
     },
     {
       "id": "e8854d0b-f2c7-5f43-97cc-b735ec89c05b",
-      "label": "1番",
+      "label": "B1番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -739,7 +739,7 @@
     },
     {
       "id": "3224c10a-0cb5-5134-b8ae-12d52a958805",
-      "label": "2番",
+      "label": "B2番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -751,7 +751,7 @@
     },
     {
       "id": "28a0adb3-173a-53f2-95ad-7cbd6105e59c",
-      "label": "3番",
+      "label": "B3番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -763,7 +763,7 @@
     },
     {
       "id": "0500fc71-d515-50da-8c0f-57c49cc77197",
-      "label": "4番",
+      "label": "B4番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -775,7 +775,7 @@
     },
     {
       "id": "cabdc4e3-eb23-5138-8c08-3eda158fdd2e",
-      "label": "5番",
+      "label": "B5番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -787,7 +787,7 @@
     },
     {
       "id": "609c32fe-0461-5482-8459-53247f758caf",
-      "label": "6番",
+      "label": "B6番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -799,7 +799,7 @@
     },
     {
       "id": "846c566b-660f-5e59-9518-884ee65573d9",
-      "label": "7番",
+      "label": "B7番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -811,7 +811,7 @@
     },
     {
       "id": "ef6d10c6-45fd-5a8d-b7c1-1416822b2e14",
-      "label": "8番",
+      "label": "B8番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -823,7 +823,7 @@
     },
     {
       "id": "5324237b-332e-59b5-ad96-e80f14324f24",
-      "label": "9番",
+      "label": "B9番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -835,7 +835,7 @@
     },
     {
       "id": "6e697430-c880-5040-a7fd-8b717e117ade",
-      "label": "10番",
+      "label": "B10番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -847,7 +847,7 @@
     },
     {
       "id": "de3dca6b-243a-5d1e-afe4-12a1b5d4fcce",
-      "label": "11番",
+      "label": "B11番",
       "section": "コートサイドB",
       "zone": "courtside",
       "sellable": true,
@@ -859,7 +859,7 @@
     },
     {
       "id": "9857712d-cf60-5c20-9198-acdb57110e62",
-      "label": "1番",
+      "label": "A1番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -871,7 +871,7 @@
     },
     {
       "id": "150c1fb1-da60-55cb-ac32-2931e2a458f6",
-      "label": "2番",
+      "label": "A2番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -883,7 +883,7 @@
     },
     {
       "id": "09b06b15-50aa-5a1d-bf1c-80a9b40231c0",
-      "label": "3番",
+      "label": "A3番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -895,7 +895,7 @@
     },
     {
       "id": "e969ecb6-f432-5a76-a2e7-45f90c9fbd0f",
-      "label": "4番",
+      "label": "A4番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -907,7 +907,7 @@
     },
     {
       "id": "891c0a1e-eee9-5d6e-af8e-013a324ce4c2",
-      "label": "5番",
+      "label": "A5番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -919,7 +919,7 @@
     },
     {
       "id": "1397f780-22ef-5da2-9880-1b6e4c615929",
-      "label": "6番",
+      "label": "A6番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -931,7 +931,7 @@
     },
     {
       "id": "0e0c39ff-8b27-5544-b838-d228662d537c",
-      "label": "7番",
+      "label": "A7番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -943,7 +943,7 @@
     },
     {
       "id": "8d5304ce-e650-5c7d-b911-72ec8ed07419",
-      "label": "8番",
+      "label": "A8番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -955,7 +955,7 @@
     },
     {
       "id": "89ffcec5-45af-5a23-9a1d-6ac266c39c09",
-      "label": "9番",
+      "label": "A9番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -967,7 +967,7 @@
     },
     {
       "id": "ce98a57d-a634-5d41-825a-2bff32e49dcf",
-      "label": "10番",
+      "label": "A10番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -979,7 +979,7 @@
     },
     {
       "id": "f46e3dbb-5e88-5792-a99e-3574b3695930",
-      "label": "11番",
+      "label": "A11番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -991,7 +991,7 @@
     },
     {
       "id": "f3cce144-481c-59a9-94b1-0e834bd2380f",
-      "label": "12番",
+      "label": "A12番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1003,7 +1003,7 @@
     },
     {
       "id": "922ab7bc-88b2-5e4b-aa7f-00bd19547990",
-      "label": "1番",
+      "label": "A1番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1015,7 +1015,7 @@
     },
     {
       "id": "32076380-0942-5649-8719-9c03555eaa42",
-      "label": "2番",
+      "label": "A2番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1027,7 +1027,7 @@
     },
     {
       "id": "0e4c5be2-61b0-5a51-b7db-39956255f433",
-      "label": "3番",
+      "label": "A3番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1039,7 +1039,7 @@
     },
     {
       "id": "0ad8e66d-3722-5d9d-ba6a-1f9ceec89f10",
-      "label": "4番",
+      "label": "A4番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1051,7 +1051,7 @@
     },
     {
       "id": "b3da851b-e155-5163-9a97-d9562e3a8f23",
-      "label": "5番",
+      "label": "A5番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1063,7 +1063,7 @@
     },
     {
       "id": "16d5cce9-c46b-5351-ace6-80393cbc1dbf",
-      "label": "6番",
+      "label": "A6番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1075,7 +1075,7 @@
     },
     {
       "id": "317771dd-10f2-53c8-84fc-f7a0a290185a",
-      "label": "7番",
+      "label": "A7番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1087,7 +1087,7 @@
     },
     {
       "id": "2b65bcaa-11a6-5ef3-90c9-f8e22f96fae3",
-      "label": "8番",
+      "label": "A8番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1099,7 +1099,7 @@
     },
     {
       "id": "ca68770a-6485-57fb-bae4-f39d311e8045",
-      "label": "9番",
+      "label": "A9番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1111,7 +1111,7 @@
     },
     {
       "id": "66bd6c5b-5595-5ba4-abe0-3d00b1029af2",
-      "label": "10番",
+      "label": "A10番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1123,7 +1123,7 @@
     },
     {
       "id": "d327a00b-95d4-57c6-9c4d-7ccfea888f56",
-      "label": "11番",
+      "label": "A11番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1135,7 +1135,7 @@
     },
     {
       "id": "ba670487-c447-540d-bb7c-771ec2f12cab",
-      "label": "12番",
+      "label": "A12番",
       "section": "コートサイドA",
       "zone": "courtside",
       "sellable": true,
@@ -1147,7 +1147,7 @@
     },
     {
       "id": "c9eb6555-6b66-5b63-87e1-b51dbe611a47",
-      "label": "Kブロック 7列 1番",
+      "label": "K7列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1159,7 +1159,7 @@
     },
     {
       "id": "90a7f9a0-59ca-5f24-b759-bdaae9a733a7",
-      "label": "Kブロック 7列 2番",
+      "label": "K7列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1171,7 +1171,7 @@
     },
     {
       "id": "c4a4d3ae-9dcf-50cd-8d94-ece174145cc1",
-      "label": "Kブロック 7列 3番",
+      "label": "K7列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1183,7 +1183,7 @@
     },
     {
       "id": "cffffa7d-43e8-54d1-af78-dd2507ab5eb5",
-      "label": "Kブロック 7列 4番",
+      "label": "K7列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1195,7 +1195,7 @@
     },
     {
       "id": "c329903e-971d-58b0-9dc0-ff66b06e0179",
-      "label": "Kブロック 7列 5番",
+      "label": "K7列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1207,7 +1207,7 @@
     },
     {
       "id": "324ecf6f-cc12-51f2-8649-9314703fadd3",
-      "label": "Kブロック 7列 6番",
+      "label": "K7列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1219,7 +1219,7 @@
     },
     {
       "id": "2c4db98a-8c69-5e5e-9708-f331397bfd09",
-      "label": "Kブロック 7列 7番",
+      "label": "K7列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1231,7 +1231,7 @@
     },
     {
       "id": "22664406-dbb0-5d70-aeee-fcbb2422f55d",
-      "label": "Kブロック 7列 8番",
+      "label": "K7列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1243,7 +1243,7 @@
     },
     {
       "id": "39178e07-9e6d-562b-876e-8a50e1d347fa",
-      "label": "Kブロック 7列 9番",
+      "label": "K7列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1255,7 +1255,7 @@
     },
     {
       "id": "53ec2a07-bacd-5604-a0cc-311436430c44",
-      "label": "Kブロック 7列 10番",
+      "label": "K7列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1267,7 +1267,7 @@
     },
     {
       "id": "70867398-9de3-5216-adbe-233c22d34e7d",
-      "label": "Kブロック 7列 11番",
+      "label": "K7列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1279,7 +1279,7 @@
     },
     {
       "id": "8793cda0-4ea9-5b94-a437-304a0343ae93",
-      "label": "Kブロック 7列 12番",
+      "label": "K7列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "82ea3984-de08-5f62-900b-977c691db858",
-      "label": "Kブロック 6列 1番",
+      "label": "K6列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1303,7 +1303,7 @@
     },
     {
       "id": "c479578b-ffa9-5f13-85e2-8e34f4516f3e",
-      "label": "Kブロック 6列 2番",
+      "label": "K6列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1315,7 +1315,7 @@
     },
     {
       "id": "086496d7-0b50-5bc9-b06b-44adcc44e2d7",
-      "label": "Kブロック 6列 3番",
+      "label": "K6列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1327,7 +1327,7 @@
     },
     {
       "id": "ecfba05b-ce1d-586e-9de4-8aa39cc37138",
-      "label": "Kブロック 6列 4番",
+      "label": "K6列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1339,7 +1339,7 @@
     },
     {
       "id": "b91b91e1-7b0d-56f9-9434-657a938f998c",
-      "label": "Kブロック 6列 5番",
+      "label": "K6列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1351,7 +1351,7 @@
     },
     {
       "id": "bb6c8e7d-70fb-572e-9372-d318f6fb52b8",
-      "label": "Kブロック 6列 6番",
+      "label": "K6列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1363,7 +1363,7 @@
     },
     {
       "id": "0e60a6c3-4c1e-5e10-add7-9c7772672810",
-      "label": "Kブロック 6列 7番",
+      "label": "K6列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1375,7 +1375,7 @@
     },
     {
       "id": "94651e7c-84c8-525c-a557-78f95e4d83ce",
-      "label": "Kブロック 6列 8番",
+      "label": "K6列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1387,7 +1387,7 @@
     },
     {
       "id": "62c7411c-b9e2-5841-8983-a26e8a6cf740",
-      "label": "Kブロック 6列 9番",
+      "label": "K6列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1399,7 +1399,7 @@
     },
     {
       "id": "c3edab41-67ea-5d3c-a0d8-8da640ac1aa2",
-      "label": "Kブロック 6列 10番",
+      "label": "K6列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1411,7 +1411,7 @@
     },
     {
       "id": "ba15a3ed-e0b5-556a-b7ab-c137756d0c42",
-      "label": "Kブロック 6列 11番",
+      "label": "K6列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1423,7 +1423,7 @@
     },
     {
       "id": "b5563785-dd7f-50c4-afbf-c163a0fe5eaf",
-      "label": "Kブロック 6列 12番",
+      "label": "K6列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1435,7 +1435,7 @@
     },
     {
       "id": "c44d71d1-54b4-5c3f-9f1b-98e38d81ea8c",
-      "label": "Kブロック 5列 1番",
+      "label": "K5列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1447,7 +1447,7 @@
     },
     {
       "id": "6353a4bd-657a-544b-add4-0dd64a102d33",
-      "label": "Kブロック 5列 2番",
+      "label": "K5列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1459,7 +1459,7 @@
     },
     {
       "id": "550e0e0c-b836-53f4-8c7b-6aa228a60498",
-      "label": "Kブロック 5列 3番",
+      "label": "K5列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1471,7 +1471,7 @@
     },
     {
       "id": "fb7378dc-05a3-5c05-b798-b1779f15b958",
-      "label": "Kブロック 5列 4番",
+      "label": "K5列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1483,7 +1483,7 @@
     },
     {
       "id": "ce81dcb7-5b73-5d88-a87e-bd7e6420980e",
-      "label": "Kブロック 5列 5番",
+      "label": "K5列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1495,7 +1495,7 @@
     },
     {
       "id": "0eb67f83-6965-5cf2-b966-cd30bc01f103",
-      "label": "Kブロック 5列 6番",
+      "label": "K5列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1507,7 +1507,7 @@
     },
     {
       "id": "9b6ade26-3890-5c31-9644-be33bdb98275",
-      "label": "Kブロック 5列 7番",
+      "label": "K5列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1519,7 +1519,7 @@
     },
     {
       "id": "e726fc9e-7026-53b6-82d9-41ca60658cd8",
-      "label": "Kブロック 5列 8番",
+      "label": "K5列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1531,7 +1531,7 @@
     },
     {
       "id": "c00909f8-fb19-5c7b-83e5-e194fb0abea2",
-      "label": "Kブロック 5列 9番",
+      "label": "K5列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1543,7 +1543,7 @@
     },
     {
       "id": "a7d5e343-784c-5ac8-8ed2-774e10441f7e",
-      "label": "Kブロック 5列 10番",
+      "label": "K5列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1555,7 +1555,7 @@
     },
     {
       "id": "6bd017cc-b921-5149-b000-7898d90676c0",
-      "label": "Kブロック 5列 11番",
+      "label": "K5列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1567,7 +1567,7 @@
     },
     {
       "id": "bbd283b9-2ecf-5975-9024-26cbbddb7cd8",
-      "label": "Kブロック 5列 12番",
+      "label": "K5列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1579,7 +1579,7 @@
     },
     {
       "id": "494ef128-86ae-5304-80ac-42c99657558c",
-      "label": "Kブロック 4列 1番",
+      "label": "K4列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1591,7 +1591,7 @@
     },
     {
       "id": "b239fcdf-9d4a-5656-9119-3e51e735e6b1",
-      "label": "Kブロック 4列 2番",
+      "label": "K4列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1603,7 +1603,7 @@
     },
     {
       "id": "2fe58ea8-e2ea-5f59-a7dd-9adf0e93ea6a",
-      "label": "Kブロック 4列 3番",
+      "label": "K4列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1615,7 +1615,7 @@
     },
     {
       "id": "c5701428-ddf5-5ad4-8b3e-fce68ff7f1e6",
-      "label": "Kブロック 4列 4番",
+      "label": "K4列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1627,7 +1627,7 @@
     },
     {
       "id": "503c9ea2-0f8f-5266-b0bd-9794ada68207",
-      "label": "Kブロック 4列 5番",
+      "label": "K4列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1639,7 +1639,7 @@
     },
     {
       "id": "6305be8b-92f3-5dbb-8291-dc3f8d71dc06",
-      "label": "Kブロック 4列 6番",
+      "label": "K4列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1651,7 +1651,7 @@
     },
     {
       "id": "270c8ab9-3449-5a68-8daf-922de1fec03e",
-      "label": "Kブロック 4列 7番",
+      "label": "K4列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1663,7 +1663,7 @@
     },
     {
       "id": "b77abde4-db8f-5cb4-9ba0-0488701cb6ff",
-      "label": "Kブロック 4列 8番",
+      "label": "K4列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1675,7 +1675,7 @@
     },
     {
       "id": "b0afe1d3-2af8-5138-a361-38ad3dd7fb6b",
-      "label": "Kブロック 4列 9番",
+      "label": "K4列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1687,7 +1687,7 @@
     },
     {
       "id": "5053bd35-765c-5e74-9fc8-42bc020e1890",
-      "label": "Kブロック 4列 10番",
+      "label": "K4列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1699,7 +1699,7 @@
     },
     {
       "id": "69b3a0fb-fa68-5fee-bfec-6fd36e362341",
-      "label": "Kブロック 4列 11番",
+      "label": "K4列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1711,7 +1711,7 @@
     },
     {
       "id": "bbc7a4c8-cbc5-5b80-a4ea-8fc14653592b",
-      "label": "Kブロック 4列 12番",
+      "label": "K4列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1723,7 +1723,7 @@
     },
     {
       "id": "f335a3af-2bc4-5008-8f1d-6b35d88ffd40",
-      "label": "Kブロック 3列 1番",
+      "label": "K3列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1735,7 +1735,7 @@
     },
     {
       "id": "2bfb439c-07f4-56fc-a23a-4a40d9691dca",
-      "label": "Kブロック 3列 2番",
+      "label": "K3列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1747,7 +1747,7 @@
     },
     {
       "id": "d71c0b93-76c4-510d-b517-7c7b4a138752",
-      "label": "Kブロック 3列 3番",
+      "label": "K3列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1759,7 +1759,7 @@
     },
     {
       "id": "b37e9c7d-d65e-5e20-94b6-e409308d42cd",
-      "label": "Kブロック 3列 4番",
+      "label": "K3列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1771,7 +1771,7 @@
     },
     {
       "id": "f4e7bee1-ef28-5221-82e4-41a55fb1a5af",
-      "label": "Kブロック 3列 5番",
+      "label": "K3列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1783,7 +1783,7 @@
     },
     {
       "id": "22fb884a-f432-50c7-b61a-075ade2d1e95",
-      "label": "Kブロック 3列 6番",
+      "label": "K3列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1795,7 +1795,7 @@
     },
     {
       "id": "31bc91f3-c425-5204-9e11-2e4efd403da6",
-      "label": "Kブロック 3列 7番",
+      "label": "K3列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1807,7 +1807,7 @@
     },
     {
       "id": "def42247-dac8-5cbd-841c-c2c92fe89697",
-      "label": "Kブロック 3列 8番",
+      "label": "K3列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1819,7 +1819,7 @@
     },
     {
       "id": "5aabbfdb-a6fa-54f4-b73e-1ae27d2c4b2f",
-      "label": "Kブロック 3列 9番",
+      "label": "K3列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1831,7 +1831,7 @@
     },
     {
       "id": "b3ab8779-46c7-50a5-b2a8-867626f85c47",
-      "label": "Kブロック 3列 10番",
+      "label": "K3列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1843,7 +1843,7 @@
     },
     {
       "id": "346f0273-f1ef-5677-927c-a306cae71960",
-      "label": "Kブロック 3列 11番",
+      "label": "K3列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1855,7 +1855,7 @@
     },
     {
       "id": "48a93123-7479-5171-83b8-7599d872829b",
-      "label": "Kブロック 3列 12番",
+      "label": "K3列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1867,7 +1867,7 @@
     },
     {
       "id": "954e5856-0646-5e7b-975f-e21ec3d95928",
-      "label": "Kブロック 2列 1番",
+      "label": "K2列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1879,7 +1879,7 @@
     },
     {
       "id": "a79045ad-d42e-5eac-951f-e40ce2f5e662",
-      "label": "Kブロック 2列 2番",
+      "label": "K2列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1891,7 +1891,7 @@
     },
     {
       "id": "a0d7263e-b5aa-54b4-918c-3ccd13b839f6",
-      "label": "Kブロック 2列 3番",
+      "label": "K2列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1903,7 +1903,7 @@
     },
     {
       "id": "03277edc-1c18-5ff4-9914-7e737c2a1478",
-      "label": "Kブロック 2列 4番",
+      "label": "K2列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1915,7 +1915,7 @@
     },
     {
       "id": "3a8b7642-8786-5ef2-bca2-84c73f3a354c",
-      "label": "Kブロック 2列 5番",
+      "label": "K2列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1927,7 +1927,7 @@
     },
     {
       "id": "4a7f1140-50bc-5797-9f24-76b80ec3b828",
-      "label": "Kブロック 2列 6番",
+      "label": "K2列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1939,7 +1939,7 @@
     },
     {
       "id": "fbf654e6-f073-51af-a15b-bdf908ff9256",
-      "label": "Kブロック 2列 7番",
+      "label": "K2列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1951,7 +1951,7 @@
     },
     {
       "id": "7db0d98c-a40b-544b-907c-6917a1513f68",
-      "label": "Kブロック 2列 8番",
+      "label": "K2列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1963,7 +1963,7 @@
     },
     {
       "id": "b8da2810-7b81-53dd-8851-b8190b6bf546",
-      "label": "Kブロック 2列 9番",
+      "label": "K2列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1975,7 +1975,7 @@
     },
     {
       "id": "4202b5ef-5b34-5769-85d7-60ea9db85f85",
-      "label": "Kブロック 2列 10番",
+      "label": "K2列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1987,7 +1987,7 @@
     },
     {
       "id": "c6e8f3cb-0ba7-5f96-826b-b2956401d4ba",
-      "label": "Kブロック 2列 11番",
+      "label": "K2列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -1999,7 +1999,7 @@
     },
     {
       "id": "0977211e-60eb-53ef-bb12-01f971bfcac3",
-      "label": "Kブロック 2列 12番",
+      "label": "K2列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2011,7 +2011,7 @@
     },
     {
       "id": "aa68176c-6410-5cf5-bec4-6fdcd1e3168e",
-      "label": "Kブロック 1列 1番",
+      "label": "K1列1番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2023,7 +2023,7 @@
     },
     {
       "id": "e83f2518-dbbc-5966-a1d0-280ce48110c6",
-      "label": "Kブロック 1列 2番",
+      "label": "K1列2番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2035,7 +2035,7 @@
     },
     {
       "id": "7882a85d-c6e6-5117-a3f4-110d5bfb514a",
-      "label": "Kブロック 1列 3番",
+      "label": "K1列3番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2047,7 +2047,7 @@
     },
     {
       "id": "d44daaa8-0d03-5b4a-9812-fc097073fd00",
-      "label": "Kブロック 1列 4番",
+      "label": "K1列4番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2059,7 +2059,7 @@
     },
     {
       "id": "1422ecb2-df7f-5314-9c88-ac092f7978a1",
-      "label": "Kブロック 1列 5番",
+      "label": "K1列5番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2071,7 +2071,7 @@
     },
     {
       "id": "74ae704f-89b7-58b6-98f5-bac01f4edf9d",
-      "label": "Kブロック 1列 6番",
+      "label": "K1列6番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2083,7 +2083,7 @@
     },
     {
       "id": "b1d36c98-ff1d-5859-9312-04f34490448d",
-      "label": "Kブロック 1列 7番",
+      "label": "K1列7番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2095,7 +2095,7 @@
     },
     {
       "id": "a94e2cf3-7a24-5e57-bf31-e3f58a21aa7b",
-      "label": "Kブロック 1列 8番",
+      "label": "K1列8番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2107,7 +2107,7 @@
     },
     {
       "id": "e9914ab8-b5e1-5e0d-aa70-4648f8a0289a",
-      "label": "Kブロック 1列 9番",
+      "label": "K1列9番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2119,7 +2119,7 @@
     },
     {
       "id": "96d246aa-5b60-56d8-9548-b6bd094917a5",
-      "label": "Kブロック 1列 10番",
+      "label": "K1列10番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2131,7 +2131,7 @@
     },
     {
       "id": "cff815eb-5469-578a-b1ff-85b1649fc530",
-      "label": "Kブロック 1列 11番",
+      "label": "K1列11番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2143,7 +2143,7 @@
     },
     {
       "id": "23331706-8e2e-5f4a-9e45-f72ad3375e23",
-      "label": "Kブロック 1列 12番",
+      "label": "K1列12番",
       "section": "K",
       "zone": "floor1",
       "sellable": true,
@@ -2155,7 +2155,7 @@
     },
     {
       "id": "ab35f91f-64c2-56e6-bc37-ceabaea9bf2f",
-      "label": "Iブロック 1列 1番",
+      "label": "I1列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2167,7 +2167,7 @@
     },
     {
       "id": "3b87ab40-3638-5232-a6c3-256311880528",
-      "label": "Iブロック 2列 1番",
+      "label": "I2列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2179,7 +2179,7 @@
     },
     {
       "id": "1f54b8eb-9f34-53df-bf56-14744317a212",
-      "label": "Iブロック 3列 1番",
+      "label": "I3列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2191,7 +2191,7 @@
     },
     {
       "id": "8e1cc0b8-aaa8-5afe-956c-2f6ad8714862",
-      "label": "Iブロック 4列 1番",
+      "label": "I4列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2203,7 +2203,7 @@
     },
     {
       "id": "6597a268-905c-5851-be8d-7cd8195e3874",
-      "label": "Iブロック 5列 1番",
+      "label": "I5列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2215,7 +2215,7 @@
     },
     {
       "id": "46a00e3b-0ffc-5f23-bc8d-7e7ac69f063e",
-      "label": "Iブロック 6列 1番",
+      "label": "I6列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2227,7 +2227,7 @@
     },
     {
       "id": "0a4852a9-cccf-5759-990e-486d7d2a24ee",
-      "label": "Iブロック 7列 1番",
+      "label": "I7列1番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2239,7 +2239,7 @@
     },
     {
       "id": "7669c9c8-e129-5b49-9868-22502e6cca58",
-      "label": "Iブロック 1列 2番",
+      "label": "I1列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2251,7 +2251,7 @@
     },
     {
       "id": "f90dfd8b-0f4e-5888-a152-3428d4ae7310",
-      "label": "Iブロック 2列 2番",
+      "label": "I2列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2263,7 +2263,7 @@
     },
     {
       "id": "dc7b3f83-2bc6-5eac-9889-8470913d25b3",
-      "label": "Iブロック 3列 2番",
+      "label": "I3列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2275,7 +2275,7 @@
     },
     {
       "id": "0ac4b76d-9375-5cfc-b7ce-8c0b1a4ed421",
-      "label": "Iブロック 4列 2番",
+      "label": "I4列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2287,7 +2287,7 @@
     },
     {
       "id": "24e5bb1f-0090-5f2c-a183-fc7032480943",
-      "label": "Iブロック 5列 2番",
+      "label": "I5列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2299,7 +2299,7 @@
     },
     {
       "id": "773d85d1-f98a-5f33-b87b-655fac7089c2",
-      "label": "Iブロック 6列 2番",
+      "label": "I6列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2311,7 +2311,7 @@
     },
     {
       "id": "126fba22-59d9-5672-a48e-ce7a76ea10c0",
-      "label": "Iブロック 7列 2番",
+      "label": "I7列2番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2323,7 +2323,7 @@
     },
     {
       "id": "2cdc34a8-a62d-5335-9f2c-43429cbc67ed",
-      "label": "Iブロック 1列 3番",
+      "label": "I1列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2335,7 +2335,7 @@
     },
     {
       "id": "bdf97bfa-fbad-5208-80a9-ec80f9ccaa2c",
-      "label": "Iブロック 2列 3番",
+      "label": "I2列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2347,7 +2347,7 @@
     },
     {
       "id": "93524579-e30d-5375-bf16-dbf5a887efde",
-      "label": "Iブロック 3列 3番",
+      "label": "I3列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2359,7 +2359,7 @@
     },
     {
       "id": "9f5f8b5e-6ee4-5501-a60d-b4d0e7f4e63b",
-      "label": "Iブロック 4列 3番",
+      "label": "I4列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2371,7 +2371,7 @@
     },
     {
       "id": "b15b97c2-dd2e-55ca-83c0-9887b09557db",
-      "label": "Iブロック 5列 3番",
+      "label": "I5列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2383,7 +2383,7 @@
     },
     {
       "id": "7f736c7b-87c7-506d-a425-3c2a4d2e5b78",
-      "label": "Iブロック 6列 3番",
+      "label": "I6列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2395,7 +2395,7 @@
     },
     {
       "id": "5ba679fa-b58f-53e6-878a-153c4d1c0122",
-      "label": "Iブロック 7列 3番",
+      "label": "I7列3番",
       "section": "I",
       "zone": "floor1",
       "sellable": true,
@@ -2407,7 +2407,7 @@
     },
     {
       "id": "8b359586-ca3e-5092-9d4c-e548879b0f25",
-      "label": "Hブロック 1列 1番",
+      "label": "H1列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2419,7 +2419,7 @@
     },
     {
       "id": "b6530148-b202-5836-a0c8-99f90e99f010",
-      "label": "Hブロック 2列 1番",
+      "label": "H2列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2431,7 +2431,7 @@
     },
     {
       "id": "88848f6c-d8d1-5f92-9bf3-3b10108b616e",
-      "label": "Hブロック 3列 1番",
+      "label": "H3列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2443,7 +2443,7 @@
     },
     {
       "id": "33bef727-735e-50e8-ad4b-7d017e77d476",
-      "label": "Hブロック 4列 1番",
+      "label": "H4列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2455,7 +2455,7 @@
     },
     {
       "id": "7ab875f3-c896-5950-9835-f7ab87e23bfe",
-      "label": "Hブロック 5列 1番",
+      "label": "H5列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2467,7 +2467,7 @@
     },
     {
       "id": "2d28ee56-d858-5363-8fb2-a91bd67e7aff",
-      "label": "Hブロック 6列 1番",
+      "label": "H6列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2479,7 +2479,7 @@
     },
     {
       "id": "6991b9b3-c407-51a9-99e6-e96895fe1062",
-      "label": "Hブロック 7列 1番",
+      "label": "H7列1番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2491,7 +2491,7 @@
     },
     {
       "id": "acbce0da-e856-5234-ba5a-e4cae07b8fda",
-      "label": "Hブロック 1列 2番",
+      "label": "H1列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2503,7 +2503,7 @@
     },
     {
       "id": "c37d5851-2d44-5b0c-8e69-a502fdd41393",
-      "label": "Hブロック 2列 2番",
+      "label": "H2列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2515,7 +2515,7 @@
     },
     {
       "id": "8156754d-581f-50cd-b1f4-d77e56b57d61",
-      "label": "Hブロック 3列 2番",
+      "label": "H3列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2527,7 +2527,7 @@
     },
     {
       "id": "8e01100a-a39d-5c4c-a40e-1e330f9e293f",
-      "label": "Hブロック 4列 2番",
+      "label": "H4列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2539,7 +2539,7 @@
     },
     {
       "id": "fe648850-1962-5cbd-aaf2-d117b9d15b4f",
-      "label": "Hブロック 5列 2番",
+      "label": "H5列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2551,7 +2551,7 @@
     },
     {
       "id": "66dec50d-5b75-5e2a-9087-f763a70dcc5f",
-      "label": "Hブロック 6列 2番",
+      "label": "H6列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2563,7 +2563,7 @@
     },
     {
       "id": "4be10536-e621-5deb-8323-83dbf1b4a5cf",
-      "label": "Hブロック 7列 2番",
+      "label": "H7列2番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2575,7 +2575,7 @@
     },
     {
       "id": "99a582d9-ddd2-5160-ac1e-663f07dac72b",
-      "label": "Hブロック 1列 3番",
+      "label": "H1列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2587,7 +2587,7 @@
     },
     {
       "id": "0edf0532-81e8-53e8-b80e-92e2c7e34e6c",
-      "label": "Hブロック 2列 3番",
+      "label": "H2列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2599,7 +2599,7 @@
     },
     {
       "id": "ab11ef6e-621e-5d4e-8225-52d0c63b65e9",
-      "label": "Hブロック 3列 3番",
+      "label": "H3列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2611,7 +2611,7 @@
     },
     {
       "id": "0be131ab-ed80-5e7f-91ee-e3709aae2544",
-      "label": "Hブロック 4列 3番",
+      "label": "H4列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2623,7 +2623,7 @@
     },
     {
       "id": "2aca9c90-05d3-5867-88c5-0e28f361e227",
-      "label": "Hブロック 5列 3番",
+      "label": "H5列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2635,7 +2635,7 @@
     },
     {
       "id": "95028fa8-d57c-56f2-ad0b-e359e2b67d02",
-      "label": "Hブロック 6列 3番",
+      "label": "H6列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2647,7 +2647,7 @@
     },
     {
       "id": "ce0143bc-248c-5b49-9193-88bb147fcca7",
-      "label": "Hブロック 7列 3番",
+      "label": "H7列3番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2659,7 +2659,7 @@
     },
     {
       "id": "215c76c7-7ada-5647-8079-d2e80e60e9db",
-      "label": "Hブロック 1列 4番",
+      "label": "H1列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2671,7 +2671,7 @@
     },
     {
       "id": "8e3ed3d8-3c41-5bc8-a870-3ddf9153d8e7",
-      "label": "Hブロック 2列 4番",
+      "label": "H2列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2683,7 +2683,7 @@
     },
     {
       "id": "213e5407-5504-5757-a2fb-e20784f99b8c",
-      "label": "Hブロック 3列 4番",
+      "label": "H3列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2695,7 +2695,7 @@
     },
     {
       "id": "c804fd32-09db-5468-a454-0e7fd802e9cf",
-      "label": "Hブロック 4列 4番",
+      "label": "H4列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2707,7 +2707,7 @@
     },
     {
       "id": "cbb0ef56-b388-53ff-a283-3cf356f074b1",
-      "label": "Hブロック 5列 4番",
+      "label": "H5列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2719,7 +2719,7 @@
     },
     {
       "id": "6474e9b5-6e3a-5bea-9794-63e732e94cf7",
-      "label": "Hブロック 6列 4番",
+      "label": "H6列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2731,7 +2731,7 @@
     },
     {
       "id": "957aa592-ab16-5cbd-9763-b0682b9df581",
-      "label": "Hブロック 7列 4番",
+      "label": "H7列4番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2743,7 +2743,7 @@
     },
     {
       "id": "e7fccee8-20b1-5602-92ea-99254f9432de",
-      "label": "Hブロック 1列 5番",
+      "label": "H1列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2755,7 +2755,7 @@
     },
     {
       "id": "9670e0b4-a488-59c8-aa95-793406ee74ae",
-      "label": "Hブロック 2列 5番",
+      "label": "H2列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2767,7 +2767,7 @@
     },
     {
       "id": "480c7e7c-b0b2-521c-9793-0f9fe29050ce",
-      "label": "Hブロック 3列 5番",
+      "label": "H3列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2779,7 +2779,7 @@
     },
     {
       "id": "2a557cf8-63c4-5030-8c9f-73c0ac697299",
-      "label": "Hブロック 4列 5番",
+      "label": "H4列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2791,7 +2791,7 @@
     },
     {
       "id": "dbc88132-487d-5adc-a5c1-845d4ef6886e",
-      "label": "Hブロック 5列 5番",
+      "label": "H5列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2803,7 +2803,7 @@
     },
     {
       "id": "c918be86-2a5e-56b8-a030-33b5dd20f56d",
-      "label": "Hブロック 6列 5番",
+      "label": "H6列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2815,7 +2815,7 @@
     },
     {
       "id": "bf300ce4-7d92-5649-aa8f-88cab2c5458e",
-      "label": "Hブロック 7列 5番",
+      "label": "H7列5番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2827,7 +2827,7 @@
     },
     {
       "id": "d7d3613d-376d-5b91-9df1-654aa8e0009f",
-      "label": "Hブロック 1列 6番",
+      "label": "H1列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2839,7 +2839,7 @@
     },
     {
       "id": "06eb8aba-d0e3-5549-b51a-25d8048e035d",
-      "label": "Hブロック 2列 6番",
+      "label": "H2列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2851,7 +2851,7 @@
     },
     {
       "id": "4e0c894b-b626-5112-97a9-1f3ff34ffd37",
-      "label": "Hブロック 3列 6番",
+      "label": "H3列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2863,7 +2863,7 @@
     },
     {
       "id": "e4b77514-077c-50bc-afae-d068ab39b10c",
-      "label": "Hブロック 4列 6番",
+      "label": "H4列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2875,7 +2875,7 @@
     },
     {
       "id": "4576902e-75aa-55e2-99a9-8cd69918ecf1",
-      "label": "Hブロック 5列 6番",
+      "label": "H5列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2887,7 +2887,7 @@
     },
     {
       "id": "f3dae8bb-d9ad-50c6-9a61-8c4a1077c154",
-      "label": "Hブロック 6列 6番",
+      "label": "H6列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2899,7 +2899,7 @@
     },
     {
       "id": "985cf5d4-3073-5fc0-b7ae-ace608fd18aa",
-      "label": "Hブロック 7列 6番",
+      "label": "H7列6番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2911,7 +2911,7 @@
     },
     {
       "id": "4427019e-2bb3-5868-8314-db88ed0e61e1",
-      "label": "Hブロック 1列 7番",
+      "label": "H1列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2923,7 +2923,7 @@
     },
     {
       "id": "4c18f57b-8ba7-5421-a145-9c03051d68ad",
-      "label": "Hブロック 2列 7番",
+      "label": "H2列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2935,7 +2935,7 @@
     },
     {
       "id": "0448495a-3445-5645-a683-7ab8202c2a22",
-      "label": "Hブロック 3列 7番",
+      "label": "H3列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2947,7 +2947,7 @@
     },
     {
       "id": "5fcf9c15-bc8e-5f39-9ead-731089ba8455",
-      "label": "Hブロック 4列 7番",
+      "label": "H4列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2959,7 +2959,7 @@
     },
     {
       "id": "f67f7571-393c-567c-b52e-6675f1495e98",
-      "label": "Hブロック 5列 7番",
+      "label": "H5列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2971,7 +2971,7 @@
     },
     {
       "id": "959fd950-eeef-5e2f-a3c0-9d3dc19cfc88",
-      "label": "Hブロック 6列 7番",
+      "label": "H6列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2983,7 +2983,7 @@
     },
     {
       "id": "58fe8a2b-87ef-5cc5-be13-bec4a8ca7373",
-      "label": "Hブロック 7列 7番",
+      "label": "H7列7番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -2995,7 +2995,7 @@
     },
     {
       "id": "fcd22d1e-551b-54b3-b423-f7040c3c5115",
-      "label": "Hブロック 1列 8番",
+      "label": "H1列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3007,7 +3007,7 @@
     },
     {
       "id": "279fd0bf-2df9-54b9-91b0-c16224d0a47e",
-      "label": "Hブロック 2列 8番",
+      "label": "H2列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3019,7 +3019,7 @@
     },
     {
       "id": "0a4f99b6-38c6-590b-b227-b3efffa68dce",
-      "label": "Hブロック 3列 8番",
+      "label": "H3列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3031,7 +3031,7 @@
     },
     {
       "id": "ae9dee66-2b4a-50c2-ba24-a2f53380ba81",
-      "label": "Hブロック 4列 8番",
+      "label": "H4列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3043,7 +3043,7 @@
     },
     {
       "id": "1f9ce23d-64ba-513b-b527-3d92e584ed25",
-      "label": "Hブロック 5列 8番",
+      "label": "H5列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3055,7 +3055,7 @@
     },
     {
       "id": "c4554ad5-b201-5002-8c7b-46a58b2ee7fc",
-      "label": "Hブロック 6列 8番",
+      "label": "H6列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3067,7 +3067,7 @@
     },
     {
       "id": "99a36abe-7a07-5f58-9499-f7ce20e67d1d",
-      "label": "Hブロック 7列 8番",
+      "label": "H7列8番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3079,7 +3079,7 @@
     },
     {
       "id": "f4aacc09-84fa-547c-a3d6-22a36e6afdd8",
-      "label": "Hブロック 1列 9番",
+      "label": "H1列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3091,7 +3091,7 @@
     },
     {
       "id": "8af2150b-6d77-5808-93ee-b16a96a7a0f5",
-      "label": "Hブロック 2列 9番",
+      "label": "H2列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3103,7 +3103,7 @@
     },
     {
       "id": "cb5414be-5b60-511a-bf86-d706d393ea32",
-      "label": "Hブロック 3列 9番",
+      "label": "H3列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3115,7 +3115,7 @@
     },
     {
       "id": "5c9d88f2-c6a4-5ffb-a9c3-0228e21510cd",
-      "label": "Hブロック 4列 9番",
+      "label": "H4列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3127,7 +3127,7 @@
     },
     {
       "id": "8fb3e64b-d911-5185-9248-53ba90dd608f",
-      "label": "Hブロック 5列 9番",
+      "label": "H5列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3139,7 +3139,7 @@
     },
     {
       "id": "9a7ef692-dc4d-5965-9532-9aba0184fcff",
-      "label": "Hブロック 6列 9番",
+      "label": "H6列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3151,7 +3151,7 @@
     },
     {
       "id": "59173fbe-137c-53dd-8af5-af67e899f330",
-      "label": "Hブロック 7列 9番",
+      "label": "H7列9番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3163,7 +3163,7 @@
     },
     {
       "id": "47acef23-f1e2-52a6-b2ba-2ae65b02e41f",
-      "label": "Hブロック 1列 10番",
+      "label": "H1列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3175,7 +3175,7 @@
     },
     {
       "id": "9adfcba0-b712-5380-befc-e99b705fa042",
-      "label": "Hブロック 2列 10番",
+      "label": "H2列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3187,7 +3187,7 @@
     },
     {
       "id": "8cb4f773-de2c-592e-830c-e1bcb3bc45e7",
-      "label": "Hブロック 3列 10番",
+      "label": "H3列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3199,7 +3199,7 @@
     },
     {
       "id": "b688f538-7910-5b47-b85c-46eeab178197",
-      "label": "Hブロック 4列 10番",
+      "label": "H4列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3211,7 +3211,7 @@
     },
     {
       "id": "ac8e71cf-c96e-5915-890e-5f01c1a99396",
-      "label": "Hブロック 5列 10番",
+      "label": "H5列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3223,7 +3223,7 @@
     },
     {
       "id": "ab311b75-25bf-587b-a7b4-2823f928bf83",
-      "label": "Hブロック 6列 10番",
+      "label": "H6列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3235,7 +3235,7 @@
     },
     {
       "id": "b0153f6a-6792-57fb-a60a-5b53428130bc",
-      "label": "Hブロック 7列 10番",
+      "label": "H7列10番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3247,7 +3247,7 @@
     },
     {
       "id": "53cffde0-b0f8-527e-ab74-dd158dda6d80",
-      "label": "Hブロック 1列 11番",
+      "label": "H1列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3259,7 +3259,7 @@
     },
     {
       "id": "7f4c4dcd-cae5-55c6-990b-bc7f5910e4c8",
-      "label": "Hブロック 2列 11番",
+      "label": "H2列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3271,7 +3271,7 @@
     },
     {
       "id": "88741edd-2648-5d5b-a196-2cc63caaff0f",
-      "label": "Hブロック 3列 11番",
+      "label": "H3列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3283,7 +3283,7 @@
     },
     {
       "id": "6fbac3ea-6864-54cb-a752-bc31e483cd91",
-      "label": "Hブロック 4列 11番",
+      "label": "H4列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3295,7 +3295,7 @@
     },
     {
       "id": "957a3ff6-7a91-545e-be33-34dc1f5b345a",
-      "label": "Hブロック 5列 11番",
+      "label": "H5列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3307,7 +3307,7 @@
     },
     {
       "id": "8fd3e68d-6f4c-575e-bc80-af72fc831f6e",
-      "label": "Hブロック 6列 11番",
+      "label": "H6列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3319,7 +3319,7 @@
     },
     {
       "id": "45b4d2d2-bd63-593e-8aee-4a787d112a65",
-      "label": "Hブロック 7列 11番",
+      "label": "H7列11番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3331,7 +3331,7 @@
     },
     {
       "id": "7a57e624-39df-517d-828c-7dbc724b2496",
-      "label": "Hブロック 1列 12番",
+      "label": "H1列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3343,7 +3343,7 @@
     },
     {
       "id": "25c637ea-c04b-53cc-b504-1e721ed8139e",
-      "label": "Hブロック 2列 12番",
+      "label": "H2列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3355,7 +3355,7 @@
     },
     {
       "id": "2e053486-2ff4-524e-b3c2-9892449a0b3a",
-      "label": "Hブロック 3列 12番",
+      "label": "H3列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3367,7 +3367,7 @@
     },
     {
       "id": "97732f98-43d1-5fcf-92a0-ca1c0a98d5bb",
-      "label": "Hブロック 4列 12番",
+      "label": "H4列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3379,7 +3379,7 @@
     },
     {
       "id": "52c9c381-9669-501c-97fc-ead604b78273",
-      "label": "Hブロック 5列 12番",
+      "label": "H5列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3391,7 +3391,7 @@
     },
     {
       "id": "4c9214ff-068b-546d-83a1-f97c834a55c5",
-      "label": "Hブロック 6列 12番",
+      "label": "H6列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3403,7 +3403,7 @@
     },
     {
       "id": "cab3b0a3-fc09-567a-a9e4-db3b0197a408",
-      "label": "Hブロック 7列 12番",
+      "label": "H7列12番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3415,7 +3415,7 @@
     },
     {
       "id": "f80fbe6a-0a37-58ff-8597-dc52c63f8bc5",
-      "label": "Hブロック 1列 13番",
+      "label": "H1列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3427,7 +3427,7 @@
     },
     {
       "id": "31e14683-8675-58a5-a48c-ad89393de69a",
-      "label": "Hブロック 2列 13番",
+      "label": "H2列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3439,7 +3439,7 @@
     },
     {
       "id": "0def9b7e-4366-5911-b8e7-09ddf19478e6",
-      "label": "Hブロック 3列 13番",
+      "label": "H3列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3451,7 +3451,7 @@
     },
     {
       "id": "c079ea77-c41e-59de-925b-68c48ff0be41",
-      "label": "Hブロック 4列 13番",
+      "label": "H4列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3463,7 +3463,7 @@
     },
     {
       "id": "de6c855b-6147-5f82-ae52-52be1603bab1",
-      "label": "Hブロック 5列 13番",
+      "label": "H5列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3475,7 +3475,7 @@
     },
     {
       "id": "c7d838d5-0525-5418-9087-bd658f0bfd16",
-      "label": "Hブロック 6列 13番",
+      "label": "H6列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3487,7 +3487,7 @@
     },
     {
       "id": "4c43ba21-f071-5d46-b4c0-d3cb1c37577c",
-      "label": "Hブロック 7列 13番",
+      "label": "H7列13番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3499,7 +3499,7 @@
     },
     {
       "id": "247ed4e0-9463-527e-aa00-19f5c73d7922",
-      "label": "Hブロック 1列 14番",
+      "label": "H1列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3511,7 +3511,7 @@
     },
     {
       "id": "3ad8cc55-87e4-5813-b2ad-8dba5a381c72",
-      "label": "Hブロック 2列 14番",
+      "label": "H2列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3523,7 +3523,7 @@
     },
     {
       "id": "38226fc5-dc3c-5c9d-b0a3-043d236e747e",
-      "label": "Hブロック 3列 14番",
+      "label": "H3列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3535,7 +3535,7 @@
     },
     {
       "id": "c6259f3e-1f2f-55c8-b152-84bbfd355596",
-      "label": "Hブロック 4列 14番",
+      "label": "H4列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3547,7 +3547,7 @@
     },
     {
       "id": "5f800210-55d8-5bd0-9e17-29172ab30f24",
-      "label": "Hブロック 5列 14番",
+      "label": "H5列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3559,7 +3559,7 @@
     },
     {
       "id": "726fdccb-9294-5901-8462-cab43fd7185f",
-      "label": "Hブロック 6列 14番",
+      "label": "H6列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3571,7 +3571,7 @@
     },
     {
       "id": "45faf804-c12e-5122-b83a-a2f0039b3fd1",
-      "label": "Hブロック 7列 14番",
+      "label": "H7列14番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3583,7 +3583,7 @@
     },
     {
       "id": "2edeaf16-5290-5d65-b7f2-a5cf2d58bf75",
-      "label": "Hブロック 1列 15番",
+      "label": "H1列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3595,7 +3595,7 @@
     },
     {
       "id": "37cb10fc-0f7e-5be9-8eb5-91357b633aa7",
-      "label": "Hブロック 2列 15番",
+      "label": "H2列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3607,7 +3607,7 @@
     },
     {
       "id": "50ea7741-c9ce-5e85-86d1-cdb5d103b2b3",
-      "label": "Hブロック 3列 15番",
+      "label": "H3列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3619,7 +3619,7 @@
     },
     {
       "id": "779fb720-6096-59b0-b483-c4594ed1df74",
-      "label": "Hブロック 4列 15番",
+      "label": "H4列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3631,7 +3631,7 @@
     },
     {
       "id": "c35ca6c7-d091-569a-bc6b-c90e9c4e255f",
-      "label": "Hブロック 5列 15番",
+      "label": "H5列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3643,7 +3643,7 @@
     },
     {
       "id": "a14a6777-8ff7-5731-9f44-535e396055df",
-      "label": "Hブロック 6列 15番",
+      "label": "H6列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3655,7 +3655,7 @@
     },
     {
       "id": "00d8fc1e-8950-562e-adfc-4209f38552fe",
-      "label": "Hブロック 7列 15番",
+      "label": "H7列15番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3667,7 +3667,7 @@
     },
     {
       "id": "d599f751-3302-5e45-86ea-d032eb4ce878",
-      "label": "Hブロック 1列 16番",
+      "label": "H1列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3679,7 +3679,7 @@
     },
     {
       "id": "1e0c635c-6ea0-59b2-9381-7cadf5c17a0f",
-      "label": "Hブロック 2列 16番",
+      "label": "H2列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3691,7 +3691,7 @@
     },
     {
       "id": "4750a873-5836-5c12-95de-bad618cff80c",
-      "label": "Hブロック 3列 16番",
+      "label": "H3列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3703,7 +3703,7 @@
     },
     {
       "id": "ea6f8d2d-c168-5e7d-b2ea-605344cd672a",
-      "label": "Hブロック 4列 16番",
+      "label": "H4列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3715,7 +3715,7 @@
     },
     {
       "id": "1c17c7b3-1438-540e-8453-47eb8baa2d37",
-      "label": "Hブロック 5列 16番",
+      "label": "H5列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3727,7 +3727,7 @@
     },
     {
       "id": "9d545089-36ef-5ff3-a726-459b939bb2a5",
-      "label": "Hブロック 6列 16番",
+      "label": "H6列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3739,7 +3739,7 @@
     },
     {
       "id": "2b37afca-be8e-5d95-ba41-36e47f210ba6",
-      "label": "Hブロック 7列 16番",
+      "label": "H7列16番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3751,7 +3751,7 @@
     },
     {
       "id": "30f14536-1ce1-5ebd-9863-ee2d1c55e0bd",
-      "label": "Hブロック 1列 17番",
+      "label": "H1列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3763,7 +3763,7 @@
     },
     {
       "id": "35b0611b-389a-5427-b010-2d1b24d7a841",
-      "label": "Hブロック 2列 17番",
+      "label": "H2列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3775,7 +3775,7 @@
     },
     {
       "id": "192d3e52-a8e4-5ceb-a7d1-5c1e52a6d85a",
-      "label": "Hブロック 3列 17番",
+      "label": "H3列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3787,7 +3787,7 @@
     },
     {
       "id": "0a4c97af-c5c1-55fb-ac30-69718264f25f",
-      "label": "Hブロック 4列 17番",
+      "label": "H4列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3799,7 +3799,7 @@
     },
     {
       "id": "7b60127e-c4a0-598e-be9b-09c9151979b9",
-      "label": "Hブロック 5列 17番",
+      "label": "H5列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3811,7 +3811,7 @@
     },
     {
       "id": "93bb9fa0-06e3-5237-89c6-ee8d39dfeff1",
-      "label": "Hブロック 6列 17番",
+      "label": "H6列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3823,7 +3823,7 @@
     },
     {
       "id": "b5714fe1-fdd9-514a-9663-c93ba62b5829",
-      "label": "Hブロック 7列 17番",
+      "label": "H7列17番",
       "section": "H",
       "zone": "floor1",
       "sellable": true,
@@ -3835,7 +3835,7 @@
     },
     {
       "id": "ad1f9211-b129-567f-9fb9-60768b570421",
-      "label": "Gブロック 1列 1番",
+      "label": "G1列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3847,7 +3847,7 @@
     },
     {
       "id": "072368a4-06b8-599a-85f7-0f7a3eee11d0",
-      "label": "Gブロック 2列 1番",
+      "label": "G2列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3859,7 +3859,7 @@
     },
     {
       "id": "35bee25b-be7a-59fc-a0fb-73b92818cecb",
-      "label": "Gブロック 3列 1番",
+      "label": "G3列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3871,7 +3871,7 @@
     },
     {
       "id": "93fcf2db-2e13-59fd-bb98-b25f85635f24",
-      "label": "Gブロック 4列 1番",
+      "label": "G4列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3883,7 +3883,7 @@
     },
     {
       "id": "8a78fd2d-44db-5553-ba44-e4e90f4c2d42",
-      "label": "Gブロック 5列 1番",
+      "label": "G5列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3895,7 +3895,7 @@
     },
     {
       "id": "dc79d5b2-142a-5acb-b863-0c9a6146e906",
-      "label": "Gブロック 6列 1番",
+      "label": "G6列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3907,7 +3907,7 @@
     },
     {
       "id": "7d0b67f8-bdfb-532a-999d-61e3439d7d43",
-      "label": "Gブロック 7列 1番",
+      "label": "G7列1番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3919,7 +3919,7 @@
     },
     {
       "id": "acd1ba72-af8c-5e2b-96fc-9dd2ea21fd4c",
-      "label": "Gブロック 1列 2番",
+      "label": "G1列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3931,7 +3931,7 @@
     },
     {
       "id": "83fb0afd-f7c4-534c-9c1f-b39112ecdd43",
-      "label": "Gブロック 2列 2番",
+      "label": "G2列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3943,7 +3943,7 @@
     },
     {
       "id": "5d8d8026-2b97-5c90-8e66-205d9a771cd3",
-      "label": "Gブロック 3列 2番",
+      "label": "G3列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3955,7 +3955,7 @@
     },
     {
       "id": "fb7dc01d-8222-51f2-bfe6-c10fb6ebbbfb",
-      "label": "Gブロック 4列 2番",
+      "label": "G4列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3967,7 +3967,7 @@
     },
     {
       "id": "c5e205fe-85f9-57d3-b43e-4fdc43dbbb1e",
-      "label": "Gブロック 5列 2番",
+      "label": "G5列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3979,7 +3979,7 @@
     },
     {
       "id": "3118f287-ca20-534c-9811-f487d3f30988",
-      "label": "Gブロック 6列 2番",
+      "label": "G6列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -3991,7 +3991,7 @@
     },
     {
       "id": "05ba9233-e466-5e35-98f5-c6b8110bde6c",
-      "label": "Gブロック 7列 2番",
+      "label": "G7列2番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4003,7 +4003,7 @@
     },
     {
       "id": "43fbd8af-6fc5-5418-933f-da3698a77227",
-      "label": "Gブロック 1列 3番",
+      "label": "G1列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4015,7 +4015,7 @@
     },
     {
       "id": "984a853e-e75a-55cb-809f-b6ce12092c0e",
-      "label": "Gブロック 2列 3番",
+      "label": "G2列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4027,7 +4027,7 @@
     },
     {
       "id": "8914f1bf-5ed4-58e5-82e4-48b940713c73",
-      "label": "Gブロック 3列 3番",
+      "label": "G3列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4039,7 +4039,7 @@
     },
     {
       "id": "3a96e13d-9645-50bf-a66a-2238344a57af",
-      "label": "Gブロック 4列 3番",
+      "label": "G4列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4051,7 +4051,7 @@
     },
     {
       "id": "571cc9ec-be49-5093-ba51-cc78d76d3a76",
-      "label": "Gブロック 5列 3番",
+      "label": "G5列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4063,7 +4063,7 @@
     },
     {
       "id": "7a04b7a3-3a48-54f3-86f1-948410043da6",
-      "label": "Gブロック 6列 3番",
+      "label": "G6列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4075,7 +4075,7 @@
     },
     {
       "id": "ae27afc0-7f61-5d8f-8590-3dee8f3e9c2c",
-      "label": "Gブロック 7列 3番",
+      "label": "G7列3番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4087,7 +4087,7 @@
     },
     {
       "id": "59fab849-ad70-5ceb-a20c-897899dcbb90",
-      "label": "Gブロック 1列 4番",
+      "label": "G1列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4099,7 +4099,7 @@
     },
     {
       "id": "1706a8e9-05a6-57ad-b708-27dc76ee1be0",
-      "label": "Gブロック 2列 4番",
+      "label": "G2列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4111,7 +4111,7 @@
     },
     {
       "id": "225f9e15-1d2e-5baa-8f88-33f005db1ec0",
-      "label": "Gブロック 3列 4番",
+      "label": "G3列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4123,7 +4123,7 @@
     },
     {
       "id": "4b778682-2b43-5762-a4a3-7bd9c36b7e3e",
-      "label": "Gブロック 4列 4番",
+      "label": "G4列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4135,7 +4135,7 @@
     },
     {
       "id": "b05e8ee9-18c7-5c70-9427-a0ad8939b2b9",
-      "label": "Gブロック 5列 4番",
+      "label": "G5列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4147,7 +4147,7 @@
     },
     {
       "id": "4a7112bd-c562-5470-9a44-b58fa31e727b",
-      "label": "Gブロック 6列 4番",
+      "label": "G6列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4159,7 +4159,7 @@
     },
     {
       "id": "43d883a3-b339-50c6-94fa-f13d704f959b",
-      "label": "Gブロック 7列 4番",
+      "label": "G7列4番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4171,7 +4171,7 @@
     },
     {
       "id": "a92ccc42-3269-5e73-ae7e-2182c417978f",
-      "label": "Gブロック 1列 5番",
+      "label": "G1列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4183,7 +4183,7 @@
     },
     {
       "id": "f3ad1437-c7dd-57ca-b6a1-c85324aabc19",
-      "label": "Gブロック 2列 5番",
+      "label": "G2列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4195,7 +4195,7 @@
     },
     {
       "id": "9123867b-fbac-5bcc-ad1b-c6abd8ffc0d6",
-      "label": "Gブロック 3列 5番",
+      "label": "G3列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4207,7 +4207,7 @@
     },
     {
       "id": "fe31bf66-d77d-553d-9386-44f4d13f5b4f",
-      "label": "Gブロック 4列 5番",
+      "label": "G4列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4219,7 +4219,7 @@
     },
     {
       "id": "69141791-ee23-5156-b5c9-6e3b2d006713",
-      "label": "Gブロック 5列 5番",
+      "label": "G5列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4231,7 +4231,7 @@
     },
     {
       "id": "71c96101-e3a6-5e6a-a9ba-3062e9ddbc6c",
-      "label": "Gブロック 6列 5番",
+      "label": "G6列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4243,7 +4243,7 @@
     },
     {
       "id": "b0f87793-91bf-53e3-bdce-e20801e270e5",
-      "label": "Gブロック 7列 5番",
+      "label": "G7列5番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4255,7 +4255,7 @@
     },
     {
       "id": "c6fa6d42-f580-5763-b38e-740cda01b014",
-      "label": "Gブロック 1列 6番",
+      "label": "G1列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4267,7 +4267,7 @@
     },
     {
       "id": "57478a13-3277-51d6-9b28-10f0c32e3d2d",
-      "label": "Gブロック 2列 6番",
+      "label": "G2列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4279,7 +4279,7 @@
     },
     {
       "id": "76aa1188-6242-5616-896f-92fd200d9dee",
-      "label": "Gブロック 3列 6番",
+      "label": "G3列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4291,7 +4291,7 @@
     },
     {
       "id": "756546b1-d124-5be7-9ffa-71835cd62bb1",
-      "label": "Gブロック 4列 6番",
+      "label": "G4列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4303,7 +4303,7 @@
     },
     {
       "id": "c43f15c5-84c4-5104-ac01-640d47df1d25",
-      "label": "Gブロック 5列 6番",
+      "label": "G5列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4315,7 +4315,7 @@
     },
     {
       "id": "4257187c-6a72-52ab-9c70-bb236354cf0e",
-      "label": "Gブロック 6列 6番",
+      "label": "G6列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4327,7 +4327,7 @@
     },
     {
       "id": "f7453b83-43e8-52bb-9114-a1ea5c45f33c",
-      "label": "Gブロック 7列 6番",
+      "label": "G7列6番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4339,7 +4339,7 @@
     },
     {
       "id": "6fbd31db-1ea4-5528-a341-fb25239c329e",
-      "label": "Gブロック 1列 7番",
+      "label": "G1列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4351,7 +4351,7 @@
     },
     {
       "id": "4a42cf5f-d38d-5efe-894a-5faed77a312d",
-      "label": "Gブロック 2列 7番",
+      "label": "G2列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4363,7 +4363,7 @@
     },
     {
       "id": "01daa415-c7d3-58b5-9eb2-43eaf4d545d0",
-      "label": "Gブロック 3列 7番",
+      "label": "G3列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4375,7 +4375,7 @@
     },
     {
       "id": "73852b67-0be1-54f6-886a-34b586ecf8e5",
-      "label": "Gブロック 4列 7番",
+      "label": "G4列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4387,7 +4387,7 @@
     },
     {
       "id": "df4dee35-c7a0-57a0-93ba-92474c815379",
-      "label": "Gブロック 5列 7番",
+      "label": "G5列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4399,7 +4399,7 @@
     },
     {
       "id": "cea41fb9-99ab-5121-b6c3-934b4d4b0ac8",
-      "label": "Gブロック 6列 7番",
+      "label": "G6列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4411,7 +4411,7 @@
     },
     {
       "id": "a0bbc974-d098-5ba6-9c91-df74ec7fa51f",
-      "label": "Gブロック 7列 7番",
+      "label": "G7列7番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4423,7 +4423,7 @@
     },
     {
       "id": "68bd31ca-e77d-5946-9ab7-174dc285648a",
-      "label": "Gブロック 1列 8番",
+      "label": "G1列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4435,7 +4435,7 @@
     },
     {
       "id": "2bfa64b0-5539-5175-a2a8-8e0aede9bbbb",
-      "label": "Gブロック 2列 8番",
+      "label": "G2列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4447,7 +4447,7 @@
     },
     {
       "id": "be58cd44-c938-57ec-9ce3-db52b92e66b0",
-      "label": "Gブロック 3列 8番",
+      "label": "G3列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4459,7 +4459,7 @@
     },
     {
       "id": "e0440c03-f4e1-5712-99f8-e8fc49d30401",
-      "label": "Gブロック 4列 8番",
+      "label": "G4列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4471,7 +4471,7 @@
     },
     {
       "id": "92e54f17-982f-5567-b251-aa927e73970c",
-      "label": "Gブロック 5列 8番",
+      "label": "G5列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4483,7 +4483,7 @@
     },
     {
       "id": "30a25909-a14b-5acb-a114-4723139f9282",
-      "label": "Gブロック 6列 8番",
+      "label": "G6列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4495,7 +4495,7 @@
     },
     {
       "id": "4dda8615-a4de-511c-85ec-90b991abe298",
-      "label": "Gブロック 7列 8番",
+      "label": "G7列8番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4507,7 +4507,7 @@
     },
     {
       "id": "df30c851-0993-5b03-b9fa-7ee9a4a37ba1",
-      "label": "Gブロック 1列 9番",
+      "label": "G1列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4519,7 +4519,7 @@
     },
     {
       "id": "2463e570-b93f-54a4-aad8-208cbae53c9b",
-      "label": "Gブロック 2列 9番",
+      "label": "G2列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4531,7 +4531,7 @@
     },
     {
       "id": "9e44b990-4765-5043-839e-7bb95bde9b4f",
-      "label": "Gブロック 3列 9番",
+      "label": "G3列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4543,7 +4543,7 @@
     },
     {
       "id": "2bb0177b-f159-5ff0-8a16-7c8e88295a11",
-      "label": "Gブロック 4列 9番",
+      "label": "G4列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4555,7 +4555,7 @@
     },
     {
       "id": "cdfa1ff1-83e1-5ff2-be39-f1b8a2c4019b",
-      "label": "Gブロック 5列 9番",
+      "label": "G5列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4567,7 +4567,7 @@
     },
     {
       "id": "9ff06fd9-511c-5e7d-8067-c6e9f30b0cd7",
-      "label": "Gブロック 6列 9番",
+      "label": "G6列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4579,7 +4579,7 @@
     },
     {
       "id": "37591f6b-1fdb-5dad-a6c8-468fbd44c147",
-      "label": "Gブロック 7列 9番",
+      "label": "G7列9番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4591,7 +4591,7 @@
     },
     {
       "id": "82e71cc4-8691-5c95-8771-385e2b7d0f6f",
-      "label": "Gブロック 1列 10番",
+      "label": "G1列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4603,7 +4603,7 @@
     },
     {
       "id": "0b08641a-1c94-5ddf-b4c3-4f427f5930fe",
-      "label": "Gブロック 2列 10番",
+      "label": "G2列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4615,7 +4615,7 @@
     },
     {
       "id": "80f48303-79d6-532e-9663-f4c256096e73",
-      "label": "Gブロック 3列 10番",
+      "label": "G3列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4627,7 +4627,7 @@
     },
     {
       "id": "d5961442-358a-59c6-bae2-237ab8c3d523",
-      "label": "Gブロック 4列 10番",
+      "label": "G4列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4639,7 +4639,7 @@
     },
     {
       "id": "6c07fe6a-280f-535c-b240-69407d75af62",
-      "label": "Gブロック 5列 10番",
+      "label": "G5列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4651,7 +4651,7 @@
     },
     {
       "id": "af420ae5-c4b5-5e03-a046-7aec7e419fd7",
-      "label": "Gブロック 6列 10番",
+      "label": "G6列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4663,7 +4663,7 @@
     },
     {
       "id": "64deee78-1411-50e1-9a9f-06a6015267e8",
-      "label": "Gブロック 7列 10番",
+      "label": "G7列10番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4675,7 +4675,7 @@
     },
     {
       "id": "ecd17fe3-839a-5917-aa03-32ad5b69a65e",
-      "label": "Gブロック 1列 11番",
+      "label": "G1列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4687,7 +4687,7 @@
     },
     {
       "id": "4fc2f384-7b8e-5414-9e7a-ce1bc91e40f6",
-      "label": "Gブロック 2列 11番",
+      "label": "G2列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4699,7 +4699,7 @@
     },
     {
       "id": "63d1e8f8-8652-544a-8ded-f48540c72be0",
-      "label": "Gブロック 3列 11番",
+      "label": "G3列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4711,7 +4711,7 @@
     },
     {
       "id": "9774fc32-18ac-5f17-a8ac-6380c16d325c",
-      "label": "Gブロック 4列 11番",
+      "label": "G4列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4723,7 +4723,7 @@
     },
     {
       "id": "e7a9981d-59c1-52b9-905b-25cd5532425f",
-      "label": "Gブロック 5列 11番",
+      "label": "G5列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4735,7 +4735,7 @@
     },
     {
       "id": "bf63dd5a-13fe-5777-a4c6-91caf60cec2a",
-      "label": "Gブロック 6列 11番",
+      "label": "G6列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4747,7 +4747,7 @@
     },
     {
       "id": "236e9b21-17ed-53a0-a11c-8c437a1e4e98",
-      "label": "Gブロック 7列 11番",
+      "label": "G7列11番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4759,7 +4759,7 @@
     },
     {
       "id": "3b9cabaa-d689-50a7-b36b-0557d50f396a",
-      "label": "Gブロック 1列 12番",
+      "label": "G1列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4771,7 +4771,7 @@
     },
     {
       "id": "2b63a5df-aeac-5c0a-8f48-ae37eb42d981",
-      "label": "Gブロック 2列 12番",
+      "label": "G2列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4783,7 +4783,7 @@
     },
     {
       "id": "f853c12a-967d-5ac8-8a5e-5fedbfc8f2e6",
-      "label": "Gブロック 3列 12番",
+      "label": "G3列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4795,7 +4795,7 @@
     },
     {
       "id": "10986577-848a-55be-8b38-df880cec422b",
-      "label": "Gブロック 4列 12番",
+      "label": "G4列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4807,7 +4807,7 @@
     },
     {
       "id": "c5d96b39-ec09-5022-a20a-2f1039605d3a",
-      "label": "Gブロック 5列 12番",
+      "label": "G5列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4819,7 +4819,7 @@
     },
     {
       "id": "b274dcbb-9c51-5fe7-8e9b-c42a09dfe5f8",
-      "label": "Gブロック 6列 12番",
+      "label": "G6列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4831,7 +4831,7 @@
     },
     {
       "id": "d46792a6-c83b-5451-b804-6fae350e09d1",
-      "label": "Gブロック 7列 12番",
+      "label": "G7列12番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4843,7 +4843,7 @@
     },
     {
       "id": "fd159717-e074-5e5d-9846-d9a253401381",
-      "label": "Gブロック 1列 13番",
+      "label": "G1列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4855,7 +4855,7 @@
     },
     {
       "id": "987eba35-75d6-5ee6-8709-0f01bc43534e",
-      "label": "Gブロック 2列 13番",
+      "label": "G2列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4867,7 +4867,7 @@
     },
     {
       "id": "9a0cdd57-5c6a-5d96-b194-c0f84ccb84fa",
-      "label": "Gブロック 3列 13番",
+      "label": "G3列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4879,7 +4879,7 @@
     },
     {
       "id": "6447c831-9d5c-5761-850b-691098de5139",
-      "label": "Gブロック 4列 13番",
+      "label": "G4列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4891,7 +4891,7 @@
     },
     {
       "id": "742bf0db-715f-5b03-9def-2b50d2e89b79",
-      "label": "Gブロック 5列 13番",
+      "label": "G5列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4903,7 +4903,7 @@
     },
     {
       "id": "6e9e8cd7-62c3-5634-8631-a5449ade0a45",
-      "label": "Gブロック 6列 13番",
+      "label": "G6列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4915,7 +4915,7 @@
     },
     {
       "id": "43aa0e22-0baa-5fb1-a6c8-5a7e7db8cdaf",
-      "label": "Gブロック 7列 13番",
+      "label": "G7列13番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4927,7 +4927,7 @@
     },
     {
       "id": "26e226ac-cc47-54c6-9764-55fe8604d79b",
-      "label": "Gブロック 1列 14番",
+      "label": "G1列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4939,7 +4939,7 @@
     },
     {
       "id": "d05382db-bf81-5c93-9fcf-cc34b6a9504a",
-      "label": "Gブロック 2列 14番",
+      "label": "G2列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4951,7 +4951,7 @@
     },
     {
       "id": "17c550e3-d07e-5d78-b2bf-cfd399844973",
-      "label": "Gブロック 3列 14番",
+      "label": "G3列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4963,7 +4963,7 @@
     },
     {
       "id": "25696c41-5cb7-5866-bbe4-d1997280d276",
-      "label": "Gブロック 4列 14番",
+      "label": "G4列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4975,7 +4975,7 @@
     },
     {
       "id": "b342256b-3210-5c98-ab38-2cec3e0b3c3b",
-      "label": "Gブロック 5列 14番",
+      "label": "G5列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4987,7 +4987,7 @@
     },
     {
       "id": "5ae74dd0-d723-5af3-afe2-6be2ac6a9dda",
-      "label": "Gブロック 6列 14番",
+      "label": "G6列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -4999,7 +4999,7 @@
     },
     {
       "id": "44a61574-bc5e-5b86-af3e-d5bbe764e709",
-      "label": "Gブロック 7列 14番",
+      "label": "G7列14番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5011,7 +5011,7 @@
     },
     {
       "id": "358acb77-671c-5f52-89cd-2ebe4c7871a0",
-      "label": "Gブロック 1列 15番",
+      "label": "G1列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5023,7 +5023,7 @@
     },
     {
       "id": "af96a4cb-ef78-56c6-b833-531de47cb8f4",
-      "label": "Gブロック 2列 15番",
+      "label": "G2列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5035,7 +5035,7 @@
     },
     {
       "id": "ffb5bccd-32a2-5cf7-9bf3-f5e83441db3b",
-      "label": "Gブロック 3列 15番",
+      "label": "G3列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5047,7 +5047,7 @@
     },
     {
       "id": "7afb4b43-5e7e-5945-9a8c-70bdda78b38c",
-      "label": "Gブロック 4列 15番",
+      "label": "G4列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5059,7 +5059,7 @@
     },
     {
       "id": "6626613a-fc0d-5da1-8678-3282215b50bc",
-      "label": "Gブロック 5列 15番",
+      "label": "G5列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5071,7 +5071,7 @@
     },
     {
       "id": "13994a13-e433-507b-be65-cce9c8f5cfd6",
-      "label": "Gブロック 6列 15番",
+      "label": "G6列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5083,7 +5083,7 @@
     },
     {
       "id": "dd0d01b2-5bfd-5de8-8812-0a019d3c3d7d",
-      "label": "Gブロック 7列 15番",
+      "label": "G7列15番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5095,7 +5095,7 @@
     },
     {
       "id": "fd2d4baf-a364-51f9-bab8-d7c0c76d1e9f",
-      "label": "Gブロック 1列 16番",
+      "label": "G1列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5107,7 +5107,7 @@
     },
     {
       "id": "f99153c4-1bba-5d23-a01e-8fdb21ad9679",
-      "label": "Gブロック 2列 16番",
+      "label": "G2列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5119,7 +5119,7 @@
     },
     {
       "id": "433af2bf-405a-5790-9d8f-274c8a90ecba",
-      "label": "Gブロック 3列 16番",
+      "label": "G3列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5131,7 +5131,7 @@
     },
     {
       "id": "f089484f-209b-5e7f-b13e-54492fb32e42",
-      "label": "Gブロック 4列 16番",
+      "label": "G4列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5143,7 +5143,7 @@
     },
     {
       "id": "e3587f0a-e397-582a-ae97-60fa2424789a",
-      "label": "Gブロック 5列 16番",
+      "label": "G5列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5155,7 +5155,7 @@
     },
     {
       "id": "4e28004f-2ac0-5464-81ce-7d4c35c65f46",
-      "label": "Gブロック 6列 16番",
+      "label": "G6列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5167,7 +5167,7 @@
     },
     {
       "id": "6008b6b4-4f71-5998-9c4c-f6b579eb421c",
-      "label": "Gブロック 7列 16番",
+      "label": "G7列16番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5179,7 +5179,7 @@
     },
     {
       "id": "cf29cdae-4987-5b9e-af4f-0613fa65fd6b",
-      "label": "Gブロック 1列 17番",
+      "label": "G1列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5191,7 +5191,7 @@
     },
     {
       "id": "77dde7f3-f2af-5e33-af3b-3e51f2439519",
-      "label": "Gブロック 2列 17番",
+      "label": "G2列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5203,7 +5203,7 @@
     },
     {
       "id": "7c3d4a40-1ba6-531a-aaae-006296baf5e5",
-      "label": "Gブロック 3列 17番",
+      "label": "G3列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5215,7 +5215,7 @@
     },
     {
       "id": "9b85bf20-4c1b-5102-90b1-674d1deb6221",
-      "label": "Gブロック 4列 17番",
+      "label": "G4列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5227,7 +5227,7 @@
     },
     {
       "id": "94e4f3b3-0076-5e26-ae4c-41398cb265be",
-      "label": "Gブロック 5列 17番",
+      "label": "G5列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5239,7 +5239,7 @@
     },
     {
       "id": "a437a5f7-e3a2-5ddb-b926-d52c5d9ec876",
-      "label": "Gブロック 6列 17番",
+      "label": "G6列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5251,7 +5251,7 @@
     },
     {
       "id": "abde8b46-8bbb-5e4a-b714-fbba7e4df931",
-      "label": "Gブロック 7列 17番",
+      "label": "G7列17番",
       "section": "G",
       "zone": "floor1",
       "sellable": true,
@@ -5263,7 +5263,7 @@
     },
     {
       "id": "8a44fa1c-c056-5e8e-a0c4-a4e1258a0545",
-      "label": "Fブロック 1列 1番",
+      "label": "F1列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5275,7 +5275,7 @@
     },
     {
       "id": "22197ef2-6ad0-502e-bcc2-3e04d68f5949",
-      "label": "Fブロック 2列 1番",
+      "label": "F2列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5287,7 +5287,7 @@
     },
     {
       "id": "190e905e-0a3a-55dc-aec7-70b1bdae994e",
-      "label": "Fブロック 3列 1番",
+      "label": "F3列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5299,7 +5299,7 @@
     },
     {
       "id": "0426ddff-27ba-552a-a1cb-762dcb34cbc4",
-      "label": "Fブロック 4列 1番",
+      "label": "F4列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5311,7 +5311,7 @@
     },
     {
       "id": "9b532d60-b583-529b-9479-d22f65367259",
-      "label": "Fブロック 5列 1番",
+      "label": "F5列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5323,7 +5323,7 @@
     },
     {
       "id": "97c69b74-361e-5079-83ea-4b00ab3f58ec",
-      "label": "Fブロック 6列 1番",
+      "label": "F6列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5335,7 +5335,7 @@
     },
     {
       "id": "8fb75b8d-75d2-5ed1-b0aa-df3d971268cd",
-      "label": "Fブロック 7列 1番",
+      "label": "F7列1番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5347,7 +5347,7 @@
     },
     {
       "id": "1b66582a-df88-5db9-98c6-5423330a7556",
-      "label": "Fブロック 1列 2番",
+      "label": "F1列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5359,7 +5359,7 @@
     },
     {
       "id": "9e1af177-630b-5cfc-964d-84217c4bbfe2",
-      "label": "Fブロック 2列 2番",
+      "label": "F2列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5371,7 +5371,7 @@
     },
     {
       "id": "8e7d7493-3475-5b7c-9b10-e58d70acd7fa",
-      "label": "Fブロック 3列 2番",
+      "label": "F3列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5383,7 +5383,7 @@
     },
     {
       "id": "d384ce65-6553-5dba-9517-179f99be4059",
-      "label": "Fブロック 4列 2番",
+      "label": "F4列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5395,7 +5395,7 @@
     },
     {
       "id": "58b2f5b8-3876-573a-9227-64f940beef3d",
-      "label": "Fブロック 5列 2番",
+      "label": "F5列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5407,7 +5407,7 @@
     },
     {
       "id": "04e3bde8-d589-5819-808d-8cbbe80a6213",
-      "label": "Fブロック 6列 2番",
+      "label": "F6列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5419,7 +5419,7 @@
     },
     {
       "id": "fe6ec05c-a806-5ec6-b153-97747a93f336",
-      "label": "Fブロック 7列 2番",
+      "label": "F7列2番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5431,7 +5431,7 @@
     },
     {
       "id": "7b5e77a1-9df3-5250-baee-927b1aa5dada",
-      "label": "Fブロック 1列 3番",
+      "label": "F1列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5443,7 +5443,7 @@
     },
     {
       "id": "46c6f626-50a0-5b7b-9f20-c0eaedcdafc8",
-      "label": "Fブロック 2列 3番",
+      "label": "F2列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5455,7 +5455,7 @@
     },
     {
       "id": "3679c060-7673-587d-a69b-c1b60c82b9a1",
-      "label": "Fブロック 3列 3番",
+      "label": "F3列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5467,7 +5467,7 @@
     },
     {
       "id": "e0775cff-c448-541f-b7ae-32ff19a00446",
-      "label": "Fブロック 4列 3番",
+      "label": "F4列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5479,7 +5479,7 @@
     },
     {
       "id": "5886f7d6-f182-50ca-af6b-df931072366e",
-      "label": "Fブロック 5列 3番",
+      "label": "F5列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5491,7 +5491,7 @@
     },
     {
       "id": "bd253210-43e6-5b41-b450-2238fd5e7ad2",
-      "label": "Fブロック 6列 3番",
+      "label": "F6列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5503,7 +5503,7 @@
     },
     {
       "id": "10785ce3-0a54-55a7-a9a1-02eef9763cfa",
-      "label": "Fブロック 7列 3番",
+      "label": "F7列3番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5515,7 +5515,7 @@
     },
     {
       "id": "77dc35a8-d645-511c-9d30-2cbe4289c947",
-      "label": "Fブロック 1列 4番",
+      "label": "F1列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5527,7 +5527,7 @@
     },
     {
       "id": "27df3eae-2876-5166-a74d-dd6bf22ff699",
-      "label": "Fブロック 2列 4番",
+      "label": "F2列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5539,7 +5539,7 @@
     },
     {
       "id": "9f6e56db-6821-5811-a89c-346c6027ddf4",
-      "label": "Fブロック 3列 4番",
+      "label": "F3列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5551,7 +5551,7 @@
     },
     {
       "id": "5551c63e-eb28-56b7-9a50-48398029e7d5",
-      "label": "Fブロック 4列 4番",
+      "label": "F4列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5563,7 +5563,7 @@
     },
     {
       "id": "f6f622c4-a064-5fea-8920-a26ffbfff873",
-      "label": "Fブロック 5列 4番",
+      "label": "F5列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5575,7 +5575,7 @@
     },
     {
       "id": "ba8f5a1b-88ac-5c04-9f5c-2a3d24f21b22",
-      "label": "Fブロック 6列 4番",
+      "label": "F6列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5587,7 +5587,7 @@
     },
     {
       "id": "777a1788-8bbb-59b8-ac3a-a7f7f829f3ce",
-      "label": "Fブロック 7列 4番",
+      "label": "F7列4番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5599,7 +5599,7 @@
     },
     {
       "id": "f1e2cbca-333c-568b-9081-5dca7f2bff94",
-      "label": "Fブロック 1列 5番",
+      "label": "F1列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5611,7 +5611,7 @@
     },
     {
       "id": "1055f37d-7a66-5ad2-ac7a-b292b5447cc0",
-      "label": "Fブロック 2列 5番",
+      "label": "F2列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5623,7 +5623,7 @@
     },
     {
       "id": "ba42cb65-fbbe-5870-9e44-ae013d1db07d",
-      "label": "Fブロック 3列 5番",
+      "label": "F3列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5635,7 +5635,7 @@
     },
     {
       "id": "53f87519-2e52-5604-a3bf-e3cf04436ece",
-      "label": "Fブロック 4列 5番",
+      "label": "F4列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5647,7 +5647,7 @@
     },
     {
       "id": "4261675f-a8c9-5d95-9e42-d40e1ad4102d",
-      "label": "Fブロック 5列 5番",
+      "label": "F5列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5659,7 +5659,7 @@
     },
     {
       "id": "a58f829c-e914-5ec9-a586-9a30eae1173b",
-      "label": "Fブロック 6列 5番",
+      "label": "F6列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5671,7 +5671,7 @@
     },
     {
       "id": "35f41295-e8b4-517a-816e-24cd405c7aa5",
-      "label": "Fブロック 7列 5番",
+      "label": "F7列5番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5683,7 +5683,7 @@
     },
     {
       "id": "33452f78-14b1-5f45-8871-7504b51a4a10",
-      "label": "Fブロック 1列 6番",
+      "label": "F1列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5695,7 +5695,7 @@
     },
     {
       "id": "fc238049-b0d3-5d24-a361-d5493d4be2e4",
-      "label": "Fブロック 2列 6番",
+      "label": "F2列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5707,7 +5707,7 @@
     },
     {
       "id": "49cff438-5f25-54e5-9896-30c26d63a875",
-      "label": "Fブロック 3列 6番",
+      "label": "F3列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5719,7 +5719,7 @@
     },
     {
       "id": "b643ebbd-5dee-566a-89fe-26af0884aaed",
-      "label": "Fブロック 4列 6番",
+      "label": "F4列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5731,7 +5731,7 @@
     },
     {
       "id": "b821d513-4d9e-5ad5-b035-7395569a11a0",
-      "label": "Fブロック 5列 6番",
+      "label": "F5列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5743,7 +5743,7 @@
     },
     {
       "id": "21f7b9f8-fe21-5f79-bb9d-991cd95def6d",
-      "label": "Fブロック 6列 6番",
+      "label": "F6列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5755,7 +5755,7 @@
     },
     {
       "id": "e4da7e8d-9c1b-5748-bbad-f897c9fa69b0",
-      "label": "Fブロック 7列 6番",
+      "label": "F7列6番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5767,7 +5767,7 @@
     },
     {
       "id": "0fa4e5fb-98b3-526a-8632-fc2204c5cb21",
-      "label": "Fブロック 1列 7番",
+      "label": "F1列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5779,7 +5779,7 @@
     },
     {
       "id": "d2268ae7-23c3-5b5a-bbc7-268add82dfd6",
-      "label": "Fブロック 2列 7番",
+      "label": "F2列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5791,7 +5791,7 @@
     },
     {
       "id": "59434b22-5329-52d3-b62e-f4156647a041",
-      "label": "Fブロック 3列 7番",
+      "label": "F3列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5803,7 +5803,7 @@
     },
     {
       "id": "9ebfb32c-e930-55b3-9d50-008844fe9011",
-      "label": "Fブロック 4列 7番",
+      "label": "F4列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5815,7 +5815,7 @@
     },
     {
       "id": "44ec912b-23c3-5daf-9384-75f886079be0",
-      "label": "Fブロック 5列 7番",
+      "label": "F5列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5827,7 +5827,7 @@
     },
     {
       "id": "dcb9df7d-22c3-5eb6-8642-b0a55dd75e33",
-      "label": "Fブロック 6列 7番",
+      "label": "F6列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5839,7 +5839,7 @@
     },
     {
       "id": "4a360be4-876f-5182-9e12-55d6613e0b11",
-      "label": "Fブロック 7列 7番",
+      "label": "F7列7番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5851,7 +5851,7 @@
     },
     {
       "id": "8123d553-177c-55f2-adcb-7410b1d9dbb3",
-      "label": "Fブロック 1列 8番",
+      "label": "F1列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5863,7 +5863,7 @@
     },
     {
       "id": "f5d508a5-f017-52fb-b225-beb7a25fa8b1",
-      "label": "Fブロック 2列 8番",
+      "label": "F2列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5875,7 +5875,7 @@
     },
     {
       "id": "9edb5b76-56fc-51da-b78e-80121f8f0998",
-      "label": "Fブロック 3列 8番",
+      "label": "F3列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5887,7 +5887,7 @@
     },
     {
       "id": "79a1f25e-b545-511e-8ff5-23d6285799c1",
-      "label": "Fブロック 4列 8番",
+      "label": "F4列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5899,7 +5899,7 @@
     },
     {
       "id": "0d679f2f-fa2c-5d10-bff6-ef54810e0ee5",
-      "label": "Fブロック 5列 8番",
+      "label": "F5列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5911,7 +5911,7 @@
     },
     {
       "id": "71b48750-d0a2-5a31-96d5-43244ae59892",
-      "label": "Fブロック 6列 8番",
+      "label": "F6列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5923,7 +5923,7 @@
     },
     {
       "id": "f402f228-1645-59eb-a65c-df5377587f09",
-      "label": "Fブロック 7列 8番",
+      "label": "F7列8番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5935,7 +5935,7 @@
     },
     {
       "id": "b0e95285-b825-58fd-b051-9f7b2de3984c",
-      "label": "Fブロック 1列 9番",
+      "label": "F1列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5947,7 +5947,7 @@
     },
     {
       "id": "0ae4e702-d16a-58cc-bae9-93935547878a",
-      "label": "Fブロック 2列 9番",
+      "label": "F2列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5959,7 +5959,7 @@
     },
     {
       "id": "4a19fd78-0964-5d45-8246-c3239e209add",
-      "label": "Fブロック 3列 9番",
+      "label": "F3列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5971,7 +5971,7 @@
     },
     {
       "id": "62475446-7d7d-5ab0-8766-6abb428b3fb8",
-      "label": "Fブロック 4列 9番",
+      "label": "F4列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5983,7 +5983,7 @@
     },
     {
       "id": "081589c1-a264-595f-ba99-587402771536",
-      "label": "Fブロック 5列 9番",
+      "label": "F5列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -5995,7 +5995,7 @@
     },
     {
       "id": "5897dbb7-6c6e-5478-b44c-1d44e3547997",
-      "label": "Fブロック 6列 9番",
+      "label": "F6列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6007,7 +6007,7 @@
     },
     {
       "id": "f84405f3-a3bf-5923-8080-0c9038f41e3d",
-      "label": "Fブロック 7列 9番",
+      "label": "F7列9番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6019,7 +6019,7 @@
     },
     {
       "id": "90c911f5-434e-5639-8117-9c7763fdcbce",
-      "label": "Fブロック 1列 10番",
+      "label": "F1列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6031,7 +6031,7 @@
     },
     {
       "id": "2769c912-5390-5360-90b3-74320cb428ce",
-      "label": "Fブロック 2列 10番",
+      "label": "F2列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6043,7 +6043,7 @@
     },
     {
       "id": "ed9d06fe-70d8-54e5-a116-9b21de81a866",
-      "label": "Fブロック 3列 10番",
+      "label": "F3列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6055,7 +6055,7 @@
     },
     {
       "id": "45aa8ecc-ad96-5097-86e9-6c89dfc7bccc",
-      "label": "Fブロック 4列 10番",
+      "label": "F4列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6067,7 +6067,7 @@
     },
     {
       "id": "361d91a8-b608-5d48-ac46-32ec205d7e0a",
-      "label": "Fブロック 5列 10番",
+      "label": "F5列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6079,7 +6079,7 @@
     },
     {
       "id": "c28a33ac-5c18-5c6d-8a3a-48607f33abee",
-      "label": "Fブロック 6列 10番",
+      "label": "F6列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6091,7 +6091,7 @@
     },
     {
       "id": "fb19e86e-81f8-5aaf-b805-bb0701bab291",
-      "label": "Fブロック 7列 10番",
+      "label": "F7列10番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6103,7 +6103,7 @@
     },
     {
       "id": "240e43b7-7205-5590-af21-3906b7737ac7",
-      "label": "Fブロック 1列 11番",
+      "label": "F1列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6115,7 +6115,7 @@
     },
     {
       "id": "fa7a1ee8-7004-543f-b6f3-373cfd561e58",
-      "label": "Fブロック 2列 11番",
+      "label": "F2列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6127,7 +6127,7 @@
     },
     {
       "id": "5bf3b376-9c89-53a1-bd03-f2a2515ac7b1",
-      "label": "Fブロック 3列 11番",
+      "label": "F3列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6139,7 +6139,7 @@
     },
     {
       "id": "10bd61b5-faf8-53f3-9b5c-2ea78f6c1a28",
-      "label": "Fブロック 4列 11番",
+      "label": "F4列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6151,7 +6151,7 @@
     },
     {
       "id": "9ccf4a83-3a51-59df-bf3f-59616d938992",
-      "label": "Fブロック 5列 11番",
+      "label": "F5列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6163,7 +6163,7 @@
     },
     {
       "id": "ba33f559-281e-5b28-9e4f-664652cf8948",
-      "label": "Fブロック 6列 11番",
+      "label": "F6列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6175,7 +6175,7 @@
     },
     {
       "id": "b59c59fe-122a-52a7-a988-86bd2b174345",
-      "label": "Fブロック 7列 11番",
+      "label": "F7列11番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6187,7 +6187,7 @@
     },
     {
       "id": "a9438dd9-86a7-556b-994c-d7fd94a4e633",
-      "label": "Fブロック 1列 12番",
+      "label": "F1列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6199,7 +6199,7 @@
     },
     {
       "id": "c6b2db82-e9db-5d67-b4de-bc6247b0e123",
-      "label": "Fブロック 2列 12番",
+      "label": "F2列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6211,7 +6211,7 @@
     },
     {
       "id": "0a5e345e-88f6-5364-97c1-912fb157b31a",
-      "label": "Fブロック 3列 12番",
+      "label": "F3列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6223,7 +6223,7 @@
     },
     {
       "id": "20d77379-65a3-5e5e-b7be-b5ab22308b5a",
-      "label": "Fブロック 4列 12番",
+      "label": "F4列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6235,7 +6235,7 @@
     },
     {
       "id": "373f6313-846f-52fd-bc65-f2b161151116",
-      "label": "Fブロック 5列 12番",
+      "label": "F5列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6247,7 +6247,7 @@
     },
     {
       "id": "c73cde23-d263-5963-a4ba-ab07a7da2342",
-      "label": "Fブロック 6列 12番",
+      "label": "F6列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6259,7 +6259,7 @@
     },
     {
       "id": "a231c4e2-188f-527a-972b-9b7792d2ae25",
-      "label": "Fブロック 7列 12番",
+      "label": "F7列12番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6271,7 +6271,7 @@
     },
     {
       "id": "72f0e2f3-5495-554c-adb4-0b2c0cf0adbf",
-      "label": "Fブロック 1列 13番",
+      "label": "F1列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6283,7 +6283,7 @@
     },
     {
       "id": "6041c2a9-2aee-559b-8c32-aaddbf9e83d6",
-      "label": "Fブロック 2列 13番",
+      "label": "F2列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6295,7 +6295,7 @@
     },
     {
       "id": "b0c5fcff-0ec8-58ab-9afd-83615438c7d9",
-      "label": "Fブロック 3列 13番",
+      "label": "F3列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6307,7 +6307,7 @@
     },
     {
       "id": "f417b3e2-3902-5b16-97bb-bb2133a4ac46",
-      "label": "Fブロック 4列 13番",
+      "label": "F4列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6319,7 +6319,7 @@
     },
     {
       "id": "b0862abe-a789-5319-8af8-54b02c09872d",
-      "label": "Fブロック 5列 13番",
+      "label": "F5列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6331,7 +6331,7 @@
     },
     {
       "id": "ce0f4ad8-6f45-5a0d-b3eb-fe1c10467fc3",
-      "label": "Fブロック 6列 13番",
+      "label": "F6列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6343,7 +6343,7 @@
     },
     {
       "id": "1e684b26-33fa-578b-9a9d-5f2a3549c1fe",
-      "label": "Fブロック 7列 13番",
+      "label": "F7列13番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6355,7 +6355,7 @@
     },
     {
       "id": "4fa650ac-02b1-50a4-97bf-cf4edb228bcb",
-      "label": "Fブロック 1列 14番",
+      "label": "F1列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6367,7 +6367,7 @@
     },
     {
       "id": "05e3a451-7a93-5377-a667-d90ee0a535fb",
-      "label": "Fブロック 2列 14番",
+      "label": "F2列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6379,7 +6379,7 @@
     },
     {
       "id": "7fdc4a6f-24f6-5959-844a-06dbf82aa013",
-      "label": "Fブロック 3列 14番",
+      "label": "F3列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6391,7 +6391,7 @@
     },
     {
       "id": "8ff959da-c42e-577f-83dd-5ecd2c94fb06",
-      "label": "Fブロック 4列 14番",
+      "label": "F4列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6403,7 +6403,7 @@
     },
     {
       "id": "52718fb0-3c79-5cd9-91e8-11520ca8ba48",
-      "label": "Fブロック 5列 14番",
+      "label": "F5列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6415,7 +6415,7 @@
     },
     {
       "id": "73b3978e-f156-5f2b-9b58-eacfc2581424",
-      "label": "Fブロック 6列 14番",
+      "label": "F6列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6427,7 +6427,7 @@
     },
     {
       "id": "361f3b21-92ab-50b2-b457-07b411de3cf8",
-      "label": "Fブロック 7列 14番",
+      "label": "F7列14番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6439,7 +6439,7 @@
     },
     {
       "id": "4511f5e7-3b89-5eaf-bed3-41277d597829",
-      "label": "Fブロック 1列 15番",
+      "label": "F1列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6451,7 +6451,7 @@
     },
     {
       "id": "c2049f73-7f97-5c22-bd1a-6bcbd8636267",
-      "label": "Fブロック 2列 15番",
+      "label": "F2列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6463,7 +6463,7 @@
     },
     {
       "id": "6a3fc613-f3bb-50f5-8155-9f672ed88b4f",
-      "label": "Fブロック 3列 15番",
+      "label": "F3列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6475,7 +6475,7 @@
     },
     {
       "id": "53259c7b-f9f4-59d9-bf1a-04512589151d",
-      "label": "Fブロック 4列 15番",
+      "label": "F4列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6487,7 +6487,7 @@
     },
     {
       "id": "9e7d72f3-3a79-5a3b-9024-52c4af871c10",
-      "label": "Fブロック 5列 15番",
+      "label": "F5列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6499,7 +6499,7 @@
     },
     {
       "id": "d374ee0f-6dff-56fa-889c-be9d1db0991f",
-      "label": "Fブロック 6列 15番",
+      "label": "F6列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6511,7 +6511,7 @@
     },
     {
       "id": "ce2529f4-40ed-5134-9c99-0b8f439d2826",
-      "label": "Fブロック 7列 15番",
+      "label": "F7列15番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6523,7 +6523,7 @@
     },
     {
       "id": "1aa60ecf-5a14-5707-8278-d91ef0955c24",
-      "label": "Fブロック 1列 16番",
+      "label": "F1列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6535,7 +6535,7 @@
     },
     {
       "id": "2321d812-f144-5faa-a266-baee0c57db2d",
-      "label": "Fブロック 2列 16番",
+      "label": "F2列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6547,7 +6547,7 @@
     },
     {
       "id": "2e4b1531-b6fc-5d0a-818b-dcc5168daad6",
-      "label": "Fブロック 3列 16番",
+      "label": "F3列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6559,7 +6559,7 @@
     },
     {
       "id": "f7c4ce11-5033-5f5e-a2c2-c2c5d3c4c9ee",
-      "label": "Fブロック 4列 16番",
+      "label": "F4列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6571,7 +6571,7 @@
     },
     {
       "id": "33c5bd72-7e1b-5bbb-8637-14561230b937",
-      "label": "Fブロック 5列 16番",
+      "label": "F5列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6583,7 +6583,7 @@
     },
     {
       "id": "cd33b224-0fea-516a-8e3d-3bfc30e230a9",
-      "label": "Fブロック 6列 16番",
+      "label": "F6列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6595,7 +6595,7 @@
     },
     {
       "id": "b98ea1e0-7b0f-566a-a44f-c5d604f3e34f",
-      "label": "Fブロック 7列 16番",
+      "label": "F7列16番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6607,7 +6607,7 @@
     },
     {
       "id": "842bf465-1f5f-5fa2-ab27-c9726ff071d6",
-      "label": "Fブロック 1列 17番",
+      "label": "F1列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6619,7 +6619,7 @@
     },
     {
       "id": "79eef2e6-b8b7-5327-bc98-3b1f1915dd5f",
-      "label": "Fブロック 2列 17番",
+      "label": "F2列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6631,7 +6631,7 @@
     },
     {
       "id": "27efbc3e-f3ad-551c-82f7-adf30017ce4a",
-      "label": "Fブロック 3列 17番",
+      "label": "F3列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6643,7 +6643,7 @@
     },
     {
       "id": "fae20c3f-122f-5461-98b6-45d8c0a3f7d9",
-      "label": "Fブロック 4列 17番",
+      "label": "F4列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6655,7 +6655,7 @@
     },
     {
       "id": "bcc0acb8-2f9b-5765-a106-6ae10bd6c0af",
-      "label": "Fブロック 5列 17番",
+      "label": "F5列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6667,7 +6667,7 @@
     },
     {
       "id": "0b379af1-fccd-5cd5-aa10-4e6f6a7627fa",
-      "label": "Fブロック 6列 17番",
+      "label": "F6列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6679,7 +6679,7 @@
     },
     {
       "id": "7eeca2cf-506b-5754-90ca-e795458968fa",
-      "label": "Fブロック 7列 17番",
+      "label": "F7列17番",
       "section": "F",
       "zone": "floor1",
       "sellable": true,
@@ -6691,7 +6691,7 @@
     },
     {
       "id": "ca35f0b2-a827-59f0-bb83-8eae5f5988fd",
-      "label": "Cブロック 1列 7番",
+      "label": "C1列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6703,7 +6703,7 @@
     },
     {
       "id": "92df6676-9559-5ab8-8cc6-0255b1c16fd2",
-      "label": "Cブロック 1列 6番",
+      "label": "C1列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6715,7 +6715,7 @@
     },
     {
       "id": "7ea352c5-1e0a-506d-83a4-2fce37e9b8fc",
-      "label": "Cブロック 1列 5番",
+      "label": "C1列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6727,7 +6727,7 @@
     },
     {
       "id": "171c3ee8-5d71-597b-b70e-d599a3d8f1d1",
-      "label": "Cブロック 1列 4番",
+      "label": "C1列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6739,7 +6739,7 @@
     },
     {
       "id": "0d94e28b-65d7-5619-a569-17ccdb65228b",
-      "label": "Cブロック 1列 3番",
+      "label": "C1列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6751,7 +6751,7 @@
     },
     {
       "id": "4ce7697f-8837-5bc4-9f6d-785299f8c33b",
-      "label": "Cブロック 1列 2番",
+      "label": "C1列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6763,7 +6763,7 @@
     },
     {
       "id": "fb238def-c486-52fc-9967-7e6f1534ee12",
-      "label": "Cブロック 1列 1番",
+      "label": "C1列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6775,7 +6775,7 @@
     },
     {
       "id": "9dde9c52-b2de-5352-8aca-b8342aa6f156",
-      "label": "Cブロック 2列 7番",
+      "label": "C2列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6787,7 +6787,7 @@
     },
     {
       "id": "a32fec8f-f4a7-507c-b640-146377b7a6e0",
-      "label": "Cブロック 2列 6番",
+      "label": "C2列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6799,7 +6799,7 @@
     },
     {
       "id": "77a99b69-b2e7-53a3-aad3-157c42096a55",
-      "label": "Cブロック 2列 5番",
+      "label": "C2列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6811,7 +6811,7 @@
     },
     {
       "id": "c3e9f629-997b-5730-bc9c-9d6431537053",
-      "label": "Cブロック 2列 4番",
+      "label": "C2列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6823,7 +6823,7 @@
     },
     {
       "id": "84a1a847-0837-53c7-ba8e-17a12dfde721",
-      "label": "Cブロック 2列 3番",
+      "label": "C2列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6835,7 +6835,7 @@
     },
     {
       "id": "c8626c64-6fe8-539d-896b-b26fee55454b",
-      "label": "Cブロック 2列 2番",
+      "label": "C2列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6847,7 +6847,7 @@
     },
     {
       "id": "bf76d6c5-5f55-52d2-845b-46c1efd9b330",
-      "label": "Cブロック 2列 1番",
+      "label": "C2列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6859,7 +6859,7 @@
     },
     {
       "id": "ac4b9891-dc19-571f-9e22-7ab6aaa362a1",
-      "label": "Cブロック 3列 7番",
+      "label": "C3列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6871,7 +6871,7 @@
     },
     {
       "id": "6b49e7fb-2e7d-5c21-b072-976ee7e996cc",
-      "label": "Cブロック 3列 6番",
+      "label": "C3列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6883,7 +6883,7 @@
     },
     {
       "id": "f587f6f2-bea8-5353-ad2c-5c1cb003043b",
-      "label": "Cブロック 3列 5番",
+      "label": "C3列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6895,7 +6895,7 @@
     },
     {
       "id": "73e429d7-d483-5e98-870f-3265927b2105",
-      "label": "Cブロック 3列 4番",
+      "label": "C3列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6907,7 +6907,7 @@
     },
     {
       "id": "a5b616e2-c7ed-54b7-88da-65f79d6b8ea0",
-      "label": "Cブロック 3列 3番",
+      "label": "C3列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6919,7 +6919,7 @@
     },
     {
       "id": "fd311eee-c7d6-569f-b588-f07dc9e7305a",
-      "label": "Cブロック 3列 2番",
+      "label": "C3列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6931,7 +6931,7 @@
     },
     {
       "id": "bb10165a-9cd9-5ea6-a693-84f2f7eaa2c0",
-      "label": "Cブロック 3列 1番",
+      "label": "C3列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -6943,7 +6943,7 @@
     },
     {
       "id": "189b9fdc-5da9-5b6d-a337-4b73abdd474a",
-      "label": "Mブロック 7列 1番",
+      "label": "M7列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -6955,7 +6955,7 @@
     },
     {
       "id": "c41ecef0-f2b0-547b-9bfc-1b8236e15240",
-      "label": "Mブロック 7列 2番",
+      "label": "M7列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -6967,7 +6967,7 @@
     },
     {
       "id": "21cafcb8-363a-545d-8597-10467a87c95d",
-      "label": "Mブロック 7列 3番",
+      "label": "M7列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -6979,7 +6979,7 @@
     },
     {
       "id": "643ee977-12e3-5412-87ee-f71f37eb75ff",
-      "label": "Mブロック 7列 4番",
+      "label": "M7列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -6991,7 +6991,7 @@
     },
     {
       "id": "a66a546c-147c-55bc-83a4-157adb47b19d",
-      "label": "Mブロック 7列 5番",
+      "label": "M7列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7003,7 +7003,7 @@
     },
     {
       "id": "628ca018-7719-5a41-9825-ea8675d6b124",
-      "label": "Mブロック 7列 6番",
+      "label": "M7列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7015,7 +7015,7 @@
     },
     {
       "id": "5d461010-b8cb-538d-a039-6cb2c8079764",
-      "label": "Mブロック 7列 7番",
+      "label": "M7列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7027,7 +7027,7 @@
     },
     {
       "id": "3301f179-2fc5-5a5b-a7ea-0cdd5974effb",
-      "label": "Mブロック 7列 8番",
+      "label": "M7列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7039,7 +7039,7 @@
     },
     {
       "id": "84f838bb-df06-5104-83ec-701d4e1c2b73",
-      "label": "Mブロック 7列 9番",
+      "label": "M7列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7051,7 +7051,7 @@
     },
     {
       "id": "2022b3ff-c951-541c-a398-d736ba2ff594",
-      "label": "Mブロック 7列 10番",
+      "label": "M7列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7063,7 +7063,7 @@
     },
     {
       "id": "62402ebd-4a7c-5e94-83b9-bd1a68c6621a",
-      "label": "Mブロック 7列 11番",
+      "label": "M7列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7075,7 +7075,7 @@
     },
     {
       "id": "b372703c-1e18-537c-8627-86ac11f869ff",
-      "label": "Mブロック 7列 12番",
+      "label": "M7列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7087,7 +7087,7 @@
     },
     {
       "id": "bf620f1c-d4d2-5a07-8dfe-19ba4f825872",
-      "label": "Mブロック 6列 1番",
+      "label": "M6列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7099,7 +7099,7 @@
     },
     {
       "id": "1acc070c-ed31-5e3f-b676-5abafb0730f7",
-      "label": "Mブロック 6列 2番",
+      "label": "M6列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7111,7 +7111,7 @@
     },
     {
       "id": "f9926e2f-e3e0-5536-989c-9b8f84775d93",
-      "label": "Mブロック 6列 3番",
+      "label": "M6列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7123,7 +7123,7 @@
     },
     {
       "id": "e37847f6-b826-5adb-978d-341f912b3018",
-      "label": "Mブロック 6列 4番",
+      "label": "M6列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7135,7 +7135,7 @@
     },
     {
       "id": "02093d08-9505-5c4d-9fb7-714e5b3a0b3b",
-      "label": "Mブロック 6列 5番",
+      "label": "M6列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7147,7 +7147,7 @@
     },
     {
       "id": "9640ae60-5885-55bf-b70f-37538fd68bb5",
-      "label": "Mブロック 6列 6番",
+      "label": "M6列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7159,7 +7159,7 @@
     },
     {
       "id": "966702fa-8887-5b1e-84ae-41854e26b1df",
-      "label": "Mブロック 6列 7番",
+      "label": "M6列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7171,7 +7171,7 @@
     },
     {
       "id": "66201c3d-783c-5fda-8255-2036b7a77121",
-      "label": "Mブロック 6列 8番",
+      "label": "M6列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7183,7 +7183,7 @@
     },
     {
       "id": "73663a83-66c4-5aa7-8206-c6616b697866",
-      "label": "Mブロック 6列 9番",
+      "label": "M6列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7195,7 +7195,7 @@
     },
     {
       "id": "77074e34-4cb5-5d67-9fa7-f8a21068f8ab",
-      "label": "Mブロック 6列 10番",
+      "label": "M6列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7207,7 +7207,7 @@
     },
     {
       "id": "479ed9c1-7d61-54bd-ae35-e73ca935ffce",
-      "label": "Mブロック 6列 11番",
+      "label": "M6列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7219,7 +7219,7 @@
     },
     {
       "id": "f00e9bd5-c127-50dc-aae3-b05eb6b427f2",
-      "label": "Mブロック 6列 12番",
+      "label": "M6列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7231,7 +7231,7 @@
     },
     {
       "id": "245c0899-5a6c-5f65-aa2f-026346cff6d3",
-      "label": "Mブロック 5列 1番",
+      "label": "M5列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7243,7 +7243,7 @@
     },
     {
       "id": "298a7929-e1fc-5822-aab5-ef788727c8b1",
-      "label": "Mブロック 5列 2番",
+      "label": "M5列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7255,7 +7255,7 @@
     },
     {
       "id": "9ac2f5d8-a95d-53ab-8913-cfcd4fc580c5",
-      "label": "Mブロック 5列 3番",
+      "label": "M5列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7267,7 +7267,7 @@
     },
     {
       "id": "c5a90c4a-1b11-57c5-a526-5872fd7879af",
-      "label": "Mブロック 5列 4番",
+      "label": "M5列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7279,7 +7279,7 @@
     },
     {
       "id": "00267a85-8320-51c8-9163-fd960ca24cf4",
-      "label": "Mブロック 5列 5番",
+      "label": "M5列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7291,7 +7291,7 @@
     },
     {
       "id": "fa0b52a5-b00e-5409-8b3f-d967912b3990",
-      "label": "Mブロック 5列 6番",
+      "label": "M5列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7303,7 +7303,7 @@
     },
     {
       "id": "b1402c39-bb8f-5ef3-9deb-f656ef711718",
-      "label": "Mブロック 5列 7番",
+      "label": "M5列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7315,7 +7315,7 @@
     },
     {
       "id": "cb0664b2-4a12-5bb2-b340-bc2bb243f38c",
-      "label": "Mブロック 5列 8番",
+      "label": "M5列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7327,7 +7327,7 @@
     },
     {
       "id": "afc7678b-5f38-518e-b362-cedac57ae1bc",
-      "label": "Mブロック 5列 9番",
+      "label": "M5列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7339,7 +7339,7 @@
     },
     {
       "id": "3f8b1c55-aa03-5f75-bf0a-114a225339dd",
-      "label": "Mブロック 5列 10番",
+      "label": "M5列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7351,7 +7351,7 @@
     },
     {
       "id": "eaa78388-2ca4-52e3-a9e7-5d4ab91a205f",
-      "label": "Mブロック 5列 11番",
+      "label": "M5列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7363,7 +7363,7 @@
     },
     {
       "id": "dab23303-e19b-51fa-b4c9-a2376bab190d",
-      "label": "Mブロック 5列 12番",
+      "label": "M5列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7375,7 +7375,7 @@
     },
     {
       "id": "23b0d2ae-bf35-5680-a6a6-05b358a8c5a4",
-      "label": "Mブロック 4列 1番",
+      "label": "M4列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7387,7 +7387,7 @@
     },
     {
       "id": "f948e8f8-04b4-536b-91a2-6d4e17072526",
-      "label": "Mブロック 4列 2番",
+      "label": "M4列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7399,7 +7399,7 @@
     },
     {
       "id": "f30de082-556f-5c12-8e82-a33e2a00511c",
-      "label": "Mブロック 4列 3番",
+      "label": "M4列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7411,7 +7411,7 @@
     },
     {
       "id": "eeca3071-4750-57a4-92da-111d5d83fb12",
-      "label": "Mブロック 4列 4番",
+      "label": "M4列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7423,7 +7423,7 @@
     },
     {
       "id": "b8344e41-7051-5332-945d-d1f028747e8e",
-      "label": "Mブロック 4列 5番",
+      "label": "M4列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7435,7 +7435,7 @@
     },
     {
       "id": "4aceddab-84c6-5268-bdde-452cf03d28d8",
-      "label": "Mブロック 4列 6番",
+      "label": "M4列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7447,7 +7447,7 @@
     },
     {
       "id": "3db88c92-4bde-50c6-bfef-e17143df0949",
-      "label": "Mブロック 4列 7番",
+      "label": "M4列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7459,7 +7459,7 @@
     },
     {
       "id": "41ad06e2-08b1-52bc-84b5-d856cc59c928",
-      "label": "Mブロック 4列 8番",
+      "label": "M4列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7471,7 +7471,7 @@
     },
     {
       "id": "c1baabd6-d9b4-569d-9577-85dbdc1694e0",
-      "label": "Mブロック 4列 9番",
+      "label": "M4列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7483,7 +7483,7 @@
     },
     {
       "id": "680ea17e-6bc3-5054-8807-619c518025cc",
-      "label": "Mブロック 4列 10番",
+      "label": "M4列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7495,7 +7495,7 @@
     },
     {
       "id": "089ea0e1-bb0e-591b-9762-7d4875b33dc7",
-      "label": "Mブロック 4列 11番",
+      "label": "M4列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7507,7 +7507,7 @@
     },
     {
       "id": "c0ce97e9-914d-559e-8d5f-20e7416acf01",
-      "label": "Mブロック 4列 12番",
+      "label": "M4列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7519,7 +7519,7 @@
     },
     {
       "id": "24ef456b-cfdc-594d-9b63-31e8ffffb2d9",
-      "label": "Mブロック 3列 1番",
+      "label": "M3列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7531,7 +7531,7 @@
     },
     {
       "id": "525253b4-9f75-5fbd-8dca-3d0a49853462",
-      "label": "Mブロック 3列 2番",
+      "label": "M3列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7543,7 +7543,7 @@
     },
     {
       "id": "81e89d38-cd9f-5fae-9bef-54e97cfd7b5b",
-      "label": "Mブロック 3列 3番",
+      "label": "M3列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7555,7 +7555,7 @@
     },
     {
       "id": "0ffe31f7-3605-5e29-acbc-335c781b9324",
-      "label": "Mブロック 3列 4番",
+      "label": "M3列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7567,7 +7567,7 @@
     },
     {
       "id": "24b5eb50-e631-5d83-b4be-82393cb00cc4",
-      "label": "Mブロック 3列 5番",
+      "label": "M3列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7579,7 +7579,7 @@
     },
     {
       "id": "f7320d9b-c7f0-5114-a552-0fdb4ef9a30f",
-      "label": "Mブロック 3列 6番",
+      "label": "M3列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7591,7 +7591,7 @@
     },
     {
       "id": "4ddcff42-c921-583a-93d7-c7f910b60991",
-      "label": "Mブロック 3列 7番",
+      "label": "M3列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7603,7 +7603,7 @@
     },
     {
       "id": "f7e85b07-5a9b-5193-8d73-5ae7db6291c2",
-      "label": "Mブロック 3列 8番",
+      "label": "M3列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7615,7 +7615,7 @@
     },
     {
       "id": "64cc0641-c165-5088-beaa-cd2130150e69",
-      "label": "Mブロック 3列 9番",
+      "label": "M3列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7627,7 +7627,7 @@
     },
     {
       "id": "e3cfa524-b236-5792-a7c7-cf756d4f2804",
-      "label": "Mブロック 3列 10番",
+      "label": "M3列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7639,7 +7639,7 @@
     },
     {
       "id": "01b2e349-2cf3-5a4c-bfed-376c931e3ca7",
-      "label": "Mブロック 3列 11番",
+      "label": "M3列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7651,7 +7651,7 @@
     },
     {
       "id": "e919d678-5ed7-5b45-843c-6bbddab4f9ce",
-      "label": "Mブロック 3列 12番",
+      "label": "M3列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7663,7 +7663,7 @@
     },
     {
       "id": "0a3431e8-1938-5c97-bb45-649968a91974",
-      "label": "Mブロック 2列 1番",
+      "label": "M2列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7675,7 +7675,7 @@
     },
     {
       "id": "a33c22d3-3852-58ad-8a9f-38a667070c7f",
-      "label": "Mブロック 2列 2番",
+      "label": "M2列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7687,7 +7687,7 @@
     },
     {
       "id": "ba0d191a-8ac0-5320-a129-af194376ad5d",
-      "label": "Mブロック 2列 3番",
+      "label": "M2列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7699,7 +7699,7 @@
     },
     {
       "id": "93690921-891c-5572-acab-40cb23f5397d",
-      "label": "Mブロック 2列 4番",
+      "label": "M2列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7711,7 +7711,7 @@
     },
     {
       "id": "864b5095-73cb-581c-8711-980c554355ff",
-      "label": "Mブロック 2列 5番",
+      "label": "M2列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7723,7 +7723,7 @@
     },
     {
       "id": "c12186b0-2312-5141-a6c1-349ea72f62f0",
-      "label": "Mブロック 2列 6番",
+      "label": "M2列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7735,7 +7735,7 @@
     },
     {
       "id": "f9ce2bbb-e8d8-5d4b-ae68-905dc1550abd",
-      "label": "Mブロック 2列 7番",
+      "label": "M2列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7747,7 +7747,7 @@
     },
     {
       "id": "0553afb1-aa28-52a8-8417-d66f3fa39f0c",
-      "label": "Mブロック 2列 8番",
+      "label": "M2列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7759,7 +7759,7 @@
     },
     {
       "id": "dfa693e3-e60c-527b-af01-dd98e3ca9065",
-      "label": "Mブロック 2列 9番",
+      "label": "M2列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7771,7 +7771,7 @@
     },
     {
       "id": "0a392385-92af-5569-b427-d642d76c0c51",
-      "label": "Mブロック 2列 10番",
+      "label": "M2列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7783,7 +7783,7 @@
     },
     {
       "id": "24cd606c-bfab-5675-b219-8e5d15f6cdd3",
-      "label": "Mブロック 2列 11番",
+      "label": "M2列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7795,7 +7795,7 @@
     },
     {
       "id": "36bb1dec-926e-5a76-88e2-2c5939b8b642",
-      "label": "Mブロック 2列 12番",
+      "label": "M2列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7807,7 +7807,7 @@
     },
     {
       "id": "38fb379a-7e90-5ba9-9990-47d367f9a893",
-      "label": "Mブロック 1列 1番",
+      "label": "M1列1番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7819,7 +7819,7 @@
     },
     {
       "id": "95258d45-ef51-57a6-97b3-67777c5dbc92",
-      "label": "Mブロック 1列 2番",
+      "label": "M1列2番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7831,7 +7831,7 @@
     },
     {
       "id": "84a4b9f6-e3cd-5a59-b0fa-e4566d25ea24",
-      "label": "Mブロック 1列 3番",
+      "label": "M1列3番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7843,7 +7843,7 @@
     },
     {
       "id": "ffc73f74-9c22-5f2c-8ece-f66380b7a60c",
-      "label": "Mブロック 1列 4番",
+      "label": "M1列4番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7855,7 +7855,7 @@
     },
     {
       "id": "cd392b93-2642-5614-9e25-efb5d0060fe4",
-      "label": "Mブロック 1列 5番",
+      "label": "M1列5番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7867,7 +7867,7 @@
     },
     {
       "id": "ca8805d3-9ce9-5b75-9642-27ea348ced3d",
-      "label": "Mブロック 1列 6番",
+      "label": "M1列6番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7879,7 +7879,7 @@
     },
     {
       "id": "b7ce0a00-c9fb-5fc7-bc1b-a0e65f04e39f",
-      "label": "Mブロック 1列 7番",
+      "label": "M1列7番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7891,7 +7891,7 @@
     },
     {
       "id": "a0139a7f-6262-53f6-815d-eb8ce99e2678",
-      "label": "Mブロック 1列 8番",
+      "label": "M1列8番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7903,7 +7903,7 @@
     },
     {
       "id": "f8f8ee05-2659-5bbc-87f6-3fe3c79e3419",
-      "label": "Mブロック 1列 9番",
+      "label": "M1列9番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7915,7 +7915,7 @@
     },
     {
       "id": "1b1602a8-8687-5f6e-b84f-298d290672e8",
-      "label": "Mブロック 1列 10番",
+      "label": "M1列10番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7927,7 +7927,7 @@
     },
     {
       "id": "873d9a7d-a228-5d66-899f-51a87ede6ab7",
-      "label": "Mブロック 1列 11番",
+      "label": "M1列11番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7939,7 +7939,7 @@
     },
     {
       "id": "256ce503-ec43-5a2c-8968-cf685b5218d2",
-      "label": "Mブロック 1列 12番",
+      "label": "M1列12番",
       "section": "M",
       "zone": "floor1",
       "sellable": true,
@@ -7951,7 +7951,7 @@
     },
     {
       "id": "ff4550d7-0dbe-5286-8051-0ac21c569c3c",
-      "label": "Cブロック 4列 1番",
+      "label": "C4列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -7963,7 +7963,7 @@
     },
     {
       "id": "121ae9dd-8699-56f7-b051-f99e478d4fe2",
-      "label": "Cブロック 4列 2番",
+      "label": "C4列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -7975,7 +7975,7 @@
     },
     {
       "id": "bfce2e5c-6c02-5817-88a1-b2632d88ac73",
-      "label": "Cブロック 4列 3番",
+      "label": "C4列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -7987,7 +7987,7 @@
     },
     {
       "id": "1dab5578-c6d7-53bf-90cb-4f74589188a9",
-      "label": "Cブロック 4列 4番",
+      "label": "C4列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -7999,7 +7999,7 @@
     },
     {
       "id": "fd5b48a8-57b2-5f57-ba60-0a9d7448703d",
-      "label": "Cブロック 4列 5番",
+      "label": "C4列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8011,7 +8011,7 @@
     },
     {
       "id": "92c664ee-511e-526d-9170-9434732392f9",
-      "label": "Cブロック 4列 6番",
+      "label": "C4列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8023,7 +8023,7 @@
     },
     {
       "id": "266509bf-702b-5655-bd8a-974b35b2a095",
-      "label": "Cブロック 4列 7番",
+      "label": "C4列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8035,7 +8035,7 @@
     },
     {
       "id": "c14ad8c8-fdd6-5c06-b78e-159a2929f6af",
-      "label": "Cブロック 4列 8番",
+      "label": "C4列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8047,7 +8047,7 @@
     },
     {
       "id": "58a8c846-f6e8-5fe4-ba38-79a2486388ca",
-      "label": "Cブロック 4列 9番",
+      "label": "C4列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8059,7 +8059,7 @@
     },
     {
       "id": "71319a8b-40d5-5f67-8d87-76fa7000c888",
-      "label": "Cブロック 4列 10番",
+      "label": "C4列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8071,7 +8071,7 @@
     },
     {
       "id": "a5ce20f1-ded9-5ee1-935f-6124ca1ed3b0",
-      "label": "Cブロック 4列 11番",
+      "label": "C4列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8083,7 +8083,7 @@
     },
     {
       "id": "48b3c019-b6ca-51d5-b97a-90c3f16eb443",
-      "label": "Cブロック 4列 12番",
+      "label": "C4列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8095,7 +8095,7 @@
     },
     {
       "id": "0303ea0c-eed8-5f1f-9074-69faa306f5bb",
-      "label": "Cブロック 5列 1番",
+      "label": "C5列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8107,7 +8107,7 @@
     },
     {
       "id": "a04f1249-628a-548e-b99e-83fec67544b4",
-      "label": "Cブロック 5列 2番",
+      "label": "C5列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8119,7 +8119,7 @@
     },
     {
       "id": "8583d3f1-d2ed-5e90-8cab-99247c96878f",
-      "label": "Cブロック 5列 3番",
+      "label": "C5列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8131,7 +8131,7 @@
     },
     {
       "id": "b37552e3-a60a-57e2-bd82-b9d6729b0c38",
-      "label": "Cブロック 5列 4番",
+      "label": "C5列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8143,7 +8143,7 @@
     },
     {
       "id": "16aae7bf-bffb-5b29-a1a5-a3069fce5058",
-      "label": "Cブロック 5列 5番",
+      "label": "C5列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8155,7 +8155,7 @@
     },
     {
       "id": "c305ce48-7679-56dc-9762-c121f5263fc9",
-      "label": "Cブロック 5列 6番",
+      "label": "C5列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8167,7 +8167,7 @@
     },
     {
       "id": "3d671645-ccc1-544d-b582-0638aceddf4b",
-      "label": "Cブロック 5列 7番",
+      "label": "C5列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8179,7 +8179,7 @@
     },
     {
       "id": "b7ac00f6-5f23-5893-a17a-31633551c482",
-      "label": "Cブロック 5列 8番",
+      "label": "C5列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8191,7 +8191,7 @@
     },
     {
       "id": "67ac60fc-e2d1-5e7f-95d9-259dfe09afbb",
-      "label": "Cブロック 5列 9番",
+      "label": "C5列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8203,7 +8203,7 @@
     },
     {
       "id": "65908fa2-f35a-5569-af05-5fcf0ca46623",
-      "label": "Cブロック 5列 10番",
+      "label": "C5列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8215,7 +8215,7 @@
     },
     {
       "id": "a197233d-34cf-58a4-b84c-98e3e8d32ca6",
-      "label": "Cブロック 5列 11番",
+      "label": "C5列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8227,7 +8227,7 @@
     },
     {
       "id": "0e575f6c-40e6-522b-9a95-8d8ca5213dbf",
-      "label": "Cブロック 5列 12番",
+      "label": "C5列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8239,7 +8239,7 @@
     },
     {
       "id": "fae693a5-529d-5b3c-943b-e50e0e1e6035",
-      "label": "Cブロック 6列 1番",
+      "label": "C6列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8251,7 +8251,7 @@
     },
     {
       "id": "4b29d4f8-411a-5a7f-9c16-11cd54087bf4",
-      "label": "Cブロック 6列 2番",
+      "label": "C6列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8263,7 +8263,7 @@
     },
     {
       "id": "86230896-de2a-5a60-95a1-90a8d064cb93",
-      "label": "Cブロック 6列 3番",
+      "label": "C6列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8275,7 +8275,7 @@
     },
     {
       "id": "db59bad6-254f-5c70-bf9d-d8dde35f0308",
-      "label": "Cブロック 6列 4番",
+      "label": "C6列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8287,7 +8287,7 @@
     },
     {
       "id": "c3ce46b3-8866-511b-8072-8d4ff949d764",
-      "label": "Cブロック 6列 5番",
+      "label": "C6列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8299,7 +8299,7 @@
     },
     {
       "id": "9392a04f-a90b-57c8-9a37-cde899650f23",
-      "label": "Cブロック 6列 6番",
+      "label": "C6列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8311,7 +8311,7 @@
     },
     {
       "id": "7390a73c-ec15-56a7-8d35-c35431e8831f",
-      "label": "Cブロック 6列 7番",
+      "label": "C6列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8323,7 +8323,7 @@
     },
     {
       "id": "17860921-0697-5198-b906-e52f39a657cb",
-      "label": "Cブロック 6列 8番",
+      "label": "C6列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8335,7 +8335,7 @@
     },
     {
       "id": "be14e1f5-067f-5f65-b48d-2ed71b8586b6",
-      "label": "Cブロック 6列 9番",
+      "label": "C6列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8347,7 +8347,7 @@
     },
     {
       "id": "0aefd95c-8c51-59f9-8dc6-1f0e104bb553",
-      "label": "Cブロック 6列 10番",
+      "label": "C6列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8359,7 +8359,7 @@
     },
     {
       "id": "4802c8d7-a9bd-5b52-9e3b-f68e1506b0a1",
-      "label": "Cブロック 6列 11番",
+      "label": "C6列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8371,7 +8371,7 @@
     },
     {
       "id": "1d5d3f76-27fd-5fe5-b5f2-c318b5746653",
-      "label": "Cブロック 6列 12番",
+      "label": "C6列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8383,7 +8383,7 @@
     },
     {
       "id": "87efa1df-034b-57cd-b18a-6a98b60adf9c",
-      "label": "Cブロック 7列 1番",
+      "label": "C7列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8395,7 +8395,7 @@
     },
     {
       "id": "d8a484f9-b7d5-51c7-a243-708b3c02b3fe",
-      "label": "Cブロック 7列 2番",
+      "label": "C7列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8407,7 +8407,7 @@
     },
     {
       "id": "b7118c66-c5ab-5b96-8962-ff9b6846a39d",
-      "label": "Cブロック 7列 3番",
+      "label": "C7列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8419,7 +8419,7 @@
     },
     {
       "id": "a8f8e394-b719-5a84-83ad-ae4db7b60406",
-      "label": "Cブロック 7列 4番",
+      "label": "C7列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8431,7 +8431,7 @@
     },
     {
       "id": "33ca3a60-295f-5fdc-8213-1453af2d5e41",
-      "label": "Cブロック 7列 5番",
+      "label": "C7列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8443,7 +8443,7 @@
     },
     {
       "id": "94756a8e-e4a6-5576-af9e-7be93ca7e3eb",
-      "label": "Cブロック 7列 6番",
+      "label": "C7列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8455,7 +8455,7 @@
     },
     {
       "id": "3a98c011-fdc8-50c2-b189-1600974bcf11",
-      "label": "Cブロック 7列 7番",
+      "label": "C7列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8467,7 +8467,7 @@
     },
     {
       "id": "411ddaec-addc-5a36-a606-860192e50d0b",
-      "label": "Cブロック 7列 8番",
+      "label": "C7列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8479,7 +8479,7 @@
     },
     {
       "id": "a7174f92-f64f-5ea4-9634-2bccb33205d9",
-      "label": "Cブロック 7列 9番",
+      "label": "C7列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8491,7 +8491,7 @@
     },
     {
       "id": "3141cda4-3e26-5ee6-9c1b-3f8480d0f896",
-      "label": "Cブロック 7列 10番",
+      "label": "C7列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8503,7 +8503,7 @@
     },
     {
       "id": "60471797-4284-5bed-b2a9-4a31b3b7a010",
-      "label": "Cブロック 7列 11番",
+      "label": "C7列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8515,7 +8515,7 @@
     },
     {
       "id": "f65a3e8d-f783-51d8-86ed-f5a74d5cd974",
-      "label": "Cブロック 7列 12番",
+      "label": "C7列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8527,7 +8527,7 @@
     },
     {
       "id": "77c59637-7c05-5e1b-a2ea-9dc9b7403b8f",
-      "label": "Cブロック 8列 1番",
+      "label": "C8列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8539,7 +8539,7 @@
     },
     {
       "id": "3bc4e0ed-ec58-54f0-a833-cfb8c23c03eb",
-      "label": "Cブロック 8列 2番",
+      "label": "C8列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8551,7 +8551,7 @@
     },
     {
       "id": "2e77d9b6-77f9-540c-ba33-68866f881062",
-      "label": "Cブロック 8列 3番",
+      "label": "C8列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8563,7 +8563,7 @@
     },
     {
       "id": "3f571350-2c3a-58e1-a8c4-8c34a49f11f6",
-      "label": "Cブロック 8列 4番",
+      "label": "C8列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8575,7 +8575,7 @@
     },
     {
       "id": "6aa5de60-7a79-52be-8579-52ce8c927ad9",
-      "label": "Cブロック 8列 5番",
+      "label": "C8列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8587,7 +8587,7 @@
     },
     {
       "id": "e66ccffd-f6c5-56e5-8fc7-532450a45df2",
-      "label": "Cブロック 8列 6番",
+      "label": "C8列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8599,7 +8599,7 @@
     },
     {
       "id": "b03feef3-9bb9-5d24-890f-ac8bde19db29",
-      "label": "Cブロック 8列 7番",
+      "label": "C8列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8611,7 +8611,7 @@
     },
     {
       "id": "c81aa68f-aadf-59d3-8455-7f1a73ab37fa",
-      "label": "Cブロック 8列 8番",
+      "label": "C8列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8623,7 +8623,7 @@
     },
     {
       "id": "1f727dfd-0eaf-59f3-9a48-8cedfc41a739",
-      "label": "Cブロック 8列 9番",
+      "label": "C8列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8635,7 +8635,7 @@
     },
     {
       "id": "04aa6727-b4a7-5e58-821f-e3eceea7ac00",
-      "label": "Cブロック 8列 10番",
+      "label": "C8列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8647,7 +8647,7 @@
     },
     {
       "id": "d7cfd33a-4d45-5750-a4be-e72770ad1e39",
-      "label": "Cブロック 8列 11番",
+      "label": "C8列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8659,7 +8659,7 @@
     },
     {
       "id": "2592e5a8-1ce8-5d7a-a42a-652734fabf05",
-      "label": "Cブロック 8列 12番",
+      "label": "C8列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8671,7 +8671,7 @@
     },
     {
       "id": "a50b0b03-1f7a-5b40-8597-fa03ec07b947",
-      "label": "Cブロック 9列 1番",
+      "label": "C9列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8683,7 +8683,7 @@
     },
     {
       "id": "913dfabf-7105-52d1-bf7f-1c9ae59f9115",
-      "label": "Cブロック 9列 2番",
+      "label": "C9列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8695,7 +8695,7 @@
     },
     {
       "id": "d6bcb12f-8280-5b03-8a36-174d68fdce4f",
-      "label": "Cブロック 9列 3番",
+      "label": "C9列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8707,7 +8707,7 @@
     },
     {
       "id": "e9b57f08-5eb8-5b5f-a148-392ccbf848ce",
-      "label": "Cブロック 9列 4番",
+      "label": "C9列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8719,7 +8719,7 @@
     },
     {
       "id": "c257a3ee-1c38-55ef-b17d-850e86d23f71",
-      "label": "Cブロック 9列 5番",
+      "label": "C9列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8731,7 +8731,7 @@
     },
     {
       "id": "179c61da-98a5-5487-8e6a-8cdca527b7c5",
-      "label": "Cブロック 9列 6番",
+      "label": "C9列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8743,7 +8743,7 @@
     },
     {
       "id": "45c8a11a-a0db-57a5-8afe-074aa46f4dd5",
-      "label": "Cブロック 9列 7番",
+      "label": "C9列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8755,7 +8755,7 @@
     },
     {
       "id": "f99cbb61-0c80-5dec-8020-164a22d4077b",
-      "label": "Cブロック 9列 8番",
+      "label": "C9列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8767,7 +8767,7 @@
     },
     {
       "id": "63c06388-d5e2-53e7-a6ae-d156ffe1e8c0",
-      "label": "Cブロック 9列 9番",
+      "label": "C9列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8779,7 +8779,7 @@
     },
     {
       "id": "fde1fe77-2319-589d-95e5-fe72804b93d4",
-      "label": "Cブロック 9列 10番",
+      "label": "C9列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8791,7 +8791,7 @@
     },
     {
       "id": "0dbb1a42-15ff-5274-9373-d1de22c645ad",
-      "label": "Cブロック 9列 11番",
+      "label": "C9列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8803,7 +8803,7 @@
     },
     {
       "id": "15736e8b-c2a8-5dff-a662-680812edd907",
-      "label": "Cブロック 9列 12番",
+      "label": "C9列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8815,7 +8815,7 @@
     },
     {
       "id": "690b54b7-e0d7-5adc-a527-96ed53e9d4a8",
-      "label": "Cブロック 10列 1番",
+      "label": "C10列1番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8827,7 +8827,7 @@
     },
     {
       "id": "370b537a-62ff-5e03-a8be-e2beca5467ee",
-      "label": "Cブロック 10列 2番",
+      "label": "C10列2番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8839,7 +8839,7 @@
     },
     {
       "id": "00660411-6fcc-53f1-9716-1e5436b4efbf",
-      "label": "Cブロック 10列 3番",
+      "label": "C10列3番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8851,7 +8851,7 @@
     },
     {
       "id": "1174ba77-5279-553c-a715-ac7fa1796875",
-      "label": "Cブロック 10列 4番",
+      "label": "C10列4番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8863,7 +8863,7 @@
     },
     {
       "id": "e1686f7a-33eb-5b75-98b5-2d3511bfda91",
-      "label": "Cブロック 10列 5番",
+      "label": "C10列5番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8875,7 +8875,7 @@
     },
     {
       "id": "2a5dea53-fac0-5163-a6df-b09e00933d3f",
-      "label": "Cブロック 10列 6番",
+      "label": "C10列6番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8887,7 +8887,7 @@
     },
     {
       "id": "b9d9c14e-5843-5885-bff5-222726443ff7",
-      "label": "Cブロック 10列 7番",
+      "label": "C10列7番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8899,7 +8899,7 @@
     },
     {
       "id": "b1ccc887-bc95-5102-aa13-046c42635976",
-      "label": "Cブロック 10列 8番",
+      "label": "C10列8番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8911,7 +8911,7 @@
     },
     {
       "id": "19b20ca7-c32c-5cc8-8641-aa475f807e42",
-      "label": "Cブロック 10列 9番",
+      "label": "C10列9番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8923,7 +8923,7 @@
     },
     {
       "id": "24ee3dde-5259-5ca8-b56e-4ef30b7e7eb5",
-      "label": "Cブロック 10列 10番",
+      "label": "C10列10番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8935,7 +8935,7 @@
     },
     {
       "id": "f7b1f32c-c214-527b-bdbd-2604cc36f69a",
-      "label": "Cブロック 10列 11番",
+      "label": "C10列11番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
@@ -8947,7 +8947,7 @@
     },
     {
       "id": "45955b84-4244-5d6e-b725-27f886c3122e",
-      "label": "Cブロック 10列 12番",
+      "label": "C10列12番",
       "section": "C",
       "zone": "floor1",
       "sellable": true,
