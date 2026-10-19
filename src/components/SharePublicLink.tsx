@@ -40,9 +40,9 @@ export function SharePublicLink() {
     <button
       type="button"
       onClick={() => void copy()}
-      className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+      className="rounded-md border border-slate-300 px-2 py-1 text-slate-700 hover:bg-slate-50"
     >
-      {copied ? 'コピーしました' : '公開URLをコピー'}
+      {copied ? 'コピー済' : 'URL'}
     </button>
   )
 }

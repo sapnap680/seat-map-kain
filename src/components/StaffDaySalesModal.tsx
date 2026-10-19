@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ZONE_LABELS } from '../lib/allocation'
+import { eventTabLabel, ZONE_LABELS } from '../lib/allocation'
 import {
   daySalesByZone,
   downloadDaySalesCsv,
@@ -70,8 +70,10 @@ export function StaffDaySalesModal({
 
   if (!open) return null
 
-  const eventTitle =
-    events.find((e) => e.slug === activeSlug)?.title ?? activeSlug
+  const activeEvent = events.find((e) => e.slug === activeSlug)
+  const eventTitle = activeEvent
+    ? eventTabLabel(activeEvent)
+    : activeSlug
 
   const exportCsv = () => {
     const slugPart = scope === 'all' ? 'all-events' : activeSlug

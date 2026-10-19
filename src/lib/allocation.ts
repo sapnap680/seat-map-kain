@@ -1,4 +1,10 @@
-import type { AllocationContext, GenderView, Seat, SeatZone } from '../types'
+import type {
+  AllocationContext,
+  GenderView,
+  Seat,
+  SeatZone,
+  VenueEvent,
+} from '../types'
 
 /** コートサイド・エンド・スペシャルが男女で入れ替わる試合日（slug） */
 export const GENDER_SWAP_EVENT_SLUGS = ['2025-12-12', '2025-12-13'] as const
@@ -117,4 +123,13 @@ export function initialAllocationsForSeat(
     return ['men', 'women']
   }
   return ['all_day']
+}
+
+/** ヘッダーの日付タブなど（2025-12-11 → 12/11） */
+export function eventTabLabel(
+  event: Pick<VenueEvent, 'slug' | 'title'>,
+): string {
+  const m = event.slug.match(/-(\d{2})-(\d{2})$/)
+  if (m) return `${m[1]}/${m[2]}`
+  return event.title.replace(/\s*試合\s*/g, ' ').trim()
 }

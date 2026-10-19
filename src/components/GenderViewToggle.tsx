@@ -9,7 +9,7 @@ type Props = {
 export function GenderViewToggle({ value, onChange }: Props) {
   return (
     <div
-      className="inline-flex rounded-lg border border-violet-200 bg-violet-50 p-0.5 text-sm"
+      className="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs"
       role="group"
       aria-label="男子女子の表示切替"
     >
@@ -18,13 +18,13 @@ export function GenderViewToggle({ value, onChange }: Props) {
           key={g}
           type="button"
           onClick={() => onChange(g)}
-          className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+          className={`rounded-md px-2.5 py-1 font-medium transition-colors ${
             value === g
-              ? 'bg-violet-600 text-white shadow-sm'
-              : 'text-violet-800 hover:bg-violet-100'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
-          {GENDER_VIEW_LABELS[g]}側を表示
+          {GENDER_VIEW_LABELS[g]}
         </button>
       ))}
     </div>

@@ -9,7 +9,7 @@ import { SeatMap } from './components/SeatMap'
 import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
-import { eventHasGenderSwap } from './lib/allocation'
+import { eventHasGenderSwap, eventTabLabel } from './lib/allocation'
 import { otaBlockForSeat } from './lib/otaBlockMap'
 import {
   eventHasOtaSeatView,
@@ -194,17 +194,18 @@ function App() {
 
   return (
     <div className="flex min-h-full flex-col bg-slate-100">
-      <header className="border-b border-slate-200 bg-white px-3 py-3 shadow-sm">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h1 className="text-lg font-bold text-slate-800 sm:text-xl">
-              第78回全日本大学バスケットボール選手権大会 会場席状況
+      <header className="border-b border-slate-200 bg-white shadow-sm">
+        <div className="mx-auto max-w-6xl px-3 py-2.5">
+          <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+            <h1 className="max-w-xl text-[11px] font-semibold leading-snug text-slate-800 sm:text-xs">
+              第78回全日本大学バスケットボール選手権大会
+              <span className="font-normal text-slate-500"> 会場席状況</span>
             </h1>
-            <div className="flex flex-wrap items-center gap-2 text-sm">
+            <div className="flex flex-wrap items-center justify-end gap-1.5 text-xs">
               <SharePublicLink />
               {isStaff && isDemo && (
-                <span className="rounded bg-amber-100 px-2 py-0.5 text-amber-900">
-                  デモ（スタッフ用）
+                <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-900">
+                  デモ
                 </span>
               )}
               {isStaff ? (
@@ -215,7 +216,7 @@ function App() {
                   <button
                     type="button"
                     onClick={() => signOut()}
-                    className="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-50"
+                    className="rounded-md border border-slate-300 px-2 py-1 hover:bg-slate-50"
                   >
                     ログアウト
                   </button>
@@ -232,29 +233,37 @@ function App() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {events.map((ev) => (
-              <button
-                key={ev.id}
-                type="button"
-                onClick={() => setActiveSlug(ev.slug)}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium ${
-                  activeEvent?.id === ev.id
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-                }`}
-              >
-                {ev.title}
-              </button>
-            ))}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2">
+            <div
+              className="inline-flex rounded-lg bg-slate-100 p-0.5"
+              role="tablist"
+              aria-label="会場日"
+            >
+              {events.map((ev) => (
+                <button
+                  key={ev.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeEvent?.id === ev.id}
+                  onClick={() => setActiveSlug(ev.slug)}
+                  className={`rounded-md px-3 py-1 text-xs font-medium tabular-nums transition-colors ${
+                    activeEvent?.id === ev.id
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {eventTabLabel(ev)}
+                </button>
+              ))}
+            </div>
             {showOtaSeatView && (
               <a
                 href={OTA_SEAT_VIEW_PATH}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-blue-600 px-4 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50"
               >
-                席からの見え方（3D）
+                3D席ビュー
               </a>
             )}
             {swapActive && (
@@ -262,38 +271,53 @@ function App() {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+            <label className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 py-1">
               <input
                 type="checkbox"
                 checked={highlightAvailable}
                 onChange={(e) => setHighlightAvailable(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300"
+                className="h-3.5 w-3.5 rounded border-slate-300"
               />
               残席のみ
             </label>
-            <span className="ml-auto flex flex-wrap items-center gap-2 text-sm text-slate-600">
+            <div className="ml-auto flex flex-wrap items-center gap-1.5">
               {isStaff ? (
                 <>
-                  <span>
-                    案内可 {stats.available} / 当日券 {stats.daySold} / 前売{' '}
-                    {stats.preSold} / 全 {stats.total}
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    案内可 {stats.available}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    当日券 {stats.daySold}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    前売 {stats.preSold}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    全 {stats.total}
                   </span>
                   <button
                     type="button"
                     onClick={() => setDaySalesOpen(true)}
-                    className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    className="rounded-md border border-slate-200 bg-white px-2 py-0.5 font-medium text-slate-700 hover:bg-slate-50"
                   >
-                    当日券集計（{daySaleLogCount}件）
+                    集計 {daySaleLogCount}
                   </button>
                 </>
               ) : (
-                <span>
-                  案内可 {stats.available} / 販売済 {stats.sold} / 全{' '}
-                  {stats.total}
-                </span>
+                <>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    案内可 {stats.available}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    販売済 {stats.sold}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                    全 {stats.total}
+                  </span>
+                </>
               )}
-            </span>
+            </div>
           </div>
         </div>
       </header>
