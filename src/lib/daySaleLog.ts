@@ -1,3 +1,4 @@
+import { groupBySeatCategory } from './seatCategorySummary'
 import type { AllocationContext, SeatZone } from '../types'
 
 export type DaySaleRecord = {
@@ -63,48 +64,10 @@ export function daySalesByZone(eventSlug: string): Record<string, number> {
   return out
 }
 
-const CATEGORY_SORT = [
-  'スペシャルシート',
-  'コートエンド',
-  'コートサイドA',
-  'コートサイドB',
-  '1階指定席',
-  '1階指定席（ゴール裏）',
-  '1階自由席',
-  '2階自由席',
-  'チーム券席',
-]
-
-function daySaleCategoryLabel(r: DaySaleRecord): string {
-  const c = r.category?.trim()
-  if (c) return c
-  return '（券種未設定）'
-}
-
-function sortCategoryEntries(
-  entries: [string, number][],
-): { category: string; count: number }[] {
-  return entries
-    .sort(([a], [b]) => {
-      const ia = CATEGORY_SORT.indexOf(a)
-      const ib = CATEGORY_SORT.indexOf(b)
-      if (ia >= 0 && ib >= 0) return ia - ib
-      if (ia >= 0) return -1
-      if (ib >= 0) return 1
-      return a.localeCompare(b, 'ja')
-    })
-    .map(([category, count]) => ({ category, count }))
-}
-
 export function groupDaySalesByCategory(
   records: DaySaleRecord[],
 ): { category: string; count: number }[] {
-  const counts = new Map<string, number>()
-  for (const r of records) {
-    const key = daySaleCategoryLabel(r)
-    counts.set(key, (counts.get(key) ?? 0) + 1)
-  }
-  return sortCategoryEntries([...counts.entries()])
+  return groupBySeatCategory(records)
 }
 
 /** 席種（category）ごとの当日券販売数 */
@@ -149,8 +112,8 @@ export function daySalesToCsv(records: DaySaleRecord[]): string {
   return `\uFEFF${header.join(',')}\n${rows.join('\n')}${summaryRows.length ? `\n${summaryRows.join('\n')}` : ''}`
 }
 
-export function downloadDaySalesCsv(records: DaySaleRecord[], filename: string) {
-  const blob = new Blob([daySalesToCsv(records)], {
+export function downloadCsvBlob(content: string, filename: string) {
+  const blob = new Blob([content], {
     type: 'text/csv;charset=utf-8',
   })
   const url = URL.createObjectURL(blob)
@@ -159,4 +122,8 @@ export function downloadDaySalesCsv(records: DaySaleRecord[], filename: string) 
   a.download = filename
   a.click()
   URL.revokeObjectURL(url)
+}
+
+export function downloadDaySalesCsv(records: DaySaleRecord[], filename: string) {
+  downloadCsvBlob(daySalesToCsv(records), filename)
 }

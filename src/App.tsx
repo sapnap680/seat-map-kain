@@ -406,6 +406,7 @@ function App() {
         onClose={() => setDaySalesOpen(false)}
         events={events}
         activeSlug={activeEvent?.slug ?? ''}
+        seats={seatsWithState}
       />
     </div>
   )
