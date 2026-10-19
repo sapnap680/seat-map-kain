@@ -36,21 +36,6 @@ REDACT_TEXT_PARTS = (
     "販売しません",
 )
 
-# 大田区: コート横の説明文字帯（正規化 0–1）
-OTA_LABEL_STRIPS = [
-    (0.52, 0.30, 0.88, 0.42),
-    (0.52, 0.60, 0.88, 0.74),
-    (0.08, 0.30, 0.44, 0.42),
-    (0.08, 0.60, 0.44, 0.74),
-]
-
-# 駒沢: 1階脇の縦ラベル帯
-KOMORI_LABEL_STRIPS = [
-    (0.0, 0.26, 0.055, 0.86),
-    (0.945, 0.26, 1.0, 0.86),
-]
-
-
 def is_ota_floor1_blue(r: int, g: int, b: int) -> bool:
     return 140 <= r <= 175 and 188 <= g <= 225 and b >= 238
 
@@ -74,43 +59,13 @@ def _sample_fill(im, px0: int, py0: int, pw: int, ph: int) -> tuple[int, int, in
     return im.getpixel((sx, sy))
 
 
-def _paint_rect(
-    draw,
-    im,
-    x0: float,
-    y0: float,
-    x1: float,
-    y1: float,
-    pw: float,
-    ph: float,
-    scale: float,
-) -> None:
-    w, h = im.size
-    px0 = max(0, int(x0 * pw * scale))
-    py0 = max(0, int(y0 * ph * scale))
-    px1 = min(w, int(x1 * pw * scale))
-    py1 = min(h, int(y1 * ph * scale))
-    fill = _sample_fill(im, px0, py0, pw, ph)
-    draw.rectangle([px0, py0, px1, py1], fill=fill)
-
-
-def redact_map_labels(page: fitz.Page, path: Path, slug: str, scale: float = 2.0) -> None:
+def redact_map_labels(page: fitz.Page, path: Path, _slug: str, scale: float = 2.0) -> None:
     try:
         from PIL import Image, ImageDraw
     except ImportError:
         return
     im = Image.open(path).convert("RGB")
     draw = ImageDraw.Draw(im)
-    pw, ph = page.rect.width, page.rect.height
-
-    strips = []
-    if slug in ("2025-12-12", "2025-12-13"):
-        strips.extend(OTA_LABEL_STRIPS)
-    if slug == "2025-12-11":
-        strips.extend(KOMORI_LABEL_STRIPS)
-
-    for x0, y0, x1, y1 in strips:
-        _paint_rect(draw, im, x0, y0, x1, y1, pw, ph, scale)
 
     for block in page.get_text("dict").get("blocks", []):
         if block.get("type") != 0:
@@ -125,7 +80,7 @@ def redact_map_labels(page: fitz.Page, path: Path, slug: str, scale: float = 2.0
             py0 = max(0, int(y0 * scale) - pad_y)
             px1 = min(im.size[0], int(x1 * scale) + pad_x)
             py1 = min(im.size[1], int(y1 * scale) + pad_y)
-            fill = _sample_fill(im, px0, py0, pw, ph)
+            fill = _sample_fill(im, px0, py0, page.rect.width, page.rect.height)
             draw.rectangle([px0, py0, px1, py1], fill=fill)
 
     im.save(path)
@@ -185,7 +140,7 @@ def main() -> None:
         pix = page.get_pixmap(
             matrix=mat,
             alpha=False,
-            annots=False,
+            annots=True,
             colorspace=fitz.csRGB,
         )
         pix.save(out)
