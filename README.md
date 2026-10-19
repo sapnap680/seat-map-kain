@@ -43,6 +43,8 @@ npm run convert-pdfs
 
 親フォルダ（`会場図面/*.pdf`）を `public/backgrounds/YYYY-MM-DD.png` に変換します（**色は変更しません**。PDF そのまま）。  
 本番では Vercel に同梱されるため、そのまま `/backgrounds/...` で表示されます。  
+
+大田（12/12・12/13）の **席からの見え方（3D）** は [`public/ota-seat-view.html`](public/ota-seat-view.html) をそのまま配信します。**未ログイン（来場者向け）** のとき、会場タブ横のリンクから別タブで開きます。  
 Supabase Storage に置く場合は `events.background_path` を公開 URL に変更してください。
 
 ### 4. デプロイ（Vercel）
@@ -57,7 +59,6 @@ Supabase Storage に置く場合は `events.background_path` を公開 URL に�
 | 操作 | 手順 |
 |------|------|
 | 席の状態変更 | スタッフログイン → 席をタップ → 状態（前売り済/当日販売済/空席など）とメモ → 保存 |
-| 席の新規追加 | ログイン → **席配置モード** ON → 図上をドラッグ → ラベル入力 |
 | 当日案内 | **空席のみハイライト** を ON → 緑の席を案内 |
 | 試合日切替 | 画面上部の 12/11・12/12・12/13 タブ |
 

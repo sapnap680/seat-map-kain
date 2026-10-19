@@ -192,14 +192,13 @@ export function useSeatMap(
       const raw =
         states[key] ??
         defaultSeatState(seat.id, effectiveAllocation, sellable)
-      const state =
-        sellable || raw.status !== 'available'
-          ? raw
-          : {
-              ...raw,
-              status: 'blocked' as const,
-              note: raw.note ?? '販売対象外（2階・チーム席）',
-            }
+      const state = sellable
+        ? raw
+        : {
+            ...raw,
+            status: 'available' as const,
+            note: null,
+          }
       return {
         ...seat,
         sellable,

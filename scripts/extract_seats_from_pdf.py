@@ -345,6 +345,8 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         refine_komori_12_11_zones(seats)
     elif slug in ("2025-12-12", "2025-12-13"):
         refine_ota_team_zones(seats)
+        # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外
+        seats = [s for s in seats if s["zone"] != "floor2"]
     doc.close()
     return {
         "slug": slug,

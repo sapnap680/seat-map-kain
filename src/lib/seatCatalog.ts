@@ -34,11 +34,38 @@ export function applyCatalogToEvent(
   }
 }
 
+const OTA_NO_FLOOR2 = new Set(['2025-12-12', '2025-12-13'])
+
 export function catalogSeatsForEvent(
   eventId: string,
   catalog: SeatCatalogFile,
 ): Seat[] {
-  return catalog.seats.map((s) => ({
+  const source = OTA_NO_FLOOR2.has(catalog.slug)
+    ? catalog.seats.filter((s) => s.zone !== 'floor2')
+    : catalog.seats
+  // #region agent log
+  if (OTA_NO_FLOOR2.has(catalog.slug)) {
+    const dropped = catalog.seats.length - source.length
+    if (dropped > 0) {
+      fetch('http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Debug-Session-Id': '0c7e1f',
+        },
+        body: JSON.stringify({
+          sessionId: '0c7e1f',
+          hypothesisId: 'H-ota-no-floor2',
+          location: 'seatCatalog.ts:catalogSeatsForEvent',
+          message: 'Ota floor2 seats excluded',
+          data: { slug: catalog.slug, dropped, kept: source.length },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {})
+    }
+  }
+  // #endregion
+  return source.map((s) => ({
     ...s,
     event_id: eventId,
     zone: (s.zone ?? 'floor1') as SeatZone,

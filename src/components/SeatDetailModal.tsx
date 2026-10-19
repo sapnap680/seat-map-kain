@@ -9,7 +9,6 @@ type Props = {
   genderView: GenderView
   onClose: () => void
   isStaff: boolean
-  placementMode: boolean
   onSave: (
     seatId: string,
     allocation: SeatWithState['effectiveAllocation'],
@@ -24,7 +23,6 @@ export function SeatDetailModal({
   genderView,
   onClose,
   isStaff,
-  placementMode,
   onSave,
 }: Props) {
   const [status, setStatus] = useState<SeatStatus>('available')
@@ -92,13 +90,7 @@ export function SeatDetailModal({
           )}
         </p>
 
-        {!sellable && (
-          <p className="mt-3 rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
-            この席は <strong>2階席・チーム席</strong> のため販売・案内の対象外です。
-          </p>
-        )}
-
-        {isStaff && !placementMode && sellable ? (
+        {isStaff && sellable ? (
           <form onSubmit={submit} className="mt-4 space-y-3">
             <label className="block text-sm">
               <span className="font-medium text-slate-700">状態</span>

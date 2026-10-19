@@ -1,11 +1,11 @@
 import type { AllocationContext, Seat, SeatStatus } from '../types'
 
 export const STATUS_LABELS: Record<SeatStatus, string> = {
-  available: '空席（1階指定席・料金表色）',
+  available: '未販売（案内可）',
   presold: '前売り済',
   daysold: '当日販売済',
   hold: '押さえ',
-  blocked: '使用不可',
+  blocked: '—',
 }
 
 export const STAFF_STATUSES: SeatStatus[] = [
@@ -13,7 +13,6 @@ export const STAFF_STATUSES: SeatStatus[] = [
   'presold',
   'daysold',
   'hold',
-  'blocked',
 ]
 
 export function isSeatSellable(seat: Pick<Seat, 'sellable' | 'zone'>): boolean {
@@ -52,7 +51,7 @@ export function seatOverlayClass(
     case 'hold':
       return `${base} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':
-      return `${base} border-0 bg-neutral-900/25 opacity-100`
+      return `${base} border-0 bg-transparent opacity-0`
     default:
       return `${base} opacity-0`
   }

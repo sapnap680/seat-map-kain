@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
-import { Legend } from './components/Legend'
 import { SeatDetailModal } from './components/SeatDetailModal'
 import { SeatMap } from './components/SeatMap'
 import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
-import { eventHasGenderSwap, ZONE_LABELS } from './lib/allocation'
-import { INCARE_LABELS } from './lib/incarePalette'
+import { eventHasGenderSwap } from './lib/allocation'
+import {
+  eventHasOtaSeatView,
+  OTA_SEAT_VIEW_PATH,
+} from './lib/otaSeatView'
 import { isSeatSellable } from './lib/seatStatus'
 import { isSupabaseConfigured } from './lib/supabase'
-import type { GenderView, SeatWithState, SeatZone } from './types'
+import type { GenderView, SeatWithState } from './types'
 
 function App() {
   const { events, loading: eventsLoading } = useEvents()
@@ -31,31 +33,39 @@ function App() {
     setGenderView('men')
   }, [activeEvent?.slug])
 
-  const {
-    seatsWithState,
-    loading: seatsLoading,
-    upsertSeatState,
-    updateSeatGeometry,
-    insertSeat,
-  } = useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
+  const { seatsWithState, loading: seatsLoading, upsertSeatState } =
+    useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
 
   const [highlightAvailable, setHighlightAvailable] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
-  const [placementMode, setPlacementMode] = useState(false)
-  const [moveLayoutMode, setMoveLayoutMode] = useState(false)
-  const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(
-    null,
-  )
-  const [pendingRect, setPendingRect] = useState<{
-    x: number
-    y: number
-    w: number
-    h: number
-  } | null>(null)
-  const [newLabel, setNewLabel] = useState('')
-  const [newSection, setNewSection] = useState('')
-  const [newZone, setNewZone] = useState<SeatZone>('courtside')
+
+  const showOtaSeatView = eventHasOtaSeatView(activeEvent)
+
+  useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Debug-Session-Id': '0c7e1f',
+      },
+      body: JSON.stringify({
+        sessionId: '0c7e1f',
+        hypothesisId: 'H-3d-visibility',
+        location: 'App.tsx:ota-seat-view',
+        message: '3D link gate evaluated',
+        data: {
+          showOtaSeatView,
+          activeSlug: activeEvent?.slug ?? null,
+          isStaff,
+          eventCount: events.length,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {})
+    // #endregion
+  }, [showOtaSeatView, activeEvent?.slug, isStaff, events.length])
 
   const stats = useMemo(() => {
     let available = 0
@@ -72,59 +82,6 @@ function App() {
     const total = seatsWithState.filter((s) => isSeatSellable(s)).length
     return { available, sold, total }
   }, [seatsWithState])
-
-  const onDragStart = (x: number, y: number) => {
-    setDragStart({ x, y })
-    setPendingRect({ x, y, w: 0, h: 0 })
-  }
-
-  const onDragMove = (x: number, y: number) => {
-    if (!dragStart) return
-    const x0 = Math.min(dragStart.x, x)
-    const y0 = Math.min(dragStart.y, y)
-    const w = Math.abs(x - dragStart.x)
-    const h = Math.abs(y - dragStart.y)
-    setPendingRect({ x: x0, y: y0, w, h })
-  }
-
-  const onDragEnd = async () => {
-    if (!pendingRect || !activeEvent) {
-      setDragStart(null)
-      setPendingRect(null)
-      return
-    }
-    if (pendingRect.w < 0.01 || pendingRect.h < 0.01) {
-      setDragStart(null)
-      setPendingRect(null)
-      return
-    }
-    const label =
-      newLabel.trim() ||
-      window.prompt('新しい席のラベル（例: C-1）', `C-${seatsWithState.length + 1}`)
-    if (!label) {
-      setDragStart(null)
-      setPendingRect(null)
-      return
-    }
-    const section =
-      newSection.trim() ||
-      window.prompt('ブロック名（任意）', 'C') ||
-      null
-
-    await insertSeat({
-      event_id: activeEvent.id,
-      label,
-      section: section || null,
-      zone: newZone,
-      x: pendingRect.x,
-      y: pendingRect.y,
-      w: pendingRect.w,
-      h: pendingRect.h,
-    })
-    setDragStart(null)
-    setPendingRect(null)
-    setNewLabel('')
-  }
 
   const handleSaveSeat = async (
     seatId: string,
@@ -176,28 +133,6 @@ function App() {
             </div>
           </div>
 
-          {swapActive && (
-            <div className="flex flex-col gap-2 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-sm text-violet-900">
-              <div className="flex flex-wrap items-center gap-3">
-                <GenderViewToggle value={genderView} onChange={setGenderView} />
-                <span>
-                  最終2日: コートサイド・エンド・スペシャル席は{' '}
-                  <strong>男子/女子で在庫が別</strong>です。{' '}
-                  <strong>1階席は終日共通</strong>（切替の影響なし）。
-                </span>
-              </div>
-              <p className="text-xs text-violet-700">
-                {INCARE_LABELS.floor1}（終日・男女共通） / 点線＝
-                {INCARE_LABELS.teamTicket}
-              </p>
-            </div>
-          )}
-
-          <p className="text-sm text-slate-600">
-            <strong>{INCARE_LABELS.floor1}</strong>
-            （ピンク）が前売り対象。駒沢の2階は当日販売。販売済は薄灰で重ねます。
-          </p>
-
           <div className="flex flex-wrap items-center gap-2">
             {events.map((ev) => (
               <button
@@ -213,10 +148,22 @@ function App() {
                 {ev.title}
               </button>
             ))}
+            {showOtaSeatView && (
+              <a
+                href={OTA_SEAT_VIEW_PATH}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-blue-600 px-4 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-50"
+              >
+                席からの見え方（3D）
+              </a>
+            )}
+            {swapActive && (
+              <GenderViewToggle value={genderView} onChange={setGenderView} />
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Legend />
             <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
               <input
                 type="checkbox"
@@ -224,72 +171,12 @@ function App() {
                 onChange={(e) => setHighlightAvailable(e.target.checked)}
                 className="h-4 w-4 rounded border-slate-300"
               />
-              空席のみ表示（案内用・販売済は非表示）
+              案内モード（まだ売れていない席だけ強調）
             </label>
-            {isStaff && (
-              <>
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={moveLayoutMode}
-                    onChange={(e) => {
-                      setMoveLayoutMode(e.target.checked)
-                      if (e.target.checked) setPlacementMode(false)
-                    }}
-                    className="h-4 w-4 rounded border-slate-300"
-                  />
-                  席位置調整（PDF図形をドラッグ）
-                </label>
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={placementMode}
-                    onChange={(e) => {
-                      setPlacementMode(e.target.checked)
-                      if (e.target.checked) setMoveLayoutMode(false)
-                    }}
-                    className="h-4 w-4 rounded border-slate-300"
-                  />
-                  席を手動追加
-                </label>
-              </>
-            )}
             <span className="ml-auto text-sm text-slate-600">
-              空席 {stats.available} / 販売済 {stats.sold} / 全 {stats.total} 席
+              未販売 {stats.available} / 販売済 {stats.sold} / 全 {stats.total} 席
             </span>
           </div>
-
-          {placementMode && isStaff && (
-            <div className="flex flex-wrap gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm">
-              <input
-                placeholder="次に追加する席ラベル（任意）"
-                value={newLabel}
-                onChange={(e) => setNewLabel(e.target.value)}
-                className="rounded border border-slate-300 px-2 py-1"
-              />
-              <input
-                placeholder="ブロック（任意）"
-                value={newSection}
-                onChange={(e) => setNewSection(e.target.value)}
-                className="w-24 rounded border border-slate-300 px-2 py-1"
-              />
-              <select
-                value={newZone}
-                onChange={(e) => setNewZone(e.target.value as SeatZone)}
-                className="rounded border border-slate-300 px-2 py-1"
-                title="席種別"
-              >
-                {(Object.keys(ZONE_LABELS) as SeatZone[]).map((z) => (
-                  <option key={z} value={z}>
-                    {ZONE_LABELS[z]}
-                  </option>
-                ))}
-              </select>
-              <span className="text-blue-800">
-                会場図上をドラッグして矩形を描き、席を追加します
-              </span>
-            </div>
-          )}
         </div>
       </header>
 
@@ -302,17 +189,7 @@ function App() {
             seats={seatsWithState}
             highlightAvailableOnly={highlightAvailable}
             isStaff={isStaff}
-            placementMode={placementMode}
-            moveLayoutMode={moveLayoutMode}
             onSeatClick={setSelectedSeat}
-            onSeatMove={(seatId, geom) => {
-              void updateSeatGeometry(seatId, geom)
-            }}
-            dragStart={dragStart}
-            pendingRect={pendingRect}
-            onDragStart={onDragStart}
-            onDragMove={onDragMove}
-            onDragEnd={onDragEnd}
           />
         ) : (
           <p className="py-12 text-center text-slate-500">
@@ -334,7 +211,6 @@ function App() {
         genderView={genderView}
         onClose={() => setSelectedSeat(null)}
         isStaff={isStaff}
-        placementMode={placementMode || moveLayoutMode}
         onSave={handleSaveSeat}
       />
     </div>
