@@ -62,7 +62,9 @@ def is_gray_fill(r: float, g: float, b: float) -> bool:
 
 
 def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
-    """駒オリ 1階席（PDF 上のピンク）"""
+    """駒オリ 1階席（料金表 #E38AB2 および PDF ピンク）"""
+    if r >= 0.85 and 0.5 <= g <= 0.58 and 0.68 <= b <= 0.72:
+        return True
     return r >= 0.9 and 0.65 <= g <= 0.78 and b >= 0.75
 
 

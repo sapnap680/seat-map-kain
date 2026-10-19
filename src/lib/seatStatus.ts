@@ -1,7 +1,7 @@
 import type { AllocationContext, Seat, SeatStatus } from '../types'
 
 export const STATUS_LABELS: Record<SeatStatus, string> = {
-  available: '空席（PDFの色そのまま）',
+  available: '空席（1階指定席・料金表色）',
   presold: '前売り済',
   daysold: '当日販売済',
   hold: '押さえ',
@@ -40,7 +40,7 @@ export function seatOverlayClass(
   }
 
   if (highlightAvailableOnly && status === 'available') {
-    return `${base} z-20 box-border border-2 border-pink-500 bg-transparent opacity-100`
+    return `${base} z-20 box-border border-2 border-incare-floor1 bg-transparent opacity-100`
   }
 
   switch (status) {
@@ -48,7 +48,7 @@ export function seatOverlayClass(
       return `${base} border-0 bg-transparent opacity-0`
     case 'presold':
     case 'daysold':
-      return `${base} border-0 bg-neutral-600/50 opacity-100`
+      return `${base} border-0 bg-[rgba(127,127,127,0.55)] opacity-100`
     case 'hold':
       return `${base} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':
@@ -61,10 +61,10 @@ export function seatOverlayClass(
 export function legendSwatchClass(status: SeatStatus): string {
   switch (status) {
     case 'available':
-      return 'border border-dashed border-pink-400 bg-transparent'
+      return 'border border-dashed border-incare-floor1 bg-incare-floor1/15'
     case 'presold':
     case 'daysold':
-      return 'bg-neutral-600/50 border-0'
+      return 'bg-[rgba(127,127,127,0.55)] border-0'
     case 'hold':
       return 'bg-amber-500/30 border-amber-600'
     case 'blocked':

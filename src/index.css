@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-incare-floor1: #e38ab2;
+  --color-incare-floor2: #bfbfbf;
+  --color-incare-team: #92d050;
+  --color-incare-brand: #e71d1b;
+  --color-incare-gray: #7f7f7f;
+}
+
 html,
 body,
 #root {

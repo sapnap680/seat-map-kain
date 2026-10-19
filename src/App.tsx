@@ -7,6 +7,7 @@ import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap, ZONE_LABELS } from './lib/allocation'
+import { INCARE_LABELS } from './lib/incarePalette'
 import { isSeatSellable } from './lib/seatStatus'
 import { isSupabaseConfigured } from './lib/supabase'
 import type { GenderView, SeatWithState, SeatZone } from './types'
@@ -141,6 +142,7 @@ function App() {
         <div className="mx-auto flex max-w-6xl flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 className="text-lg font-bold text-slate-800 sm:text-xl">
+              <span className="text-incare-brand">第78回</span>{' '}
               会場席状況（リアルタイム）
             </h1>
             <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -185,13 +187,16 @@ function App() {
                 </span>
               </div>
               <p className="text-xs text-violet-700">
-                ピンク＝1階（終日・男女共通） / 点線枠＝チーム席（販売なし）
+                {INCARE_LABELS.floor1}（終日・男女共通） / 点線＝
+                {INCARE_LABELS.teamTicket}
               </p>
             </div>
           )}
 
           <p className="text-sm text-slate-600">
-            1階席（<strong>ピンク</strong>）だけ販売・案内対象。2階・チーム席は図面上で「販売しません」と表示。販売済みだけ薄いグレーを重ねます。
+            <strong>{INCARE_LABELS.floor1}</strong>
+            だけ販売・案内対象（色は料金表 PPTX と統一）。{INCARE_LABELS.floor2}・
+            {INCARE_LABELS.teamTicket}は図面上で明示。販売済は灰色で重ねます。
           </p>
 
           <div className="flex flex-wrap items-center gap-2">

@@ -1,10 +1,31 @@
+import { INCARE, INCARE_LABELS } from './incarePalette'
 import type { Seat, SeatZone } from '../types'
 
 export type NormRect = { x: number; y: number; w: number; h: number }
 
 export const NON_SELLABLE_ZONE_LABEL: Partial<Record<SeatZone, string>> = {
-  floor2: '2階席・販売しません',
-  team_ticket: 'チーム席・販売しません',
+  floor2: `${INCARE_LABELS.floor2}・販売しません`,
+  team_ticket: `${INCARE_LABELS.teamTicket}・販売しません`,
+}
+
+export function nonSellableZoneStyle(zone: SeatZone): {
+  borderColor: string
+  background: string
+  stripe: string
+} {
+  if (zone === 'team_ticket') {
+    return {
+      borderColor: INCARE.teamTicket,
+      background: `rgba(${INCARE.teamTicketRgb}, 0.22)`,
+      stripe: `repeating-linear-gradient(135deg, rgba(${INCARE.teamTicketRgb}, 0.18) 0 6px, transparent 6px 14px)`,
+    }
+  }
+  return {
+    borderColor: INCARE.floor2,
+    background: `rgba(${INCARE.floor2Rgb}, 0.35)`,
+    stripe:
+      'repeating-linear-gradient(135deg, rgba(127, 127, 127, 0.14) 0 6px, transparent 6px 14px)',
+  }
 }
 
 /** 非販売席矩形を近接クラスタにまとめ、ラベル用の大きな枠にする */

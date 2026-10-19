@@ -47,9 +47,9 @@ export function parseStateStorageKey(key: string): {
 }
 
 export const ZONE_LABELS: Record<SeatZone, string> = {
-  floor1: '1階席（終日）',
-  floor2: '2階席（販売なし）',
-  team_ticket: 'チーム席（販売なし）',
+  floor1: '1階指定席（終日）',
+  floor2: '2階自由席',
+  team_ticket: 'チーム券席',
   courtside: 'コートサイド',
   end: 'エンド',
   special: 'スペシャル',
