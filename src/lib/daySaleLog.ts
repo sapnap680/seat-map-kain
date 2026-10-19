@@ -63,6 +63,57 @@ export function daySalesByZone(eventSlug: string): Record<string, number> {
   return out
 }
 
+const CATEGORY_SORT = [
+  'スペシャルシート',
+  'コートエンド',
+  'コートサイドA',
+  'コートサイドB',
+  '1階指定席',
+  '1階指定席（ゴール裏）',
+  '1階自由席',
+  '2階自由席',
+  'チーム券席',
+]
+
+function daySaleCategoryLabel(r: DaySaleRecord): string {
+  const c = r.category?.trim()
+  if (c) return c
+  return '（券種未設定）'
+}
+
+function sortCategoryEntries(
+  entries: [string, number][],
+): { category: string; count: number }[] {
+  return entries
+    .sort(([a], [b]) => {
+      const ia = CATEGORY_SORT.indexOf(a)
+      const ib = CATEGORY_SORT.indexOf(b)
+      if (ia >= 0 && ib >= 0) return ia - ib
+      if (ia >= 0) return -1
+      if (ib >= 0) return 1
+      return a.localeCompare(b, 'ja')
+    })
+    .map(([category, count]) => ({ category, count }))
+}
+
+export function groupDaySalesByCategory(
+  records: DaySaleRecord[],
+): { category: string; count: number }[] {
+  const counts = new Map<string, number>()
+  for (const r of records) {
+    const key = daySaleCategoryLabel(r)
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  return sortCategoryEntries([...counts.entries()])
+}
+
+/** 席種（category）ごとの当日券販売数 */
+export function daySalesByCategory(
+  eventSlug: string,
+): { category: string; count: number }[] {
+  return groupDaySalesByCategory(listDaySales(eventSlug))
+}
+
 function csvEscape(value: string): string {
   if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`
   return value
@@ -83,7 +134,19 @@ export function daySalesToCsv(records: DaySaleRecord[]): string {
       .map(csvEscape)
       .join(','),
   )
-  return `\uFEFF${header.join(',')}\n${rows.join('\n')}`
+  const summary = groupDaySalesByCategory(records)
+  const summaryRows =
+    summary.length === 0
+      ? []
+      : [
+          '',
+          '席種別集計',
+          ['券種', '枚数'].map(csvEscape).join(','),
+          ...summary.map(({ category, count }) =>
+            [category, String(count)].map(csvEscape).join(','),
+          ),
+        ]
+  return `\uFEFF${header.join(',')}\n${rows.join('\n')}${summaryRows.length ? `\n${summaryRows.join('\n')}` : ''}`
 }
 
 export function downloadDaySalesCsv(records: DaySaleRecord[], filename: string) {

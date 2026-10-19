@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { eventTabLabel, ZONE_LABELS } from '../lib/allocation'
+import { eventTabLabel } from '../lib/allocation'
 import {
-  daySalesByZone,
+  daySalesByCategory,
   downloadDaySalesCsv,
   listDaySales,
   type DaySaleRecord,
 } from '../lib/daySaleLog'
-import type { SeatZone, VenueEvent } from '../types'
+import type { VenueEvent } from '../types'
 import { ModalCloseButton } from './ModalCloseButton'
 
 function saleLine(r: DaySaleRecord): string {
@@ -53,9 +53,9 @@ export function StaffDaySalesModal({
     return listDaySales(activeSlug)
   }, [activeSlug, tick])
 
-  const byZone = useMemo(() => {
+  const byCategory = useMemo(() => {
     void tick
-    return daySalesByZone(activeSlug)
+    return daySalesByCategory(activeSlug)
   }, [activeSlug, tick])
 
   if (!open) return null
@@ -85,19 +85,25 @@ export function StaffDaySalesModal({
             合計 <span className="text-blue-700">{records.length}</span> 席
           </p>
 
-          {Object.keys(byZone).length > 0 && (
-            <ul className="grid grid-cols-2 gap-2 text-sm text-slate-700">
-              {(Object.entries(byZone) as [SeatZone, number][]).map(
-                ([zone, n]) => (
+          {byCategory.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-xs font-semibold text-slate-500">
+                席種ごと
+              </h3>
+              <ul className="space-y-1.5 text-sm text-slate-800">
+                {byCategory.map(({ category, count }) => (
                   <li
-                    key={zone}
-                    className="rounded-lg bg-slate-50 px-3 py-2"
+                    key={category}
+                    className="flex items-center justify-between gap-3 rounded-lg bg-slate-50 px-3 py-2"
                   >
-                    {ZONE_LABELS[zone] ?? zone}: {n}
+                    <span>{category}</span>
+                    <span className="shrink-0 tabular-nums font-semibold text-blue-700">
+                      {count} 席
+                    </span>
                   </li>
-                ),
-              )}
-            </ul>
+                ))}
+              </ul>
+            </div>
           )}
 
           <div className="max-h-48 overflow-auto rounded-lg border border-slate-200">
