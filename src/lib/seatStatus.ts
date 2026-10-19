@@ -26,42 +26,33 @@ export function isSold(status: SeatStatus): boolean {
   return status === 'presold' || status === 'daysold'
 }
 
-/** 空席はオーバーレイなし。販売済などだけ薄く重ねる */
+/** 空席は一切色を付けない。案内モードのみピンク枠。販売済は薄灰 */
 export function seatOverlayClass(
   seat: Pick<Seat, 'sellable' | 'zone'>,
   status: SeatStatus,
   highlightAvailableOnly: boolean,
-  isStaff: boolean,
+  _isStaff: boolean,
 ): string {
   const base = 'seat-hit-target m-0 p-0 shadow-none outline-none'
 
   if (!isSeatSellable(seat)) {
-    return `${base} pointer-events-none border-0 opacity-0`
-  }
-
-  if (highlightAvailableOnly) {
-    if (status === 'available') {
-      return `${base} z-20 box-border border-2 border-emerald-500 bg-transparent opacity-100`
-    }
     return `${base} pointer-events-none opacity-0`
   }
 
-  if (status === 'available') {
-    if (isStaff) {
-      return `${base} border-0 bg-transparent opacity-0 hover:opacity-100 hover:ring-1 hover:ring-blue-400/80`
-    }
-    return `${base} border-0 bg-transparent opacity-0`
+  if (highlightAvailableOnly && status === 'available') {
+    return `${base} z-20 box-border border-2 border-pink-500 bg-transparent opacity-100`
   }
 
   switch (status) {
+    case 'available':
+      return `${base} border-0 bg-transparent opacity-0`
     case 'presold':
     case 'daysold':
-      /* ピンク等の PDF 色の上に、販売済だけ薄い灰 */
       return `${base} border-0 bg-neutral-600/50 opacity-100`
     case 'hold':
       return `${base} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':
-      return `${base} border-0 bg-neutral-900/30 opacity-100`
+      return `${base} border-0 bg-neutral-900/25 opacity-100`
     default:
       return `${base} opacity-0`
   }
@@ -70,14 +61,14 @@ export function seatOverlayClass(
 export function legendSwatchClass(status: SeatStatus): string {
   switch (status) {
     case 'available':
-      return 'border border-dashed border-slate-400 bg-transparent'
+      return 'border border-dashed border-pink-400 bg-transparent'
     case 'presold':
     case 'daysold':
-      return 'bg-neutral-700/45 border-0'
+      return 'bg-neutral-600/50 border-0'
     case 'hold':
       return 'bg-amber-500/30 border-amber-600'
     case 'blocked':
-      return 'bg-neutral-900/30 border-0'
+      return 'bg-neutral-900/25 border-0'
     default:
       return 'bg-white border-gray-400'
   }

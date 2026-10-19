@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
-import { PdfPageCanvas } from './PdfPageCanvas'
 
 type Props = {
   event: VenueEvent
@@ -39,12 +38,11 @@ export function SeatMap({
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [bgFailed, setBgFailed] = useState(false)
-  const [usePdfFallback, setUsePdfFallback] = useState(false)
 
   useEffect(() => {
-    setUsePdfFallback(false)
     setBgFailed(false)
-  }, [event.pdf_path])
+  }, [event.background_path, event.slug])
+
   const [moving, setMoving] = useState<{
     seatId: string
     startX: number
@@ -133,145 +131,163 @@ export function SeatMap({
     })
   }
 
+  const bgSrc =
+    event.background_path ?? `/backgrounds/${event.slug}.png`
+
   return (
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
       <p className="border-b border-slate-200 px-3 py-1.5 text-xs text-slate-500">
-        拡大・縮小は Ctrl + ホイール（ブラウザ標準）。空席は PDF の色のまま、販売済のみ薄いグレー。
+        図面は PDF から書き出した PNG（ピンク＝1階・灰色＝非販売）。空席に色は付けません。案内時のみ「空席のみ表示」で枠を出します。
       </p>
       <div className="flex-1 overflow-auto p-2">
+        {/* inline-block で img の表示サイズと席オーバーレイを完全一致 */}
         <div
-          ref={mapRef}
-          className="relative mx-auto inline-block w-full max-w-full select-none"
-          style={{ maxWidth: event.map_width }}
+          className="mx-auto inline-block max-w-full align-top"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
         >
-          {!bgFailed && !usePdfFallback ? (
-            <PdfPageCanvas
-              pdfUrl={event.pdf_path}
-              onError={() => setUsePdfFallback(true)}
-            />
-          ) : !bgFailed && event.background_path ? (
-            <img
-              src={event.background_path}
-              alt="会場席図"
-              width={event.map_width}
-              height={event.map_height}
-              className="block h-auto w-full max-w-full"
-              onError={() => setBgFailed(true)}
-              draggable={false}
-            />
-          ) : (
-            <div
-              className="flex items-center justify-center bg-slate-200 text-sm text-slate-600"
-              style={{
-                aspectRatio: `${event.map_width} / ${event.map_height}`,
-              }}
-            >
-              会場図を読み込めませんでした
-            </div>
-          )}
+          <div ref={mapRef} className="relative">
+            {!bgFailed ? (
+              <img
+                src={bgSrc}
+                alt="会場席図"
+                width={event.map_width}
+                height={event.map_height}
+                className="block h-auto max-w-full"
+                onError={() => setBgFailed(true)}
+                draggable={false}
+              />
+            ) : (
+              <div
+                className="flex items-center justify-center bg-slate-200 text-sm text-slate-600"
+                style={{
+                  width: '100%',
+                  maxWidth: event.map_width,
+                  aspectRatio: `${event.map_width} / ${event.map_height}`,
+                }}
+              >
+                会場図を読み込めませんでした
+              </div>
+            )}
 
-          <div className="pointer-events-none absolute inset-0">
-            {seats.map((seat) => {
-              const preview = movePreview?.[seat.id]
-              const sx = preview?.x ?? seat.x
-              const sy = preview?.y ?? seat.y
-              const sellable = isSeatSellable(seat)
-              const status = seat.state.status
-              const sold = isSold(status)
+            <div className="pointer-events-none absolute inset-0">
+              {seats.map((seat) => {
+                const preview = movePreview?.[seat.id]
+                const sx = preview?.x ?? seat.x
+                const sy = preview?.y ?? seat.y
+                const sellable = isSeatSellable(seat)
+                const status = seat.state.status
+                const sold = isSold(status)
 
-              if (!sellable && !moveLayoutMode) {
-                return null
-              }
+                if (!sellable && !moveLayoutMode) {
+                  return null
+                }
 
-              const overlay = seatOverlayClass(
-                seat,
-                status,
-                highlightAvailableOnly,
-                isStaff,
-              )
+                const overlay = seatOverlayClass(
+                  seat,
+                  status,
+                  highlightAvailableOnly,
+                  isStaff,
+                )
 
-              const needsHitTarget =
-                sellable &&
-                (status === 'available' ||
-                  sold ||
-                  status === 'hold' ||
-                  status === 'blocked' ||
-                  moveLayoutMode)
+                const showVisibleOverlay =
+                  sold || status === 'hold' || status === 'blocked'
 
-              if (!needsHitTarget && !moveLayoutMode) {
-                return null
-              }
+                if (
+                  status === 'available' &&
+                  !highlightAvailableOnly &&
+                  !moveLayoutMode
+                ) {
+                  if (!sellable) return null
+                  return (
+                    <div
+                      key={seat.id}
+                      role="button"
+                      tabIndex={0}
+                      title={`席 ${seat.label}`}
+                      className="pointer-events-auto absolute cursor-pointer opacity-0"
+                      style={{
+                        left: `${sx * 100}%`,
+                        top: `${sy * 100}%`,
+                        width: `${seat.w * 100}%`,
+                        height: `${seat.h * 100}%`,
+                      }}
+                      onClick={() => onSeatClick(seat)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') onSeatClick(seat)
+                      }}
+                    />
+                  )
+                }
 
-              if (
-                status === 'available' &&
-                !highlightAvailableOnly &&
-                !isStaff &&
-                !moveLayoutMode
-              ) {
+                if (
+                  status === 'available' &&
+                  highlightAvailableOnly &&
+                  sellable
+                ) {
+                  return (
+                    <div
+                      key={seat.id}
+                      role="button"
+                      tabIndex={0}
+                      className={`pointer-events-auto absolute cursor-pointer ${overlay}`}
+                      style={{
+                        left: `${sx * 100}%`,
+                        top: `${sy * 100}%`,
+                        width: `${seat.w * 100}%`,
+                        height: `${seat.h * 100}%`,
+                      }}
+                      onClick={() => onSeatClick(seat)}
+                    />
+                  )
+                }
+
+                if (!showVisibleOverlay && !moveLayoutMode) {
+                  return null
+                }
+
                 return (
-                  <div
+                  <button
                     key={seat.id}
-                    role="button"
-                    tabIndex={0}
-                    title={`席 ${seat.label}`}
-                    className={`pointer-events-auto absolute cursor-pointer ${overlay}`}
+                    type="button"
+                    title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
+                    onPointerDown={(e) => startMoveSeat(e, seat)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (moveLayoutMode || !sellable) return
+                      onSeatClick(seat)
+                    }}
+                    className={`pointer-events-auto absolute ${overlay} ${moveLayoutMode && isStaff ? 'cursor-move !opacity-40 hover:!opacity-60' : ''}`}
                     style={{
                       left: `${sx * 100}%`,
                       top: `${sy * 100}%`,
                       width: `${seat.w * 100}%`,
                       height: `${seat.h * 100}%`,
                     }}
-                    onClick={() => onSeatClick(seat)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') onSeatClick(seat)
-                    }}
-                  />
+                  >
+                    {moveLayoutMode && isStaff && (
+                      <span className="pointer-events-none text-[8px] opacity-80">
+                        {seat.label}
+                      </span>
+                    )}
+                  </button>
                 )
-              }
+              })}
 
-              return (
-                <button
-                  key={seat.id}
-                  type="button"
-                  title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
-                  onPointerDown={(e) => startMoveSeat(e, seat)}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (moveLayoutMode || !sellable) return
-                    onSeatClick(seat)
-                  }}
-                  className={`pointer-events-auto absolute ${overlay} ${moveLayoutMode && isStaff ? 'cursor-move !opacity-40 hover:!opacity-60' : ''}`}
+              {pendingRect && (
+                <div
+                  className="absolute border-2 border-dashed border-blue-500 bg-blue-200/40"
                   style={{
-                    left: `${sx * 100}%`,
-                    top: `${sy * 100}%`,
-                    width: `${seat.w * 100}%`,
-                    height: `${seat.h * 100}%`,
+                    left: `${pendingRect.x * 100}%`,
+                    top: `${pendingRect.y * 100}%`,
+                    width: `${pendingRect.w * 100}%`,
+                    height: `${pendingRect.h * 100}%`,
                   }}
-                >
-                  {moveLayoutMode && isStaff && (
-                    <span className="pointer-events-none text-[8px] opacity-80">
-                      {seat.label}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-
-            {pendingRect && (
-              <div
-                className="absolute border-2 border-dashed border-blue-500 bg-blue-200/40"
-                style={{
-                  left: `${pendingRect.x * 100}%`,
-                  top: `${pendingRect.y * 100}%`,
-                  width: `${pendingRect.w * 100}%`,
-                  height: `${pendingRect.h * 100}%`,
-                }}
-              />
-            )}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
