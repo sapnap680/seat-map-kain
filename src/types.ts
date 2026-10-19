@@ -35,6 +35,8 @@ export interface Seat {
   event_id: string
   label: string
   section: string | null
+  /** 3D会場図と同じ券種名（大田プレミアム席など） */
+  category?: string
   zone: SeatZone
   /** false = 2階・チーム席など販売対象外 */
   sellable?: boolean

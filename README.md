@@ -9,8 +9,9 @@
 
 - **ログイン不要**で席状況を閲覧できます（スタッフログインは編集用のみ）。
 - LINE・QR・メールで上記URLをそのまま共有してください。
-- Vercel で **Deployment Protection**（パスワード保護）が有効だと他人が開けません。  
-  Project → Settings → **Deployment Protection** を **Off**（または Production のみ公開）にしてください。
+- Vercel の **Deployment Protection** はダッシュボードで変更します（コードでは変更不可）。  
+  手順: [`docs/VERCEL_PUBLIC.md`](docs/VERCEL_PUBLIC.md)  
+  要点: **Settings → Deployment Protection → Production の保護をオフ**
 
 ## すぐ試す（デモモード）
 

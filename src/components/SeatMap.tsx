@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { otaBlockAtNorm } from '../lib/otaBlockMap'
+import { otaBlockAtNorm, otaBlockForSeat } from '../lib/otaBlockMap'
 import { isOtaVisitorClickTarget } from '../lib/otaSeatClick'
 import { eventHasOtaSeatView } from '../lib/otaSeatView'
+import { seatDisplayTitle } from '../lib/allocation'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
 
@@ -185,10 +186,7 @@ export function SeatMap({
                   onClick: (e: React.MouseEvent) => {
                     e.stopPropagation()
                     if (otaVisitor && onOtaBlockPick) {
-                      const block = otaBlockAtNorm(
-                        seat.x + seat.w / 2,
-                        seat.y + seat.h / 2,
-                      )
+                      const block = otaBlockForSeat(seat)
                       if (block) {
                         onOtaBlockPick(block)
                         return
@@ -208,7 +206,7 @@ export function SeatMap({
                       key={seat.id}
                       role="button"
                       tabIndex={0}
-                      title={`席 ${seat.label}`}
+                      title={seatDisplayTitle(seat, event.slug)}
                       className="pointer-events-auto absolute cursor-pointer opacity-0"
                       {...hitProps}
                       onKeyDown={(e) => {
@@ -244,7 +242,7 @@ export function SeatMap({
                       key={seat.id}
                       role="button"
                       tabIndex={0}
-                      title={`席 ${seat.label}`}
+                      title={seatDisplayTitle(seat, event.slug)}
                       className="pointer-events-auto absolute cursor-pointer opacity-0"
                       {...hitProps}
                     />
@@ -255,7 +253,7 @@ export function SeatMap({
                   <button
                     key={seat.id}
                     type="button"
-                    title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
+                    title={`${seatDisplayTitle(seat, event.slug)}${seat.state.note ? `: ${seat.state.note}` : ''}`}
                     className={`pointer-events-auto absolute ${overlay}`}
                     {...hitProps}
                   />

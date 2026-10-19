@@ -21,6 +21,8 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 from pdf_slug import slug_from_pdf_stem  # noqa: E402
 
+from ota_seat_labels import apply_ota_seat_labels  # noqa: E402
+
 
 def slug_from_name(name: str) -> str | None:
     return slug_from_pdf_stem(name)
@@ -29,6 +31,14 @@ def slug_from_name(name: str) -> str | None:
 def seat_size_ok(slug: str, w: float, h: float) -> bool:
     if slug == "2025-12-11":
         return 14 <= w <= 28 and 18 <= h <= 32
+    if slug in ("2025-12-12", "2025-12-13"):
+        if 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5:
+            return True
+        if 12 <= w <= 18 and 12 <= h <= 22:
+            return True
+        if 24 <= w <= 32 and 24 <= h <= 32:
+            return True
+        return False
     return 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5
 
 
@@ -85,12 +95,68 @@ def is_blue_floor1(r: float, g: float, b: float) -> bool:
     return b >= 0.9 and g >= 0.72 and 0.45 <= r <= 0.7
 
 
+def is_ota_goal_magenta(r: float, g: float, b: float) -> bool:
+    """1階指定席（ゴール裏）"""
+    return 0.72 <= r <= 0.88 and g <= 0.38 and 0.48 <= b <= 0.62
+
+
+def is_ota_courtside_purple(r: float, g: float, b: float) -> bool:
+    """コートサイド A/B（料金表の紫系）"""
+    if r <= 0.52 and g <= 0.28 and b >= 0.55:
+        return True
+    return 0.72 <= r <= 0.88 and 0.52 <= g <= 0.68 and b >= 0.78
+
+
+def is_ota_end_blue(r: float, g: float, b: float) -> bool:
+    """コートエンド"""
+    return r <= 0.35 and g >= 0.38 and b >= 0.68
+
+
+def is_ota_special_gold(r: float, g: float, b: float) -> bool:
+    """スペシャルシート"""
+    if r >= 0.92 and g >= 0.68 and b <= 0.15:
+        return True
+    return 0.68 <= r <= 0.82 and 0.48 <= g <= 0.62 and b <= 0.12
+
+
+def classify_ota_seat(
+    fill: tuple[float, ...] | None,
+    cx: float,
+    cy: float,
+) -> tuple[str, bool]:
+    if not fill or len(fill) < 3:
+        return "floor2", False
+    r, g, b = float(fill[0]), float(fill[1]), float(fill[2])
+
+    if is_team_green_fill(r, g, b):
+        return "team_ticket", False
+    if is_pink_floor1(r, g, b):
+        return "floor1", True
+    if is_ota_goal_magenta(r, g, b):
+        return "floor1", True
+    if is_ota_courtside_purple(r, g, b):
+        return "courtside", True
+    if is_ota_end_blue(r, g, b):
+        return "end", True
+    if is_ota_special_gold(r, g, b):
+        return "special", True
+    if is_gray_fill(r, g, b):
+        return "floor2", False
+    if is_blue_floor1(r, g, b):
+        return "floor1", True
+
+    return "floor2", False
+
+
 def classify_seat(
     slug: str,
     fill: tuple[float, ...] | None,
     cx: float,
     cy: float,
 ) -> tuple[str, bool]:
+    if slug in ("2025-12-12", "2025-12-13"):
+        return classify_ota_seat(fill, cx, cy)
+
     if not fill or len(fill) < 3:
         return "floor2", False
     r, g, b = float(fill[0]), float(fill[1]), float(fill[2])
@@ -347,6 +413,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         refine_ota_team_zones(seats)
         # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外
         seats = [s for s in seats if s["zone"] != "floor2"]
+        apply_ota_seat_labels(seats)
     doc.close()
     return {
         "slug": slug,

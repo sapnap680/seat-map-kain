@@ -8,7 +8,7 @@ import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap } from './lib/allocation'
-import { otaBlockAtNorm } from './lib/otaBlockMap'
+import { otaBlockForSeat } from './lib/otaBlockMap'
 import {
   eventHasOtaSeatView,
   OTA_SEAT_VIEW_PATH,
@@ -251,10 +251,7 @@ function App() {
         onPreview3d={
           showOtaSeatView && isStaff && selectedSeat
             ? () => {
-                const block = otaBlockAtNorm(
-                  selectedSeat.x + selectedSeat.w / 2,
-                  selectedSeat.y + selectedSeat.h / 2,
-                )
+                const block = otaBlockForSeat(selectedSeat)
                 if (block) setOtaViewBlock(block)
               }
             : undefined

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { allocationDisplayLabel } from '../lib/allocation'
+import { allocationDisplayLabel, seatDisplayTitle } from '../lib/allocation'
 import { isSeatSellable, STAFF_STATUSES, STATUS_LABELS } from '../lib/seatStatus'
 import type { GenderView, SeatStatus, SeatWithState } from '../types'
 
@@ -61,7 +61,9 @@ export function SeatDetailModal({
       <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h2 className="text-xl font-bold text-slate-800">席 {seat.label}</h2>
+            <h2 className="text-xl font-bold text-slate-800">
+              {seatDisplayTitle(seat, eventSlug)}
+            </h2>
             {seat.section && (
               <p className="text-sm text-slate-500">ブロック {seat.section}</p>
             )}

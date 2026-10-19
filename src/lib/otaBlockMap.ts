@@ -1,3 +1,5 @@
+import type { Seat, SeatZone } from '../types'
+
 /** ota-seat-view.html の SVG 会場図（viewBox 1080×1072）と同じ座標 */
 const MAP_W = 1080
 const MAP_H = 1072
@@ -75,4 +77,28 @@ export function otaBlockAtNorm(nx: number, ny: number): string | null {
 export function otaSeatViewUrl(block: string): string {
   const q = new URLSearchParams({ block })
   return `/ota-seat-view.html?${q.toString()}`
+}
+
+const ZONE_BLOCK: Partial<Record<SeatZone, string>> = {
+  special: 'スペシャルシート',
+  end: 'コートエンド',
+}
+
+/** 席タップ → 3D会場図のブロック（座標ヒット＋プレミアム席のゾーンフォールバック） */
+export function otaBlockForSeat(
+  seat: Pick<Seat, 'zone' | 'x' | 'y' | 'w' | 'h'>,
+): string | null {
+  const cx = seat.x + seat.w / 2
+  const cy = seat.y + seat.h / 2
+  const fromMap = otaBlockAtNorm(cx, cy) // PDF正規化↔SVGでズレる席は下のゾーン判定へ
+  if (fromMap) return fromMap
+
+  const zoned = ZONE_BLOCK[seat.zone]
+  if (zoned) return zoned
+
+  if (seat.zone === 'courtside') {
+    return cx < 0.36 ? 'コートサイドB' : 'コートサイドA'
+  }
+
+  return null
 }

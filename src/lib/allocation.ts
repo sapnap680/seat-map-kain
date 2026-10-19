@@ -60,12 +60,43 @@ export const GENDER_VIEW_LABELS: Record<GenderView, string> = {
   women: '女子',
 }
 
+/** 3D（ota-seat-view）と同じ表記: 「券種　Gブロック 3列 12番」など */
+export function seatDisplayTitle(seat: Seat, eventSlug: string): string {
+  if (
+    eventHasGenderSwap(eventSlug) &&
+    seat.sellable !== false &&
+    seat.category &&
+    seat.label &&
+    seat.label !== '—'
+  ) {
+    return `${seat.category}　${seat.label}`
+  }
+  if (seat.section && seat.label.includes('ブロック')) {
+    return seat.label
+  }
+  return seat.label
+}
+
 export function allocationDisplayLabel(
   seat: Seat,
   eventSlug: string,
   genderView: GenderView,
   allocation: AllocationContext,
 ): string {
+  if (
+    eventHasGenderSwap(eventSlug) &&
+    seat.category &&
+    seat.label &&
+    seat.label !== '—'
+  ) {
+    const base = seatDisplayTitle(seat, eventSlug)
+    if (allocation === 'all_day' || !isSwappableZone(seat.zone)) {
+      if (seat.zone === 'floor1') return `${base}（男女共通・終日）`
+      return base
+    }
+    return `${GENDER_VIEW_LABELS[genderView]} / ${base}`
+  }
+
   const zoneLabel = ZONE_LABELS[seat.zone]
   if (allocation === 'all_day') {
     if (seat.zone === 'floor1' && eventHasGenderSwap(eventSlug)) {
