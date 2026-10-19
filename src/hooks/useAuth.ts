@@ -16,30 +16,40 @@ export function useAuth() {
       return
     }
 
+    const demoStaff = sessionStorage.getItem(DEMO_STAFF_KEY) === '1'
+
     supabase.auth.getSession().then(({ data }) => {
-      setIsStaff(!!data.session)
-      setEmail(data.session?.user.email ?? null)
+      setIsStaff(!!data.session || demoStaff)
+      setEmail(
+        data.session?.user.email ??
+          (demoStaff ? 'スタッフ（デモ）' : null),
+      )
       setLoading(false)
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsStaff(!!session)
-      setEmail(session?.user.email ?? null)
+      const demo = sessionStorage.getItem(DEMO_STAFF_KEY) === '1'
+      setIsStaff(!!session || demo)
+      setEmail(
+        session?.user.email ?? (demo ? 'スタッフ（デモ）' : null),
+      )
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
   const signIn = useCallback(async (staffEmail: string, password: string) => {
+    if (password === DEMO_PASSWORD) {
+      sessionStorage.setItem(DEMO_STAFF_KEY, '1')
+      setIsStaff(true)
+      setEmail(staffEmail.trim() || 'スタッフ（デモ）')
+      return { error: null }
+    }
+
     if (!isSupabaseConfigured || !supabase) {
-      if (password === DEMO_PASSWORD) {
-        sessionStorage.setItem(DEMO_STAFF_KEY, '1')
-        setIsStaff(true)
-        return { error: null }
-      }
-      return { error: new Error('デモモード: パスワードは staff-demo です') }
+      return { error: new Error('パスワードは staff-demo です（共有スタッフ用）') }
     }
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -50,12 +60,15 @@ export function useAuth() {
   }, [])
 
   const signOut = useCallback(async () => {
+    sessionStorage.removeItem(DEMO_STAFF_KEY)
     if (!isSupabaseConfigured || !supabase) {
-      sessionStorage.removeItem(DEMO_STAFF_KEY)
       setIsStaff(false)
+      setEmail(null)
       return
     }
     await supabase.auth.signOut()
+    setIsStaff(false)
+    setEmail(null)
   }, [])
 
   return { isStaff, loading, email, signIn, signOut, isDemo: !isSupabaseConfigured }

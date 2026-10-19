@@ -29,6 +29,7 @@ export function SeatMap({
 
   const otaEvent = eventHasOtaSeatView(event)
   const otaVisitor = otaEvent && !isStaff && !!onOtaBlockPick
+  const otaStaffPick = otaEvent && isStaff
 
   useEffect(() => {
     setBgFailed(false)
@@ -117,7 +118,9 @@ export function SeatMap({
   const bgSrc = bgCacheKey ? `${bgBase}?v=${bgCacheKey}` : bgBase
 
   const seatClickable = (seat: SeatWithState) => {
-    if (otaVisitor) return isOtaVisitorClickTarget(event.slug, seat)
+    if (otaVisitor || otaStaffPick) {
+      return isOtaVisitorClickTarget(event.slug, seat)
+    }
     return isSeatSellable(seat)
   }
 
@@ -127,7 +130,7 @@ export function SeatMap({
         <div className="mx-auto inline-block max-w-full align-top">
           <div
             ref={mapRef}
-            className={`relative ${otaVisitor ? 'cursor-pointer' : ''}`}
+            className={`relative ${otaVisitor || otaStaffPick ? 'cursor-pointer' : ''}`}
             onClick={(e) => {
               if (!otaVisitor) return
               if ((e.target as HTMLElement).closest('[data-seat-hit]')) return
@@ -232,11 +235,11 @@ export function SeatMap({
                   )
                 }
 
-                if (!showVisibleOverlay && !otaVisitor) {
+                if (!showVisibleOverlay && !(otaVisitor || otaStaffPick)) {
                   return null
                 }
 
-                if (!showVisibleOverlay && otaVisitor) {
+                if (!showVisibleOverlay && (otaVisitor || otaStaffPick)) {
                   return (
                     <div
                       key={seat.id}
@@ -245,6 +248,9 @@ export function SeatMap({
                       title={seatDisplayTitle(seat, event.slug)}
                       className="pointer-events-auto absolute cursor-pointer opacity-0"
                       {...hitProps}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') onSeatClick(seat)
+                      }}
                     />
                   )
                 }

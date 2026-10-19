@@ -181,6 +181,11 @@ function App() {
               ログイン不要で閲覧できます。このURLをそのままお客様・スタッフに共有してください。
             </p>
           )}
+          {isStaff && showOtaSeatView && (
+            <p className="text-xs text-emerald-800">
+              指定席をタップ →「販売状態を更新」か「3D」を選べます（未ログイン時は3Dのみ）。
+            </p>
+          )}
 
           <div className="flex flex-wrap items-center gap-2">
             {events.map((ev) => (

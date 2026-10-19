@@ -20,7 +20,7 @@ export function OtaStaffSeatChoiceModal({
   if (!seat) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 sm:items-center">
       <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
         <div className="flex items-start justify-between gap-2">
           <div>
