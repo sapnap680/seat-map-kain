@@ -138,8 +138,8 @@ export function SeatMap({
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
       <p className="border-b border-slate-200 px-3 py-1.5 text-xs text-slate-600">
         {event.slug === '2025-12-11'
-          ? '駒沢の2階（灰色）は当日販売します。1階（ピンク）は前売り対象です。'
-          : 'ピンクが1階指定席です。図面の上に枠は重ねません。'}
+          ? '駒沢の2階（灰色）は当日販売します。1階は前売り対象です（図面の色そのまま）。'
+          : '会場PDFの色そのまま表示します。席の上に色枠は重ねません。'}
       </p>
       <div className="flex-1 overflow-auto p-2">
         <div

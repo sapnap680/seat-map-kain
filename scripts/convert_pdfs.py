@@ -251,6 +251,27 @@ def _team_band_color_sample(path: Path, slug: str) -> dict[str, int]:
     return counts
 
 
+def _pixmap_vs_file_diff(pdf: Path, png: Path, mat: fitz.Matrix) -> int:
+    """PNG が PDF ラスタライズのみか（色加工なし）を検証。0 なら完全一致。"""
+    try:
+        from PIL import Image
+    except ImportError:
+        return -1
+    doc = fitz.open(pdf)
+    pix = doc[0].get_pixmap(
+        matrix=mat, alpha=False, annots=False, colorspace=fitz.csRGB
+    )
+    doc.close()
+    fresh = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+    saved = Image.open(png).convert("RGB")
+    if fresh.size != saved.size:
+        return -2
+    if fresh.tobytes() == saved.tobytes():
+        return 0
+    fp, sp = fresh.tobytes(), saved.tobytes()
+    return sum(1 for a, b in zip(fp, sp, strict=True) if a != b) // 3
+
+
 def slug_from_name(name: str) -> str | None:
     for key, slug in DATE_MAP.items():
         if key in name:
@@ -302,7 +323,19 @@ def main() -> None:
             scrub_ota_team_zone_pink_blue(out, slug)
         else:
             print(f"  as-is: PDF の色そのまま ({out.name})")
+        pixel_diff = _pixmap_vs_file_diff(pdf, out, mat) if not legacy else None
         band = _team_band_color_sample(out, slug)
+        _agent_log(
+            "H5",
+            "convert mode",
+            {
+                "slug": slug,
+                "runId": "convert-post",
+                "asIs": not legacy,
+                "legacyConvert": legacy,
+                "pixelDiffFromPdf": pixel_diff,
+            },
+        )
         _agent_log(
             "H4",
             "post-convert team band colors",

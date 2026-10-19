@@ -41,7 +41,7 @@ VITE_SUPABASE_ANON_KEY=eyJ...
 npm run convert-pdfs
 ```
 
-親フォルダ（`会場図面/*.pdf`）を `public/backgrounds/YYYY-MM-DD.png` に変換します。  
+親フォルダ（`会場図面/*.pdf`）を `public/backgrounds/YYYY-MM-DD.png` に変換します（**色は変更しません**。PDF そのまま）。  
 本番では Vercel に同梱されるため、そのまま `/backgrounds/...` で表示されます。  
 Supabase Storage に置く場合は `events.background_path` を公開 URL に変更してください。
 
