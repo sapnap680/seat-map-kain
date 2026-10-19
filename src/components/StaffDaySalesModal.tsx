@@ -141,7 +141,7 @@ export function StaffDaySalesModal({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-slate-100 p-4">
+        <div className="border-t border-slate-100 p-4">
           <button
             type="button"
             onClick={() =>
@@ -154,13 +154,6 @@ export function StaffDaySalesModal({
             className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40"
           >
             CSVダウンロード
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-full rounded-lg border border-slate-300 py-2.5 text-sm text-slate-700"
-          >
-            閉じる
           </button>
         </div>
       </div>
