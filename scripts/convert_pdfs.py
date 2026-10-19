@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import time
@@ -284,20 +285,33 @@ def main() -> None:
         )
         pix.save(out)
         doc.close()
-        recolor_floor1_to_pptx_pink(out, slug)
-        doc = fitz.open(pdf)
-        page = doc[0]
-        redact_map_labels(page, out, scale=2.0)
-        if slug in ("2025-12-12", "2025-12-13"):
-            fill_ota_stroke_team_boxes(page, out, pw, ph, scale=2.0)
-        doc.close()
-        paint_nonsellable_seats(out, slug)
-        scrub_ota_team_zone_pink_blue(out, slug)
+        legacy = os.environ.get("SEAT_MAP_LEGACY_CONVERT", "").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        if legacy:
+            recolor_floor1_to_pptx_pink(out, slug)
+            doc = fitz.open(pdf)
+            page = doc[0]
+            redact_map_labels(page, out, scale=2.0)
+            if slug in ("2025-12-12", "2025-12-13"):
+                fill_ota_stroke_team_boxes(page, out, pw, ph, scale=2.0)
+            doc.close()
+            paint_nonsellable_seats(out, slug)
+            scrub_ota_team_zone_pink_blue(out, slug)
+        else:
+            print(f"  as-is: PDF の色そのまま ({out.name})")
         band = _team_band_color_sample(out, slug)
         _agent_log(
             "H4",
             "post-convert team band colors",
-            {"slug": slug, "bandCounts": band, "runId": "convert-post"},
+            {
+                "slug": slug,
+                "bandCounts": band,
+                "runId": "convert-post",
+                "asIs": not legacy,
+            },
         )
         meta = {
             "slug": slug,

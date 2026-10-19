@@ -69,6 +69,16 @@ def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
     return r >= 0.9 and 0.65 <= g <= 0.78 and b >= 0.75
 
 
+def is_pink_floor1(r: float, g: float, b: float) -> bool:
+    """料金表 1階指定席 #E38AB2"""
+    return is_pink_floor1_komori(r, g, b)
+
+
+def is_team_green_fill(r: float, g: float, b: float) -> bool:
+    """料金表 チーム券席 #92D050"""
+    return r >= 0.48 and g >= 0.72 and b <= 0.45 and g >= r + 0.08
+
+
 def is_ota_team_zone(cx: float, cy: float) -> bool:
     """大田区 PDF: 東側チーム券列（上下の隙間も含む）"""
     if cx < 0.62:
@@ -91,27 +101,16 @@ def classify_seat(
         return "floor2", False
     r, g, b = float(fill[0]), float(fill[1]), float(fill[2])
 
+    if is_team_green_fill(r, g, b):
+        return "team_ticket", False
+    if is_pink_floor1(r, g, b):
+        return "floor1", True
     if is_gray_fill(r, g, b):
-        if slug in ("2025-12-12", "2025-12-13") and is_ota_team_zone(cx, cy):
-            return "team_ticket", False
         return "floor2", False
+    if is_blue_floor1(r, g, b):
+        return "floor1", True
 
-    if slug == "2025-12-11":
-        if is_pink_floor1_komori(r, g, b):
-            return "floor1", True
-        return "floor2", False
-
-    if slug in ("2025-12-12", "2025-12-13"):
-        if is_ota_team_zone(cx, cy):
-            if is_blue_floor1(r, g, b) or is_gray_fill(r, g, b):
-                return "team_ticket", False
-        if is_blue_floor1(r, g, b):
-            return "floor1", True
-        if is_gray_fill(r, g, b):
-            return "floor2", False
-        return "floor2", False
-
-    return "floor1", True
+    return "floor2", False
 
 
 def ota_stroke_team_rects(page: fitz.Page, pw: float, ph: float) -> list[fitz.Rect]:
@@ -351,12 +350,6 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
     if slug == "2025-12-11":
         refine_komori_12_11_zones(seats)
     elif slug in ("2025-12-12", "2025-12-13"):
-        gap_added = add_ota_team_row_gaps(page, seats, slug, pw, ph)
-        if gap_added:
-            print(f"  +{gap_added} gap-fill team seats for {slug}")
-        stroke_added = add_ota_stroke_box_seats(page, seats, slug, pw, ph)
-        if stroke_added:
-            print(f"  +{stroke_added} stroke-box team seats for {slug}")
         refine_ota_team_zones(seats)
     doc.close()
     return {
