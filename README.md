@@ -31,10 +31,10 @@ npm run dev
 ### 1. Supabase プロジェクト
 
 1. [Supabase](https://supabase.com/) でプロジェクトを作成
-2. **SQL Editor** で [`supabase/migrations/001_initial.sql`](supabase/migrations/001_initial.sql) を実行
+2. **SQL Editor** でマイグレーションを順に実行: `001_initial.sql` → `002_gender_allocation.sql` → [`003_day_ticket_sales.sql`](supabase/migrations/003_day_ticket_sales.sql)（当日券集計ログ用）
 3. **Authentication → Users** でスタッフ用ユーザーを 1 件作成（全員で共有するメール/パスワード）
 4. **Project Settings → API** から URL と `anon` key をコピー
-5. **Database → Replication** で `seat_states` / `seats` が Realtime 対象になっていることを確認（SQL 内で publication に追加済み）
+5. **Database → Replication** で `seat_states` / `seats` / `day_ticket_sales` が Realtime 対象になっていることを確認（SQL 内で publication に追加済み）
 
 ### 2. 環境変数
 

@@ -36,7 +36,7 @@ export function OtaStaffSeatChoiceModal({
   const price = ticketPriceYen(eventSlug, seat)
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 sm:items-center">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
       <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">

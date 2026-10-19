@@ -14,7 +14,8 @@ import {
   eventHasOtaSeatView,
   OTA_SEAT_VIEW_PATH,
 } from './lib/otaSeatView'
-import { appendDaySale, countDaySales } from './lib/daySaleLog'
+import { appendDaySale } from './lib/daySaleLog'
+import { useDaySales } from './hooks/useDaySales'
 import { isSeatSellable } from './lib/seatStatus'
 import { isSupabaseConfigured } from './lib/supabase'
 import type { GenderView, SeatWithState } from './types'
@@ -30,20 +31,14 @@ function App() {
 
   const { isStaff, signIn, signOut, isDemo, loading: authLoading } =
     useAuth()
-  const [genderView, setGenderView] = useState<GenderView>('men')
+  const [genderView, setGenderView] = useState<GenderView>('women')
   const swapActive = activeEvent
     ? eventHasGenderSwap(activeEvent.slug)
     : false
 
   useEffect(() => {
-    setGenderView('men')
+    setGenderView('women')
   }, [activeEvent?.slug])
-
-  useEffect(() => {
-    const onLog = () => setDaySalesTick((t) => t + 1)
-    window.addEventListener('seat-map-day-sales-changed', onLog)
-    return () => window.removeEventListener('seat-map-day-sales-changed', onLog)
-  }, [])
 
   const {
     seatsWithState,
@@ -60,7 +55,9 @@ function App() {
   const [daySoldBusy, setDaySoldBusy] = useState(false)
   const [resetBusy, setResetBusy] = useState(false)
   const [daySalesOpen, setDaySalesOpen] = useState(false)
-  const [daySalesTick, setDaySalesTick] = useState(0)
+  const { records: daySaleRecords, count: daySaleLogCount } = useDaySales(
+    activeEvent?.slug,
+  )
   const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
 
   const showOtaSeatView = eventHasOtaSeatView(activeEvent)
@@ -125,11 +122,6 @@ function App() {
     return { available, daySold, preSold, sold: daySold + preSold, total }
   }, [seatsWithState])
 
-  const daySaleLogCount = useMemo(() => {
-    void daySalesTick
-    return activeEvent ? countDaySales(activeEvent.slug) : 0
-  }, [activeEvent?.slug, daySalesTick])
-
   const handleSeatClick = (seat: SeatWithState) => {
     if (
       showOtaSeatView &&
@@ -185,7 +177,7 @@ function App() {
       seat &&
       activeEvent?.slug
     ) {
-      appendDaySale({
+      const { error: logError } = await appendDaySale({
         event_slug: activeEvent.slug,
         seat_id: seatId,
         label: seat.label,
@@ -194,6 +186,12 @@ function App() {
         allocation,
         note,
       })
+      if (logError) {
+        alert(
+          '席は当日券にしましたが、集計ログの保存に失敗しました: ' +
+            logError.message,
+        )
+      }
     }
   }
 
@@ -398,6 +396,7 @@ function App() {
         events={events}
         activeSlug={activeEvent?.slug ?? ''}
         seats={seatsWithState}
+        dayRecords={daySaleRecords}
       />
     </div>
   )

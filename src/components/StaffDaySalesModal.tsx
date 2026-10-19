@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { eventTabLabel } from '../lib/allocation'
-import { downloadCsvBlob, listDaySales } from '../lib/daySaleLog'
+import { downloadCsvBlob, type DaySaleRecord } from '../lib/daySaleLog'
 import { presoldSeatsForEvent } from '../lib/presoldExport'
 import {
   combinedSalesSummaryToCsv,
@@ -18,6 +18,7 @@ type Props = {
   events: VenueEvent[]
   activeSlug: string
   seats: SeatWithState[]
+  dayRecords: DaySaleRecord[]
 }
 
 function SalesBlock({
@@ -85,20 +86,8 @@ export function StaffDaySalesModal({
   events,
   activeSlug,
   seats,
+  dayRecords,
 }: Props) {
-  const [tick, setTick] = useState(0)
-
-  useEffect(() => {
-    const onChange = () => setTick((t) => t + 1)
-    window.addEventListener('seat-map-day-sales-changed', onChange)
-    return () => window.removeEventListener('seat-map-day-sales-changed', onChange)
-  }, [])
-
-  const dayRecords = useMemo(() => {
-    void tick
-    return listDaySales(activeSlug)
-  }, [activeSlug, tick])
-
   const presoldSeats = useMemo(
     () => presoldSeatsForEvent(seats),
     [seats],

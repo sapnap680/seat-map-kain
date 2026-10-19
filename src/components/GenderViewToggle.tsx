@@ -8,25 +8,20 @@ type Props = {
 
 export function GenderViewToggle({ value, onChange }: Props) {
   return (
-    <div
-      className="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs"
-      role="group"
-      aria-label="男子女子の表示切替"
-    >
-      {(['men', 'women'] as const).map((g) => (
-        <button
-          key={g}
-          type="button"
-          onClick={() => onChange(g)}
-          className={`rounded-md px-2.5 py-1 font-medium transition-colors ${
-            value === g
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          {GENDER_VIEW_LABELS[g]}
-        </button>
-      ))}
-    </div>
+    <label className="inline-flex items-center gap-1.5 text-xs text-slate-600">
+      <span className="font-medium text-slate-500">男子/女子</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as GenderView)}
+        className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-800 shadow-sm hover:border-slate-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        aria-label="男子女子の表示切替"
+      >
+        {(['women', 'men'] as const).map((g) => (
+          <option key={g} value={g}>
+            {GENDER_VIEW_LABELS[g]}
+          </option>
+        ))}
+      </select>
+    </label>
   )
 }
