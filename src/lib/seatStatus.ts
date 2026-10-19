@@ -56,7 +56,8 @@ export function seatOverlayClass(
   switch (status) {
     case 'presold':
     case 'daysold':
-      return `${base} border-0 bg-neutral-700/45 opacity-100`
+      /* ピンク等の PDF 色の上に、販売済だけ薄い灰 */
+      return `${base} border-0 bg-neutral-600/50 opacity-100`
     case 'hold':
       return `${base} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':

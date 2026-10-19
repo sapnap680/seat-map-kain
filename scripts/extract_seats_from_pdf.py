@@ -1,4 +1,4 @@
-"""PDF の塗りつぶし矩形を1席として抽出し public/seats/{slug}.json に出力"""
+"""PDF の塗りつぶし矩形を1席として抽出（色: ピンク/青=販売可、灰=非販売）"""
 from __future__ import annotations
 
 import json
@@ -46,36 +46,59 @@ def rect_contains(a: fitz.Rect, b: fitz.Rect, tol: float = 1.0) -> bool:
     )
 
 
-def dedupe_rects(rects: list[fitz.Rect]) -> list[fitz.Rect]:
-    kept: list[fitz.Rect] = []
-    for r in sorted(rects, key=lambda x: (x.width * x.height), reverse=True):
-        if any(rect_contains(k, r) for k in kept):
+def dedupe_items(items: list[tuple[fitz.Rect, tuple]]) -> list[tuple[fitz.Rect, tuple]]:
+    kept: list[tuple[fitz.Rect, tuple]] = []
+    for r, fill in sorted(items, key=lambda x: x[0].width * x[0].height, reverse=True):
+        if any(rect_contains(k, r) for k, _ in kept):
             continue
-        kept.append(r)
+        kept.append((r, fill))
     return kept
 
 
-def classify_komori_floor1(x: float, y: float) -> bool:
-    """駒オリ 12/11: 中央付近が 1階（販売可）"""
-    return 0.36 <= x <= 0.64 and 0.28 <= y <= 0.82
+def is_gray_fill(r: float, g: float, b: float) -> bool:
+    spread = max(r, g, b) - min(r, g, b)
+    avg = (r + g + b) / 3
+    return spread < 0.12 and 0.5 <= avg <= 0.88
 
 
-def classify_zone(slug: str, x: float, y: float, w: float, h: float) -> tuple[str, bool]:
-    cx = x + w / 2
-    cy = y + h / 2
+def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
+    """駒オリ 1階席（PDF 上のピンク）"""
+    return r >= 0.9 and 0.65 <= g <= 0.78 and b >= 0.75
 
-    if slug in ("2025-12-12", "2025-12-13"):
-        # チーム席エリア（PDF ラベル付近・右側）
-        if cx >= 0.62 and (
-            (0.28 <= cy <= 0.48) or (0.58 <= cy <= 0.78)
-        ):
+
+def is_blue_floor1(r: float, g: float, b: float) -> bool:
+    """会場総合図 12/12・13 の水色席"""
+    return b >= 0.9 and g >= 0.72 and 0.45 <= r <= 0.7
+
+
+def classify_seat(
+    slug: str,
+    fill: tuple[float, ...] | None,
+    cx: float,
+    cy: float,
+) -> tuple[str, bool]:
+    if not fill or len(fill) < 3:
+        return "floor2", False
+    r, g, b = float(fill[0]), float(fill[1]), float(fill[2])
+
+    if is_gray_fill(r, g, b):
+        if slug in ("2025-12-12", "2025-12-13") and cx >= 0.58:
             return "team_ticket", False
-        return "floor1", True
+        return "floor2", False
 
     if slug == "2025-12-11":
-        if classify_komori_floor1(cx, cy):
+        if is_pink_floor1_komori(r, g, b):
             return "floor1", True
         return "floor2", False
+
+    if slug in ("2025-12-12", "2025-12-13"):
+        if is_blue_floor1(r, g, b):
+            if cx >= 0.62 and (
+                (0.28 <= cy <= 0.48) or (0.58 <= cy <= 0.78)
+            ):
+                return "team_ticket", False
+            return "floor1", True
+        return "team_ticket", False
 
     return "floor1", True
 
@@ -84,7 +107,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
     doc = fitz.open(pdf_path)
     page = doc[0]
     pw, ph = page.rect.width, page.rect.height
-    raw: list[fitz.Rect] = []
+    raw: list[tuple[fitz.Rect, tuple]] = []
     for d in page.get_drawings():
         if d.get("type") != "f":
             continue
@@ -94,14 +117,18 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         w, h = r.width, r.height
         if not seat_size_ok(slug, w, h):
             continue
-        raw.append(fitz.Rect(r))
+        fill = d.get("fill")
+        if fill is None:
+            continue
+        raw.append((fitz.Rect(r), tuple(fill)))
     doc.close()
 
-    rects = dedupe_rects(raw)
+    items = dedupe_items(raw)
     seats = []
-    for i, r in enumerate(rects, start=1):
+    for i, (r, fill) in enumerate(items, start=1):
         x, y, w, h = r.x0 / pw, r.y0 / ph, r.width / pw, r.height / ph
-        zone, sellable = classify_zone(slug, x, y, w, h)
+        cx, cy = x + w / 2, y + h / 2
+        zone, sellable = classify_seat(slug, fill, cx, cy)
         seats.append(
             {
                 "id": str(uuid.uuid5(uuid.NAMESPACE_URL, f"{slug}-{i}-{r.x0}-{r.y0}")),

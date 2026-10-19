@@ -191,7 +191,7 @@ function App() {
           )}
 
           <p className="text-sm text-slate-600">
-            駒オリ: <strong>2階席</strong>と<strong>チーム席</strong>は販売しません（地図はPDFの色のまま、空席に色は付けません）。
+            1階席（<strong>ピンク</strong>）だけ販売・案内対象。PDF 上<strong>灰色</strong>の席・エリアはそのまま（販売なし）。販売済みだけ薄いグレーを重ねます。
           </p>
 
           <div className="flex flex-wrap items-center gap-2">
