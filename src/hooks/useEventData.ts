@@ -49,7 +49,11 @@ export function useEvents() {
       const enriched = await Promise.all(
         base.map(async (ev) => {
           const catalog = await loadSeatCatalog(ev.slug)
-          return catalog ? applyCatalogToEvent(ev, catalog) : ev
+          const merged = catalog ? applyCatalogToEvent(ev, catalog) : ev
+          return {
+            ...merged,
+            pdf_path: merged.pdf_path ?? `/pdfs/${merged.slug}.pdf`,
+          }
         }),
       )
       setEvents(enriched)

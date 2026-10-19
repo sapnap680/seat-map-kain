@@ -9,10 +9,12 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "convert-pdfs": "python scripts/convert_pdfs.py",
-    "extract-seats": "python scripts/extract_seats_from_pdf.py"
+    "extract-seats": "python scripts/extract_seats_from_pdf.py",
+    "copy-pdfs": "python scripts/copy_pdfs.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
+    "pdfjs-dist": "^6.4.299",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

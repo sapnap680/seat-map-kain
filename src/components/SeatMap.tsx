@@ -1,6 +1,7 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
+import { PdfPageCanvas } from './PdfPageCanvas'
 
 type Props = {
   event: VenueEvent
@@ -38,6 +39,12 @@ export function SeatMap({
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [bgFailed, setBgFailed] = useState(false)
+  const [usePdfFallback, setUsePdfFallback] = useState(false)
+
+  useEffect(() => {
+    setUsePdfFallback(false)
+    setBgFailed(false)
+  }, [event.pdf_path])
   const [moving, setMoving] = useState<{
     seatId: string
     startX: number
@@ -141,7 +148,12 @@ export function SeatMap({
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
         >
-          {!bgFailed ? (
+          {!bgFailed && !usePdfFallback ? (
+            <PdfPageCanvas
+              pdfUrl={event.pdf_path}
+              onError={() => setUsePdfFallback(true)}
+            />
+          ) : !bgFailed && event.background_path ? (
             <img
               src={event.background_path}
               alt="会場席図"

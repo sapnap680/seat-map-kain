@@ -22,7 +22,10 @@ export interface VenueEvent {
   id: string
   slug: string
   title: string
-  background_path: string
+  /** 表示は PDF 原稿を優先（色再現） */
+  pdf_path: string
+  /** PNG フォールバック（任意） */
+  background_path?: string
   map_width: number
   map_height: number
 }
