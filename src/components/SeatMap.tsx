@@ -210,7 +210,7 @@ export function SeatMap({
                       role="button"
                       tabIndex={0}
                       title={seatDisplayTitle(seat, event.slug)}
-                      className="pointer-events-auto absolute cursor-pointer opacity-0"
+                      className="pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
                       {...hitProps}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
@@ -229,7 +229,7 @@ export function SeatMap({
                       key={seat.id}
                       role="button"
                       tabIndex={0}
-                      className={`pointer-events-auto absolute cursor-pointer ${overlay}`}
+                      className={`pointer-events-auto absolute cursor-pointer touch-manipulation ${overlay}`}
                       {...hitProps}
                     />
                   )
@@ -246,7 +246,7 @@ export function SeatMap({
                       role="button"
                       tabIndex={0}
                       title={seatDisplayTitle(seat, event.slug)}
-                      className="pointer-events-auto absolute cursor-pointer opacity-0"
+                      className="pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
                       {...hitProps}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
@@ -260,7 +260,7 @@ export function SeatMap({
                     key={seat.id}
                     type="button"
                     title={seatDisplayTitle(seat, event.slug)}
-                    className={`pointer-events-auto absolute ${overlay}`}
+                    className={`pointer-events-auto absolute touch-manipulation ${overlay}`}
                     {...hitProps}
                   />
                 )

@@ -84,13 +84,68 @@ const ZONE_BLOCK: Partial<Record<SeatZone, string>> = {
   end: 'コートエンド',
 }
 
+const STAND_BLOCK_KEYS = new Set([
+  'I',
+  'H',
+  'G',
+  'F',
+  'E',
+  'K',
+  'L',
+  'M',
+  'C',
+  'B',
+  'A',
+])
+
+function blockFromSeatMeta(
+  seat: Pick<Seat, 'section' | 'label' | 'category'>,
+): string | null {
+  const section = seat.section?.trim()
+  if (section && STAND_BLOCK_KEYS.has(section)) return section
+
+  const label = seat.label?.trim() ?? ''
+  const fromLabel = label.match(/^([A-Z])(?:\d+列|\d+番)/)
+  if (fromLabel && STAND_BLOCK_KEYS.has(fromLabel[1])) return fromLabel[1]
+
+  const cat = seat.category ?? ''
+  if (cat.includes('コートサイドA')) return 'コートサイドA'
+  if (cat.includes('コートサイドB')) return 'コートサイドB'
+  if (cat.includes('コートエンド')) return 'コートエンド'
+  if (cat.includes('スペシャル')) return 'スペシャルシート'
+
+  return null
+}
+
+/** 1階スタンド：座標からおおよそのブロック（SVGヒット漏れ用） */
+function floor1BlockFallback(cx: number, cy: number): string {
+  if (cy < 0.22) {
+    if (cx < 0.38) return 'K'
+    if (cx < 0.62) return 'L'
+    return 'M'
+  }
+  if (cy > 0.78) {
+    if (cx < 0.38) return 'C'
+    if (cx < 0.62) return 'B'
+    return 'A'
+  }
+  if (cx < 0.28) return 'I'
+  if (cx < 0.38) return 'H'
+  if (cx < 0.55) return 'G'
+  if (cx < 0.72) return 'F'
+  return 'E'
+}
+
 /** 席タップ → 3D会場図のブロック（座標ヒット＋プレミアム席のゾーンフォールバック） */
 export function otaBlockForSeat(
-  seat: Pick<Seat, 'zone' | 'x' | 'y' | 'w' | 'h'>,
+  seat: Pick<Seat, 'zone' | 'x' | 'y' | 'w' | 'h' | 'section' | 'label' | 'category'>,
 ): string | null {
+  const fromMeta = blockFromSeatMeta(seat)
+  if (fromMeta) return fromMeta
+
   const cx = seat.x + seat.w / 2
   const cy = seat.y + seat.h / 2
-  const fromMap = otaBlockAtNorm(cx, cy) // PDF正規化↔SVGでズレる席は下のゾーン判定へ
+  const fromMap = otaBlockAtNorm(cx, cy)
   if (fromMap) return fromMap
 
   const zoned = ZONE_BLOCK[seat.zone]
@@ -100,5 +155,16 @@ export function otaBlockForSeat(
     return cx < 0.36 ? 'コートサイドB' : 'コートサイドA'
   }
 
+  if (seat.zone === 'floor1') {
+    return floor1BlockFallback(cx, cy)
+  }
+
   return null
+}
+
+/** 3D表示用（必ずブロックを返す） */
+export function otaBlockForSeatOrDefault(
+  seat: Parameters<typeof otaBlockForSeat>[0],
+): string {
+  return otaBlockForSeat(seat) ?? 'G'
 }

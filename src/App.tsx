@@ -10,7 +10,7 @@ import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap, eventTabLabel } from './lib/allocation'
-import { otaBlockForSeat } from './lib/otaBlockMap'
+import { otaBlockForSeatOrDefault } from './lib/otaBlockMap'
 import {
   eventHasOtaSeatView,
   OTA_SEAT_VIEW_PATH,
@@ -157,6 +157,12 @@ function App() {
   ) => {
     const { error } = await clearSeatState(seatId, allocation)
     if (error) alert('案内可に戻せませんでした: ' + error.message)
+  }
+
+  const openOta3dForSeat = (seat: SeatWithState) => {
+    setSelectedSeat(null)
+    setOtaStaffChoiceSeat(null)
+    setOtaViewBlock(otaBlockForSeatOrDefault(seat))
   }
 
   const handleSaveSeat = async (
@@ -371,11 +377,7 @@ function App() {
         }}
         resetBusy={resetBusy}
         onOpen3d={() => {
-          if (otaStaffChoiceSeat) {
-            const block = otaBlockForSeat(otaStaffChoiceSeat)
-            if (block) setOtaViewBlock(block)
-          }
-          setOtaStaffChoiceSeat(null)
+          if (otaStaffChoiceSeat) openOta3dForSeat(otaStaffChoiceSeat)
         }}
       />
 
@@ -388,11 +390,8 @@ function App() {
         onSave={handleSaveSeat}
         onResetAvailable={handleResetAvailable}
         onPreview3d={
-          showOtaSeatView && isStaff && selectedSeat
-            ? () => {
-                const block = otaBlockForSeat(selectedSeat)
-                if (block) setOtaViewBlock(block)
-              }
+          showOtaSeatView && selectedSeat
+            ? () => openOta3dForSeat(selectedSeat)
             : undefined
         }
       />
