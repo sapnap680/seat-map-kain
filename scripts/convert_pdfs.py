@@ -25,6 +25,7 @@ DATE_MAP = {
 }
 
 from incare_palette import FLOOR1_PINK  # noqa: E402
+from extract_seats_from_pdf import ota_stroke_team_rects  # noqa: E402
 
 # 説明ラベルだけ消す（ベンチ表記は残す）
 REDACT_TEXT_PARTS = ("ベンチ外", "メンバー", "チーム券")
@@ -80,6 +81,30 @@ def redact_map_labels(page: fitz.Page, path: Path, scale: float = 2.0) -> None:
             fill = _sample_fill(im, px0, py0)
             draw.rectangle([px0, py0, px1, py1], fill=fill)
     im.save(path)
+
+
+def fill_ota_stroke_team_boxes(
+    page: fitz.Page, path: Path, pw: float, ph: float, scale: float = 2.0
+) -> None:
+    """枠だけブロックを灰色で塗り、中抜けと赤枠を消す"""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError:
+        return
+    rects = ota_stroke_team_rects(page, pw, ph)
+    if not rects:
+        return
+    im = Image.open(path).convert("RGB")
+    draw = ImageDraw.Draw(im)
+    fill = (191, 191, 191)
+    for r in rects:
+        x0 = max(0, int(r.x0 * scale))
+        y0 = max(0, int(r.y0 * scale))
+        x1 = min(im.size[0], int(r.x1 * scale))
+        y1 = min(im.size[1], int(r.y1 * scale))
+        draw.rectangle([x0, y0, x1, y1], fill=fill)
+    im.save(path)
+    print(f"  filled {len(rects)} Ota stroke team boxes on {path.name}")
 
 
 def paint_nonsellable_seats(path: Path, slug: str) -> None:
@@ -183,7 +208,10 @@ def main() -> None:
         doc.close()
         recolor_floor1_to_pptx_pink(out, slug)
         doc = fitz.open(pdf)
-        redact_map_labels(doc[0], out, scale=2.0)
+        page = doc[0]
+        redact_map_labels(page, out, scale=2.0)
+        if slug in ("2025-12-12", "2025-12-13"):
+            fill_ota_stroke_team_boxes(page, out, pw, ph, scale=2.0)
         doc.close()
         paint_nonsellable_seats(out, slug)
         meta = {

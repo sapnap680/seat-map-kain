@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import statistics
 import sys
 import uuid
 from pathlib import Path
@@ -113,6 +114,152 @@ def classify_seat(
     return "floor1", True
 
 
+def ota_stroke_team_rects(page: fitz.Page, pw: float, ph: float) -> list[fitz.Rect]:
+    """大田 PDF: 右端チーム券は枠線だけで席矩形が無いブロック"""
+    rects: list[fitz.Rect] = []
+    for d in page.get_drawings():
+        if d.get("type") != "s" or d.get("fill") is not None:
+            continue
+        r = d.get("rect")
+        if not r:
+            continue
+        w, h = r.width, r.height
+        if not (35 <= w <= 70 and 25 <= h <= 90):
+            continue
+        cx = (r.x0 + r.x1) / 2 / pw
+        cy = (r.y0 + r.y1) / 2 / ph
+        if cx < 0.80 or not (0.275 <= cy <= 0.785):
+            continue
+        rects.append(fitz.Rect(r))
+    return rects
+
+
+def ota_seat_dims_norm(page: fitz.Page, pw: float, ph: float) -> tuple[float, float]:
+    for d in page.get_drawings():
+        if d.get("type") != "f":
+            continue
+        r = d.get("rect")
+        if not r:
+            continue
+        if abs(r.width - 8.6) <= 0.6 and abs(r.height - 8.6) <= 0.6:
+            return r.width / pw, r.height / ph
+    return 8.6 / pw, 8.6 / ph
+
+
+def _seat_overlaps(seats: list[dict], x: float, y: float, w: float, h: float) -> bool:
+    for s in seats:
+        if x + w <= s["x"] + 0.0005 or s["x"] + s["w"] <= x + 0.0005:
+            continue
+        if y + h <= s["y"] + 0.0005 or s["y"] + s["h"] <= y + 0.0005:
+            continue
+        return True
+    return False
+
+
+def add_ota_team_row_gaps(
+    page: fitz.Page, seats: list[dict], slug: str, pw: float, ph: float
+) -> int:
+    """チーム券列の欠け行（PDFに矩形が無い横帯）を補完"""
+    team = [s for s in seats if s["zone"] == "team_ticket"]
+    if len(team) < 20:
+        return 0
+    w_n, h_n = ota_seat_dims_norm(page, pw, ph)
+    row_ys = sorted({round(s["y"] + s["h"] / 2, 4) for s in team})
+    dys = [
+        row_ys[i + 1] - row_ys[i]
+        for i in range(len(row_ys) - 1)
+        if row_ys[i + 1] - row_ys[i] < 0.014
+    ]
+    if not dys:
+        return 0
+    dy = statistics.median(dys)
+    cols = sorted({round(s["x"], 5) for s in team})
+    added = 0
+    seq = len(seats) + 5000
+    for i in range(len(row_ys) - 1):
+        y_lo, y_hi = row_ys[i], row_ys[i + 1]
+        if y_hi - y_lo <= 0.025:
+            continue
+        cy = y_lo + dy
+        while cy < y_hi - dy * 0.45:
+            for x in cols:
+                y = cy - h_n / 2
+                if _seat_overlaps(seats, x, y, w_n, h_n):
+                    continue
+                cx = x + w_n / 2
+                if not is_ota_team_zone(cx, cy):
+                    continue
+                seats.append(
+                    {
+                        "id": str(
+                            uuid.uuid5(
+                                uuid.NAMESPACE_URL,
+                                f"{slug}-gap-{cy:.4f}-{x:.5f}",
+                            )
+                        ),
+                        "label": str(seq),
+                        "section": None,
+                        "zone": "team_ticket",
+                        "sellable": False,
+                        "x": x,
+                        "y": y,
+                        "w": w_n,
+                        "h": h_n,
+                    }
+                )
+                seq += 1
+                added += 1
+            cy += dy
+    return added
+
+
+def add_ota_stroke_box_seats(
+    page: fitz.Page, seats: list[dict], slug: str, pw: float, ph: float
+) -> int:
+    """枠だけのチーム券ブロック内に席グリッドを補完"""
+    w_n, h_n = ota_seat_dims_norm(page, pw, ph)
+    seat_w, seat_h = w_n * pw, h_n * ph
+    added = 0
+    seq = len(seats) + 1
+    for r in ota_stroke_team_rects(page, pw, ph):
+        pad = 1.2
+        inner = fitz.Rect(r.x0 + pad, r.y0 + pad, r.x1 - pad, r.y1 - pad)
+        cols = max(1, int(inner.width // seat_w))
+        rows = max(1, int(inner.height // seat_h))
+        grid_w = cols * seat_w
+        grid_h = rows * seat_h
+        x_start = inner.x0 + (inner.width - grid_w) / 2
+        y_start = inner.y0 + (inner.height - grid_h) / 2
+        for row in range(rows):
+            for col in range(cols):
+                x0 = x_start + col * seat_w
+                y0 = y_start + row * seat_h
+                x, y = x0 / pw, y0 / ph
+                if _seat_overlaps(seats, x, y, w_n, h_n):
+                    continue
+                seats.append(
+                    {
+                        "id": str(
+                            uuid.uuid5(
+                                uuid.NAMESPACE_URL,
+                                f"{slug}-stroke-{r.x0}-{r.y0}-{row}-{col}",
+                            )
+                        ),
+                        "label": str(seq),
+                        "section": None,
+                        "zone": "team_ticket",
+                        "sellable": False,
+                        "x": x,
+                        "y": y,
+                        "w": w_n,
+                        "h": h_n,
+                    }
+                )
+                seq += 1
+                added += 1
+    return added
+
+
 def refine_ota_team_zones(seats: list[dict]) -> None:
     """チーム券は灰色席のみ（ピンク1階は触らない）"""
     for s in seats:
@@ -181,7 +328,6 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         if fill is None:
             continue
         raw.append((fitz.Rect(r), tuple(fill)))
-    doc.close()
 
     items = dedupe_items(raw)
     seats = []
@@ -205,7 +351,14 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
     if slug == "2025-12-11":
         refine_komori_12_11_zones(seats)
     elif slug in ("2025-12-12", "2025-12-13"):
+        gap_added = add_ota_team_row_gaps(page, seats, slug, pw, ph)
+        if gap_added:
+            print(f"  +{gap_added} gap-fill team seats for {slug}")
+        stroke_added = add_ota_stroke_box_seats(page, seats, slug, pw, ph)
+        if stroke_added:
+            print(f"  +{stroke_added} stroke-box team seats for {slug}")
         refine_ota_team_zones(seats)
+    doc.close()
     return {
         "slug": slug,
         "map_width": int(pw),
