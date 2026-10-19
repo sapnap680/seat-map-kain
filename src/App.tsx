@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
+import { SharePublicLink } from './components/SharePublicLink'
 import { OtaSeatViewModal } from './components/OtaSeatViewModal'
 import { SeatDetailModal } from './components/SeatDetailModal'
 import { SeatMap } from './components/SeatMap'
@@ -25,7 +26,8 @@ function App() {
     return events.find((e) => e.slug === slug) ?? events[0]
   }, [events, activeSlug])
 
-  const { isStaff, signIn, signOut, isDemo, email } = useAuth()
+  const { isStaff, signIn, signOut, isDemo, email, loading: authLoading } =
+    useAuth()
   const [genderView, setGenderView] = useState<GenderView>('men')
   const swapActive = activeEvent
     ? eventHasGenderSwap(activeEvent.slug)
@@ -70,6 +72,27 @@ function App() {
     // #endregion
   }, [showOtaSeatView, activeEvent?.slug, isStaff, events.length])
 
+  useEffect(() => {
+    if (authLoading || isStaff) return
+    // #region agent log
+    fetch('http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Debug-Session-Id': '0c7e1f',
+      },
+      body: JSON.stringify({
+        sessionId: '0c7e1f',
+        hypothesisId: 'H-public-visitor',
+        location: 'App.tsx:public-view',
+        message: 'public visitor session',
+        data: { isDemo, hasSupabase: isSupabaseConfigured },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {})
+    // #endregion
+  }, [authLoading, isStaff, isDemo])
+
   const stats = useMemo(() => {
     let available = 0
     let sold = 0
@@ -106,9 +129,10 @@ function App() {
               会場席状況（リアルタイム）
             </h1>
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              {!isSupabaseConfigured && (
+              <SharePublicLink />
+              {isStaff && isDemo && (
                 <span className="rounded bg-amber-100 px-2 py-0.5 text-amber-900">
-                  デモモード
+                  デモ（スタッフ用）
                 </span>
               )}
               {isStaff ? (
@@ -128,13 +152,19 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setLoginOpen(true)}
-                  className="rounded-lg bg-slate-800 px-3 py-1.5 font-medium text-white hover:bg-slate-900"
+                  className="text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline"
                 >
                   スタッフログイン
                 </button>
               )}
             </div>
           </div>
+
+          {!isStaff && (
+            <p className="text-xs text-slate-500">
+              ログイン不要で閲覧できます。このURLをそのままお客様・スタッフに共有してください。
+            </p>
+          )}
 
           <div className="flex flex-wrap items-center gap-2">
             {events.map((ev) => (

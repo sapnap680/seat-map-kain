@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!ota-seat-view\\.html|backgrounds/|pdfs/|seats/|assets/|favicon\\.svg|icons\\.svg).*)",
+      "source": "/((?!ota-seat-view\\.html|backgrounds/|pdfs/|seats/|assets/|favicon\\.svg|icons\\.svg|robots\\.txt).*)",
       "destination": "/index.html"
     }
   ],
