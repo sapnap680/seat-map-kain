@@ -68,6 +68,13 @@ def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
     return r >= 0.9 and 0.65 <= g <= 0.78 and b >= 0.75
 
 
+def is_ota_team_zone(cx: float, cy: float) -> bool:
+    """大田区 PDF: 東側ベンチ外・メンバー・チーム券（上下2ブロック）"""
+    if cx < 0.62:
+        return False
+    return (0.275 <= cy <= 0.485) or (0.575 <= cy <= 0.785)
+
+
 def is_blue_floor1(r: float, g: float, b: float) -> bool:
     """会場総合図 12/12・13 の水色席"""
     return b >= 0.9 and g >= 0.72 and 0.45 <= r <= 0.7
@@ -84,7 +91,7 @@ def classify_seat(
     r, g, b = float(fill[0]), float(fill[1]), float(fill[2])
 
     if is_gray_fill(r, g, b):
-        if slug in ("2025-12-12", "2025-12-13") and cx >= 0.58:
+        if slug in ("2025-12-12", "2025-12-13") and is_ota_team_zone(cx, cy):
             return "team_ticket", False
         return "floor2", False
 
@@ -94,15 +101,31 @@ def classify_seat(
         return "floor2", False
 
     if slug in ("2025-12-12", "2025-12-13"):
-        if is_blue_floor1(r, g, b):
-            if cx >= 0.62 and (
-                (0.28 <= cy <= 0.48) or (0.58 <= cy <= 0.78)
-            ):
+        if is_ota_team_zone(cx, cy):
+            if is_blue_floor1(r, g, b) or is_gray_fill(r, g, b):
                 return "team_ticket", False
+        if is_blue_floor1(r, g, b):
             return "floor1", True
-        return "team_ticket", False
+        if is_gray_fill(r, g, b):
+            return "floor2", False
+        return "floor2", False
 
     return "floor1", True
+
+
+def refine_ota_team_zones(seats: list[dict]) -> None:
+    for s in seats:
+        if s["zone"] == "floor1":
+            continue
+        cx = s["x"] + s["w"] / 2
+        cy = s["y"] + s["h"] / 2
+        in_team = is_ota_team_zone(cx, cy)
+        if in_team:
+            s["zone"] = "team_ticket"
+            s["sellable"] = False
+        elif s["zone"] == "team_ticket":
+            s["zone"] = "floor2"
+            s["sellable"] = False
 
 
 def refine_komori_12_11_zones(seats: list[dict]) -> None:
@@ -180,6 +203,8 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         )
     if slug == "2025-12-11":
         refine_komori_12_11_zones(seats)
+    elif slug in ("2025-12-12", "2025-12-13"):
+        refine_ota_team_zones(seats)
     return {
         "slug": slug,
         "map_width": int(pw),

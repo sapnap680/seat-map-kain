@@ -28,17 +28,48 @@ export function nonSellableZoneStyle(zone: SeatZone): {
   }
 }
 
-/** オーバーレイ用: 12/11 は下半分 2 階のみ（上段 2 階・1 階帯の脇席は除外） */
+function otaTeamZone(cx: number, cy: number): boolean {
+  if (cx < 0.62) return false
+  return (cy >= 0.275 && cy <= 0.485) || (cy >= 0.575 && cy <= 0.785)
+}
+
+/** オーバーレイ用: 会場ごとに席データを絞り込み（範囲のずれ防止） */
 export function seatsForNonSellableOverlay(
   slug: string,
   zone: SeatZone,
   seats: Pick<Seat, 'x' | 'y' | 'w' | 'h' | 'zone'>[],
 ): Pick<Seat, 'x' | 'y' | 'w' | 'h' | 'zone'>[] {
   const z = seats.filter((s) => s.zone === zone)
-  if (slug !== '2025-12-11' || zone !== 'floor2') {
-    return z
+  if (slug === '2025-12-11' && zone === 'floor2') {
+    return z.filter((s) => s.y + s.h / 2 >= 0.86)
   }
-  return z.filter((s) => s.y + s.h / 2 >= 0.86)
+  if (
+    (slug === '2025-12-12' || slug === '2025-12-13') &&
+    zone === 'team_ticket'
+  ) {
+    return z.filter((s) => {
+      const cx = s.x + s.w / 2
+      const cy = s.y + s.h / 2
+      return otaTeamZone(cx, cy)
+    })
+  }
+  return z
+}
+
+export function mergeOptionsForOverlay(
+  slug: string,
+  zone: SeatZone,
+): { gap: number; maxVerticalSep: number } {
+  if (
+    (slug === '2025-12-12' || slug === '2025-12-13') &&
+    zone === 'team_ticket'
+  ) {
+    return { gap: 0.008, maxVerticalSep: 0.03 }
+  }
+  if (slug === '2025-12-11' && zone === 'team_ticket') {
+    return { gap: 0.006, maxVerticalSep: 0.025 }
+  }
+  return { gap: 0.012, maxVerticalSep: 0.04 }
 }
 
 type Box = { x0: number; y0: number; x1: number; y1: number }

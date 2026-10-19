@@ -39,6 +39,38 @@ def is_pdf_floor1_pink(r: int, g: int, b: int) -> bool:
     return r >= 200 and 130 <= g <= 200 and b >= 160
 
 
+REDACT_LABEL_PARTS = ("ベンチ外", "メンバー", "チーム券席")
+
+
+def redact_pdf_labels(page: fitz.Page, path: Path, scale: float = 2.0) -> None:
+    """図面上のベンチ外・メンバー・チーム券席などの文字を消す"""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError:
+        return
+    im = Image.open(path).convert("RGB")
+    draw = ImageDraw.Draw(im)
+    w, h = im.size
+    for block in page.get_text("dict").get("blocks", []):
+        if block.get("type") != 0:
+            continue
+        for line in block.get("lines", []):
+            for span in line.get("spans", []):
+                text = span.get("text", "")
+                if not any(part in text for part in REDACT_LABEL_PARTS):
+                    continue
+                x0, y0, x1, y1 = span["bbox"]
+                px0 = max(0, int(x0 * scale) - 4)
+                py0 = max(0, int(y0 * scale) - 3)
+                px1 = min(w - 1, int(x1 * scale) + 4)
+                py1 = min(h - 1, int(y1 * scale) + 3)
+                sample_y = max(0, py0 - 2)
+                sample_x = min(w - 1, max(0, px0))
+                fill = im.getpixel((sample_x, sample_y))
+                draw.rectangle([px0, py0, px1, py1], fill=fill)
+    im.save(path)
+
+
 def recolor_floor1_to_pptx_pink(path: Path) -> None:
     try:
         from PIL import Image
@@ -94,6 +126,7 @@ def main() -> None:
             colorspace=fitz.csRGB,
         )
         pix.save(out)
+        redact_pdf_labels(page, out, scale=2.0)
         doc.close()
         recolor_floor1_to_pptx_pink(out)
         meta = {

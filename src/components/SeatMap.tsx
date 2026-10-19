@@ -5,6 +5,7 @@ import {
   nonSellableZonesForEvent,
   nonSellableZoneStyle,
   seatsForNonSellableOverlay,
+  mergeOptionsForOverlay,
 } from '../lib/nonSellableRegions'
 import { INCARE_LABELS } from '../lib/incarePalette'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
@@ -146,11 +147,17 @@ export function SeatMap({
     const zones = nonSellableZonesForEvent(event.slug)
     return zones.flatMap((zone) => {
       const subset = seatsForNonSellableOverlay(event.slug, zone, seats)
-      return mergeSeatRectsByZone(subset, zone).map((rect) => ({
+      const { gap, maxVerticalSep } = mergeOptionsForOverlay(
+        event.slug,
         zone,
-        rect,
-        label: NON_SELLABLE_ZONE_LABEL[zone] ?? '販売しません',
-      }))
+      )
+      return mergeSeatRectsByZone(subset, zone, gap, maxVerticalSep).map(
+        (rect) => ({
+          zone,
+          rect,
+          label: NON_SELLABLE_ZONE_LABEL[zone] ?? '販売しません',
+        }),
+      )
     })
   }, [event.slug, seats])
 
