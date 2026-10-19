@@ -7,6 +7,7 @@ import {
   type DaySaleRecord,
 } from '../lib/daySaleLog'
 import type { SeatZone, VenueEvent } from '../types'
+import { ModalCloseButton } from './ModalCloseButton'
 
 function saleLine(r: DaySaleRecord): string {
   if (r.category) return `${r.category} ${r.label}`
@@ -90,14 +91,7 @@ export function StaffDaySalesModal({
               窓口で「当日券を販売した」と記録した席の一覧です（取り消ししてもログは残ります）。
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-slate-400 hover:bg-slate-100"
-            aria-label="閉じる"
-          >
-            ✕
-          </button>
+          <ModalCloseButton onClose={onClose} />
         </div>
 
         <div className="space-y-3 overflow-auto p-5">

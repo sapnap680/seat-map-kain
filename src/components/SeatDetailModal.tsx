@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { allocationDisplayLabel, seatDisplayTitle } from '../lib/allocation'
 import { isSeatSellable, statusLabelForDisplay } from '../lib/seatStatus'
+import {
+  formatTicketPrice,
+  ticketPriceYen,
+} from '../lib/ticketPricing'
 import type { GenderView, SeatStatus, SeatWithState } from '../types'
+import { ModalCloseButton } from './ModalCloseButton'
 
 type Props = {
   seat: SeatWithState | null
@@ -46,6 +51,7 @@ export function SeatDetailModal({
     status !== 'blocked'
   const canMarkDaySold =
     isStaff && sellable && status === 'available'
+  const price = sellable ? ticketPriceYen(eventSlug, seat) : null
 
   const markDaySold = async () => {
     setBusy(true)
@@ -80,15 +86,13 @@ export function SeatDetailModal({
                 seat.effectiveAllocation,
               )}
             </p>
+            {price != null && (
+              <p className="mt-2 text-xl font-bold tabular-nums text-slate-900">
+                {formatTicketPrice(price)}
+              </p>
+            )}
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-            aria-label="閉じる"
-          >
-            ✕
-          </button>
+          <ModalCloseButton onClose={onClose} />
         </div>
 
         <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">

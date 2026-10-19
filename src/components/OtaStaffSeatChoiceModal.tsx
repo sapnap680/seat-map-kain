@@ -1,6 +1,11 @@
 import { seatDisplayTitle } from '../lib/allocation'
 import { statusLabelForDisplay } from '../lib/seatStatus'
+import {
+  formatTicketPrice,
+  ticketPriceYen,
+} from '../lib/ticketPricing'
 import type { SeatWithState } from '../types'
+import { ModalCloseButton } from './ModalCloseButton'
 
 type Props = {
   seat: SeatWithState | null
@@ -28,6 +33,7 @@ export function OtaStaffSeatChoiceModal({
   const sold = seat.state.status === 'daysold' || seat.state.status === 'presold'
   const canReset =
     seat.state.status === 'daysold' || seat.state.status === 'hold'
+  const price = ticketPriceYen(eventSlug, seat)
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 sm:items-center">
@@ -40,18 +46,16 @@ export function OtaStaffSeatChoiceModal({
             {seat.category && (
               <p className="truncate text-sm text-slate-500">{seat.category}</p>
             )}
+            {price != null && (
+              <p className="mt-2 text-xl font-bold tabular-nums text-slate-900">
+                {formatTicketPrice(price)}
+              </p>
+            )}
             <p className="mt-1 text-sm text-slate-600">
               現在：{statusLabelForDisplay(seat.state.status)}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-slate-400 hover:bg-slate-100"
-            aria-label="閉じる"
-          >
-            ✕
-          </button>
+          <ModalCloseButton onClose={onClose} />
         </div>
 
         <div className="mt-4 flex flex-col gap-2">
