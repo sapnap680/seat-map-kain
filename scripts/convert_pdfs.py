@@ -26,47 +26,45 @@ DATE_MAP = {
 
 from incare_palette import FLOOR1_PINK  # noqa: E402
 
-REDACT_TEXT_PARTS = (
-    "ベンチ外",
-    "メンバー",
-    "チーム券",
-    "チーム席",
-    "濃色",
-    "淡色",
-    "販売しません",
-)
+# 説明ラベルだけ消す（ベンチ表記は残す）
+REDACT_TEXT_PARTS = ("ベンチ外", "メンバー", "チーム券")
+
 
 def is_ota_floor1_blue(r: int, g: int, b: int) -> bool:
-    return 140 <= r <= 175 and 188 <= g <= 225 and b >= 238
-
-
-def is_ota_team_zone_norm(nx: float, ny: float) -> bool:
-    if nx < 0.62:
+    """大田 1階席の水色系（複数トーン）"""
+    if b < 200 or g < 165:
         return False
-    return (0.275 <= ny <= 0.485) or (0.575 <= ny <= 0.785)
+    if r > 200:
+        return False
+    return b >= g >= r
 
 
 def is_pdf_floor1_pink(r: int, g: int, b: int) -> bool:
-    if abs(r - FLOOR1_PINK[0]) <= 8 and abs(g - FLOOR1_PINK[1]) <= 8 and abs(b - FLOOR1_PINK[2]) <= 8:
+    if abs(r - FLOOR1_PINK[0]) <= 10 and abs(g - FLOOR1_PINK[1]) <= 10 and abs(b - FLOOR1_PINK[2]) <= 10:
         return True
     return r >= 200 and 130 <= g <= 200 and b >= 160
 
 
-def _sample_fill(im, px0: int, py0: int, pw: int, ph: int) -> tuple[int, int, int]:
+def is_seat_gray(r: int, g: int, b: int) -> bool:
+    spread = max(r, g, b) - min(r, g, b)
+    avg = (r + g + b) / 3
+    return spread < 25 and 140 <= avg <= 220
+
+
+def _sample_fill(im, px0: int, py0: int) -> tuple[int, int, int]:
     w, h = im.size
     sx = min(w - 1, max(0, px0))
-    sy = min(h - 1, max(0, py0 - 4))
+    sy = min(h - 1, max(0, py0 - 3))
     return im.getpixel((sx, sy))
 
 
-def redact_map_labels(page: fitz.Page, path: Path, _slug: str, scale: float = 2.0) -> None:
+def redact_map_labels(page: fitz.Page, path: Path, scale: float = 2.0) -> None:
     try:
         from PIL import Image, ImageDraw
     except ImportError:
         return
     im = Image.open(path).convert("RGB")
     draw = ImageDraw.Draw(im)
-
     for block in page.get_text("dict").get("blocks", []):
         if block.get("type") != 0:
             continue
@@ -75,19 +73,17 @@ def redact_map_labels(page: fitz.Page, path: Path, _slug: str, scale: float = 2.
             if not any(part in line_text for part in REDACT_TEXT_PARTS):
                 continue
             x0, y0, x1, y1 = line["bbox"]
-            pad_x, pad_y = 8, 6
-            px0 = max(0, int(x0 * scale) - pad_x)
-            py0 = max(0, int(y0 * scale) - pad_y)
-            px1 = min(im.size[0], int(x1 * scale) + pad_x)
-            py1 = min(im.size[1], int(y1 * scale) + pad_y)
-            fill = _sample_fill(im, px0, py0, page.rect.width, page.rect.height)
+            px0 = max(0, int(x0 * scale) - 6)
+            py0 = max(0, int(y0 * scale) - 4)
+            px1 = min(im.size[0], int(x1 * scale) + 6)
+            py1 = min(im.size[1], int(y1 * scale) + 4)
+            fill = _sample_fill(im, px0, py0)
             draw.rectangle([px0, py0, px1, py1], fill=fill)
-
     im.save(path)
 
 
-def strip_pdf_red_boxes(path: Path) -> None:
-    """PDF に描かれた赤い囲い線だけ白にする（席の色は残す）"""
+def pdf_red_lines_to_gray(path: Path) -> None:
+    """PDF の赤い囲い線だけ席灰色に置換（白抜け防止）"""
     try:
         from PIL import Image
     except ImportError:
@@ -95,40 +91,41 @@ def strip_pdf_red_boxes(path: Path) -> None:
     im = Image.open(path).convert("RGB")
     px = im.load()
     w, h = im.size
+    gray = (191, 191, 191)
     changed = 0
     for y in range(h):
         for x in range(w):
-            if x / w < 0.68:
-                continue
             r, g, b = px[x, y]
-            if r >= 170 and g <= 90 and b <= 90 and r - max(g, b) >= 80:
-                px[x, y] = (255, 255, 255)
+            if r >= 200 and g <= 80 and b <= 80 and r - max(g, b) >= 100:
+                px[x, y] = gray
                 changed += 1
     if changed:
         im.save(path)
-        print(f"  stripped {changed} red-box px on {path.name}")
+        print(f"  red lines -> gray: {changed} px on {path.name}")
 
 
 def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
+    """1階席だけピンクに。灰色席は触らない。"""
     try:
         from PIL import Image
     except ImportError:
-        print("Pillow が無いため水色→ピンク変換をスキップ: pip install pillow", file=sys.stderr)
         return
     im = Image.open(path).convert("RGB")
     px = im.load()
     w, h = im.size
     changed = 0
     for y in range(h):
-        ny = y / h
         for x in range(w):
-            nx = x / w
-            if slug in ("2025-12-12", "2025-12-13") and is_ota_team_zone_norm(nx, ny):
-                continue
             r, g, b = px[x, y]
-            if is_ota_floor1_blue(r, g, b) or is_pdf_floor1_pink(r, g, b):
-                px[x, y] = FLOOR1_PINK
-                changed += 1
+            if is_seat_gray(r, g, b):
+                continue
+            if slug in ("2025-12-12", "2025-12-13"):
+                if not is_ota_floor1_blue(r, g, b):
+                    continue
+            elif not is_pdf_floor1_pink(r, g, b):
+                continue
+            px[x, y] = FLOOR1_PINK
+            changed += 1
     if changed:
         im.save(path)
         print(f"  recolored {changed} px to #E38AB2 on {path.name}")
@@ -163,16 +160,16 @@ def main() -> None:
         pix = page.get_pixmap(
             matrix=mat,
             alpha=False,
-            annots=True,
+            annots=False,
             colorspace=fitz.csRGB,
         )
         pix.save(out)
         doc.close()
         recolor_floor1_to_pptx_pink(out, slug)
         if slug in ("2025-12-12", "2025-12-13"):
-            strip_pdf_red_boxes(out)
+            pdf_red_lines_to_gray(out)
         doc = fitz.open(pdf)
-        redact_map_labels(doc[0], out, slug, scale=2.0)
+        redact_map_labels(doc[0], out, scale=2.0)
         doc.close()
         meta = {
             "slug": slug,
@@ -181,9 +178,10 @@ def main() -> None:
             "image_width": pix.width,
             "image_height": pix.height,
         }
-        meta_path = META_DIR / f"{slug}.meta.json"
-        meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
-        print(f"Wrote {out} ({pix.width}x{pix.height}) page=({pw}x{ph}) from {pdf.name}")
+        (META_DIR / f"{slug}.meta.json").write_text(
+            json.dumps(meta, indent=2), encoding="utf-8"
+        )
+        print(f"Wrote {out} from {pdf.name}")
 
 
 if __name__ == "__main__":
