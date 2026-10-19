@@ -3,9 +3,11 @@ import type { Seat, SeatZone } from '../types'
 
 export type NormRect = { x: number; y: number; w: number; h: number }
 
-export const NON_SELLABLE_ZONE_LABEL: Partial<Record<SeatZone, string>> = {
-  floor2: `${INCARE_LABELS.floor2}・販売しません`,
-  team_ticket: `${INCARE_LABELS.teamTicket}・販売しません`,
+/** 図面上の枠ラベル。販売しませんは出さない。駒沢2階だけ当日販売。 */
+export function overlayLabel(slug: string, zone: SeatZone): string | null {
+  if (slug === '2025-12-11' && zone === 'floor2') return '当日販売します'
+  if (zone === 'team_ticket') return INCARE_LABELS.teamTicket
+  return null
 }
 
 export function nonSellableZoneStyle(zone: SeatZone): {

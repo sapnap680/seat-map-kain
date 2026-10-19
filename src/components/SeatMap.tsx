@@ -3,7 +3,7 @@ import { INCARE_LABELS } from '../lib/incarePalette'
 import {
   mergeOptionsForOverlay,
   mergeSeatRectsByZone,
-  NON_SELLABLE_ZONE_LABEL,
+  overlayLabel,
   nonSellableZonesForEvent,
   nonSellableZoneStyle,
   seatsForNonSellableOverlay,
@@ -153,7 +153,7 @@ export function SeatMap({
         .map((rect) => ({
           zone,
           rect,
-          label: NON_SELLABLE_ZONE_LABEL[zone] ?? '販売しません',
+          label: overlayLabel(event.slug, zone),
         }))
     })
   }, [event.slug, seats])
@@ -212,9 +212,11 @@ export function SeatMap({
                         borderColor: style.borderColor,
                       }}
                     >
-                      <span className="absolute left-1/2 top-1 z-10 max-w-[96%] -translate-x-1/2 whitespace-nowrap rounded bg-white/95 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-slate-800 shadow-sm">
-                        {region.label}
-                      </span>
+                      {region.label && (
+                        <span className="absolute left-1/2 top-1 z-10 max-w-[96%] -translate-x-1/2 whitespace-nowrap rounded bg-white/95 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-slate-800 shadow-sm">
+                          {region.label}
+                        </span>
+                      )}
                     </div>
                   )
                 })}

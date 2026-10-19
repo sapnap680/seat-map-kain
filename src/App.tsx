@@ -195,8 +195,7 @@ function App() {
 
           <p className="text-sm text-slate-600">
             <strong>{INCARE_LABELS.floor1}</strong>
-            （ピンク）だけ販売・案内対象。灰色＝{INCARE_LABELS.floor2}・
-            {INCARE_LABELS.teamTicket}（販売なし）。凡例参照。販売済は薄灰で重ねます。
+            （ピンク）が前売り対象。駒沢の2階は当日販売。販売済は薄灰で重ねます。
           </p>
 
           <div className="flex flex-wrap items-center gap-2">
