@@ -195,8 +195,8 @@ function App() {
 
           <p className="text-sm text-slate-600">
             <strong>{INCARE_LABELS.floor1}</strong>
-            だけ販売・案内対象（色は料金表 PPTX と統一）。{INCARE_LABELS.floor2}・
-            {INCARE_LABELS.teamTicket}は図面上で明示。販売済は灰色で重ねます。
+            （ピンク）だけ販売・案内対象。灰色＝{INCARE_LABELS.floor2}・
+            {INCARE_LABELS.teamTicket}（販売なし）。凡例参照。販売済は薄灰で重ねます。
           </p>
 
           <div className="flex flex-wrap items-center gap-2">

@@ -114,17 +114,18 @@ def classify_seat(
 
 
 def refine_ota_team_zones(seats: list[dict]) -> None:
+    """チーム券は灰色席のみ（ピンク1階は触らない）"""
     for s in seats:
         if s["zone"] == "floor1":
             continue
         cx = s["x"] + s["w"] / 2
         cy = s["y"] + s["h"] / 2
         in_team = is_ota_team_zone(cx, cy)
-        if in_team:
-            s["zone"] = "team_ticket"
-            s["sellable"] = False
-        elif s["zone"] == "team_ticket":
+        if s["zone"] == "team_ticket" and not in_team:
             s["zone"] = "floor2"
+            s["sellable"] = False
+        elif in_team and s["zone"] == "floor2":
+            s["zone"] = "team_ticket"
             s["sellable"] = False
 
 

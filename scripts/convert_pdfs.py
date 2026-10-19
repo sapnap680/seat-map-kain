@@ -26,52 +26,112 @@ DATE_MAP = {
 
 from incare_palette import FLOOR1_PINK  # noqa: E402
 
+REDACT_TEXT_PARTS = (
+    "ベンチ外",
+    "メンバー",
+    "チーム券",
+    "チーム席",
+    "濃色",
+    "淡色",
+    "販売しません",
+)
+
+# 大田区: コート横の説明文字帯（正規化 0–1）
+OTA_LABEL_STRIPS = [
+    (0.52, 0.30, 0.88, 0.42),
+    (0.52, 0.60, 0.88, 0.74),
+    (0.08, 0.30, 0.44, 0.42),
+    (0.08, 0.60, 0.44, 0.74),
+]
+
+# 駒沢: 1階脇の縦ラベル帯
+KOMORI_LABEL_STRIPS = [
+    (0.0, 0.26, 0.055, 0.86),
+    (0.945, 0.26, 1.0, 0.86),
+]
+
 
 def is_ota_floor1_blue(r: int, g: int, b: int) -> bool:
-    """会場総合図の水色 1 階席塗り → 料金表 PPTX の 1 階指定席色へ"""
     return 140 <= r <= 175 and 188 <= g <= 225 and b >= 238
 
 
+def is_ota_team_zone_norm(nx: float, ny: float) -> bool:
+    if nx < 0.62:
+        return False
+    return (0.275 <= ny <= 0.485) or (0.575 <= ny <= 0.785)
+
+
 def is_pdf_floor1_pink(r: int, g: int, b: int) -> bool:
-    """駒オリ PDF 上の 1 階ピンク（PPTX #E38AB2 に揃える）"""
     if abs(r - FLOOR1_PINK[0]) <= 8 and abs(g - FLOOR1_PINK[1]) <= 8 and abs(b - FLOOR1_PINK[2]) <= 8:
         return True
     return r >= 200 and 130 <= g <= 200 and b >= 160
 
 
-REDACT_LABEL_PARTS = ("ベンチ外", "メンバー", "チーム券席")
+def _sample_fill(im, px0: int, py0: int, pw: int, ph: int) -> tuple[int, int, int]:
+    w, h = im.size
+    sx = min(w - 1, max(0, px0))
+    sy = min(h - 1, max(0, py0 - 4))
+    return im.getpixel((sx, sy))
 
 
-def redact_pdf_labels(page: fitz.Page, path: Path, scale: float = 2.0) -> None:
-    """図面上のベンチ外・メンバー・チーム券席などの文字を消す"""
+def _paint_rect(
+    draw,
+    im,
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    pw: float,
+    ph: float,
+    scale: float,
+) -> None:
+    w, h = im.size
+    px0 = max(0, int(x0 * pw * scale))
+    py0 = max(0, int(y0 * ph * scale))
+    px1 = min(w, int(x1 * pw * scale))
+    py1 = min(h, int(y1 * ph * scale))
+    fill = _sample_fill(im, px0, py0, pw, ph)
+    draw.rectangle([px0, py0, px1, py1], fill=fill)
+
+
+def redact_map_labels(page: fitz.Page, path: Path, slug: str, scale: float = 2.0) -> None:
     try:
         from PIL import Image, ImageDraw
     except ImportError:
         return
     im = Image.open(path).convert("RGB")
     draw = ImageDraw.Draw(im)
-    w, h = im.size
+    pw, ph = page.rect.width, page.rect.height
+
+    strips = []
+    if slug in ("2025-12-12", "2025-12-13"):
+        strips.extend(OTA_LABEL_STRIPS)
+    if slug == "2025-12-11":
+        strips.extend(KOMORI_LABEL_STRIPS)
+
+    for x0, y0, x1, y1 in strips:
+        _paint_rect(draw, im, x0, y0, x1, y1, pw, ph, scale)
+
     for block in page.get_text("dict").get("blocks", []):
         if block.get("type") != 0:
             continue
         for line in block.get("lines", []):
-            for span in line.get("spans", []):
-                text = span.get("text", "")
-                if not any(part in text for part in REDACT_LABEL_PARTS):
-                    continue
-                x0, y0, x1, y1 = span["bbox"]
-                px0 = max(0, int(x0 * scale) - 4)
-                py0 = max(0, int(y0 * scale) - 3)
-                px1 = min(w - 1, int(x1 * scale) + 4)
-                py1 = min(h - 1, int(y1 * scale) + 3)
-                sample_y = max(0, py0 - 2)
-                sample_x = min(w - 1, max(0, px0))
-                fill = im.getpixel((sample_x, sample_y))
-                draw.rectangle([px0, py0, px1, py1], fill=fill)
+            line_text = "".join(s.get("text", "") for s in line.get("spans", []))
+            if not any(part in line_text for part in REDACT_TEXT_PARTS):
+                continue
+            x0, y0, x1, y1 = line["bbox"]
+            pad_x, pad_y = 8, 6
+            px0 = max(0, int(x0 * scale) - pad_x)
+            py0 = max(0, int(y0 * scale) - pad_y)
+            px1 = min(im.size[0], int(x1 * scale) + pad_x)
+            py1 = min(im.size[1], int(y1 * scale) + pad_y)
+            fill = _sample_fill(im, px0, py0, pw, ph)
+            draw.rectangle([px0, py0, px1, py1], fill=fill)
+
     im.save(path)
 
 
-def recolor_floor1_to_pptx_pink(path: Path) -> None:
+def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
     try:
         from PIL import Image
     except ImportError:
@@ -82,7 +142,11 @@ def recolor_floor1_to_pptx_pink(path: Path) -> None:
     w, h = im.size
     changed = 0
     for y in range(h):
+        ny = y / h
         for x in range(w):
+            nx = x / w
+            if slug in ("2025-12-12", "2025-12-13") and is_ota_team_zone_norm(nx, ny):
+                continue
             r, g, b = px[x, y]
             if is_ota_floor1_blue(r, g, b) or is_pdf_floor1_pink(r, g, b):
                 px[x, y] = FLOOR1_PINK
@@ -117,18 +181,19 @@ def main() -> None:
         doc = fitz.open(pdf)
         page = doc[0]
         pw, ph = page.rect.width, page.rect.height
-        # 色再現優先: RGB・注釈込み・2倍解像度（表示サイズは page 座標のまま）
         mat = fitz.Matrix(2, 2)
         pix = page.get_pixmap(
             matrix=mat,
             alpha=False,
-            annots=True,
+            annots=False,
             colorspace=fitz.csRGB,
         )
         pix.save(out)
-        redact_pdf_labels(page, out, scale=2.0)
         doc.close()
-        recolor_floor1_to_pptx_pink(out)
+        recolor_floor1_to_pptx_pink(out, slug)
+        doc = fitz.open(pdf)
+        redact_map_labels(doc[0], out, slug, scale=2.0)
+        doc.close()
         meta = {
             "slug": slug,
             "page_width": pw,
