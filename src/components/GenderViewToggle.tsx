@@ -8,8 +8,7 @@ type Props = {
 
 export function GenderViewToggle({ value, onChange }: Props) {
   return (
-    <label className="inline-flex items-center gap-1.5 text-xs text-slate-600">
-      <span className="font-medium text-slate-500">男子/女子</span>
+    <label className="inline-flex items-center text-xs">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as GenderView)}

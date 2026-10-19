@@ -29,28 +29,34 @@ export function seatOverlayClass(
   highlightAvailableOnly: boolean,
   _isStaff: boolean,
 ): string {
-  const base = 'seat-hit-target m-0 p-0 shadow-none outline-none'
+  /** 透明クリック用（.seat-hit-target が border/bg を消すため、見える席には付けない） */
+  const hit = 'seat-hit-target m-0 p-0 shadow-none outline-none'
+  const visible = 'seat-overlay m-0 box-border p-0 shadow-none outline-none'
 
   if (!isSeatSellable(seat)) {
-    return `${base} pointer-events-none opacity-0`
+    return `${hit} pointer-events-none opacity-0`
   }
 
   if (highlightAvailableOnly && status === 'available') {
-    return `${base} z-20 box-border border-2 border-incare-floor1 bg-transparent opacity-100`
+    return `${visible} z-20 border-2 border-incare-floor1 bg-incare-floor1/10 opacity-100`
+  }
+
+  if (highlightAvailableOnly && isSold(status)) {
+    return `${visible} border-0 bg-[rgba(127,127,127,0.35)] opacity-35`
   }
 
   switch (status) {
     case 'available':
-      return `${base} border-0 bg-transparent opacity-0`
+      return `${hit} border-0 bg-transparent opacity-0`
     case 'presold':
     case 'daysold':
-      return `${base} border-0 bg-[rgba(127,127,127,0.55)] opacity-100`
+      return `${visible} border-0 bg-[rgba(127,127,127,0.55)] opacity-100`
     case 'hold':
-      return `${base} border border-amber-600/70 bg-amber-500/30 opacity-100`
+      return `${visible} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':
-      return `${base} border-0 bg-transparent opacity-0`
+      return `${hit} border-0 bg-transparent opacity-0`
     default:
-      return `${base} opacity-0`
+      return `${hit} opacity-0`
   }
 }
 

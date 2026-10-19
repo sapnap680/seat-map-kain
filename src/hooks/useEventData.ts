@@ -22,6 +22,7 @@ import {
   saveLayoutOverride,
   seatsForEvent,
 } from '../lib/seatCatalog'
+import { isDemoStaffSession } from '../lib/staffSession'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import type {
   GenderView,
@@ -97,8 +98,17 @@ export function useSeatMap(
       ...s,
       zone: s.zone ?? 'floor1',
     }))
-    if (list.length === 0) {
-      list = await loadCatalogSeats(eventSlug, eventId)
+    const catalog = await loadSeatCatalog(eventSlug)
+    const catalogList = catalog
+      ? (await loadCatalogSeats(eventSlug, eventId))
+      : []
+    if (
+      catalogList.length > 0 &&
+      (list.length === 0 || list.length < catalogList.length)
+    ) {
+      list = mergeLayoutOverrides(catalogList)
+    } else if (list.length === 0) {
+      list = catalogList
     } else {
       list = mergeLayoutOverrides(list)
     }
@@ -170,8 +180,31 @@ export function useSeatMap(
         const allocation = s.allocation ?? 'all_day'
         map[stateStorageKey(s.seat_id, allocation)] = { ...s, allocation }
       }
+      if (isDemoStaffSession()) {
+        Object.assign(map, loadDemoStates())
+      }
       setStates(map)
     })
+
+    const onDemoState = (e: globalThis.Event) => {
+      const st = (e as CustomEvent<SeatState>).detail
+      const key = stateStorageKey(st.seat_id, st.allocation)
+      setStates((prev) => ({ ...prev, [key]: st }))
+    }
+    const onDemoClear = (e: globalThis.Event) => {
+      const { seatId, allocation } = (
+        e as CustomEvent<{ seatId: string; allocation: SeatState['allocation'] }>
+      ).detail
+      const key = stateStorageKey(seatId, allocation)
+      setStates((prev) => {
+        if (!(key in prev)) return prev
+        const next = { ...prev }
+        delete next[key]
+        return next
+      })
+    }
+    window.addEventListener('seat-map-demo-update', onDemoState)
+    window.addEventListener('seat-map-demo-clear', onDemoClear)
 
     const channel = supabase
       .channel(`seat-states-${eventId}`)
@@ -211,6 +244,8 @@ export function useSeatMap(
       .subscribe()
 
     return () => {
+      window.removeEventListener('seat-map-demo-update', onDemoState)
+      window.removeEventListener('seat-map-demo-clear', onDemoClear)
       void supabase!.removeChannel(channel)
     }
   }, [eventId, eventSlug, loadCatalogSeats, reloadSeats])
@@ -256,19 +291,30 @@ export function useSeatMap(
         updated_at: new Date().toISOString(),
       }
 
-      if (!isSupabaseConfigured || !supabase) {
+      if (!isSupabaseConfigured || !supabase || isDemoStaffSession()) {
         saveDemoState(updated)
         const key = stateStorageKey(seatId, allocation)
         setStates((prev) => ({ ...prev, [key]: updated }))
         return { error: null }
       }
 
+      const key = stateStorageKey(seatId, allocation)
+      let previous: SeatState | undefined
+      setStates((prev) => {
+        previous = prev[key]
+        return { ...prev, [key]: updated }
+      })
+
       const { error } = await supabase
         .from('seat_states')
         .upsert(updated, { onConflict: 'seat_id,allocation' })
-      if (!error) {
-        const key = stateStorageKey(seatId, allocation)
-        setStates((prev) => ({ ...prev, [key]: updated }))
+      if (error) {
+        setStates((prev) => {
+          const next = { ...prev }
+          if (previous) next[key] = previous
+          else delete next[key]
+          return next
+        })
       }
       return { error }
     },
@@ -277,7 +323,7 @@ export function useSeatMap(
 
   const clearSeatState = useCallback(
     async (seatId: string, allocation: SeatState['allocation']) => {
-      if (!isSupabaseConfigured || !supabase) {
+      if (!isSupabaseConfigured || !supabase || isDemoStaffSession()) {
         clearDemoState(seatId, allocation)
         const key = stateStorageKey(seatId, allocation)
         setStates((prev) => {

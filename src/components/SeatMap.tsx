@@ -186,6 +186,28 @@ export function SeatMap({
                 const showVisibleOverlay =
                   isSold(status) || status === 'hold'
 
+                if (isStaff && showVisibleOverlay) {
+                  return (
+                    <button
+                      key={seat.id}
+                      type="button"
+                      title={seatDisplayTitle(seat, event.slug)}
+                      className={`pointer-events-auto absolute touch-manipulation ${overlay}`}
+                      data-seat-hit="1"
+                      style={{
+                        left: `${seat.x * 100}%`,
+                        top: `${seat.y * 100}%`,
+                        width: `${seat.w * 100}%`,
+                        height: `${seat.h * 100}%`,
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onSeatClick(seat)
+                      }}
+                    />
+                  )
+                }
+
                 const hitProps = {
                   'data-seat-hit': '1' as const,
                   style: {

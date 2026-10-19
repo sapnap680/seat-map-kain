@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
+import { DEMO_STAFF_KEY } from '../lib/staffSession'
 import { isSupabaseConfigured, supabase } from '../lib/supabase'
 
-const DEMO_STAFF_KEY = 'seat-map-demo-staff'
 const DEMO_PASSWORD = 'staff-demo'
 
 export function useAuth() {
