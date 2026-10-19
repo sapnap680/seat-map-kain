@@ -26,14 +26,7 @@ export function Legend() {
         />
         <span className="text-slate-600">{INCARE_LABELS.teamTicket}</span>
       </div>
-      {(
-        [
-          'available',
-          'presold',
-          'hold',
-          'blocked',
-        ] as const
-      ).map((status) => (
+      {(['available', 'presold', 'blocked'] as const).map((status) => (
         <div key={status} className="flex items-center gap-1.5">
           <span
             className={`inline-block h-4 w-4 rounded border ${legendSwatchClass(status)}`}

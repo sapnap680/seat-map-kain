@@ -5,7 +5,11 @@ import {
   stateStorageKey,
 } from '../lib/allocation'
 import { DEMO_EVENTS } from '../lib/demoData'
-import { loadDemoStates, saveDemoState } from '../lib/demoStates'
+import {
+  clearDemoState,
+  loadDemoStates,
+  saveDemoState,
+} from '../lib/demoStates'
 import {
   defaultSeatState,
   isSeatSellable,
@@ -124,6 +128,18 @@ export function useSeatMap(
         const key = stateStorageKey(st.seat_id, st.allocation)
         setStates((prev) => ({ ...prev, [key]: st }))
       }
+      const onClear = (e: globalThis.Event) => {
+        const { seatId, allocation } = (
+          e as CustomEvent<{ seatId: string; allocation: SeatState['allocation'] }>
+        ).detail
+        const key = stateStorageKey(seatId, allocation)
+        setStates((prev) => {
+          if (!(key in prev)) return prev
+          const next = { ...prev }
+          delete next[key]
+          return next
+        })
+      }
       const onLayout = () => {
         void loadCatalogSeats(eventSlug, eventId).then(setSeats)
       }
@@ -132,10 +148,12 @@ export function useSeatMap(
         if (e.key === 'seat-map-layout-overrides') onLayout()
       }
       window.addEventListener('seat-map-demo-update', onState)
+      window.addEventListener('seat-map-demo-clear', onClear)
       window.addEventListener('seat-map-layout-changed', onLayout)
       window.addEventListener('storage', onStorage)
       return () => {
         window.removeEventListener('seat-map-demo-update', onState)
+        window.removeEventListener('seat-map-demo-clear', onClear)
         window.removeEventListener('seat-map-layout-changed', onLayout)
         window.removeEventListener('storage', onStorage)
       }
@@ -161,6 +179,20 @@ export function useSeatMap(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'seat_states' },
         (payload) => {
+          if (payload.eventType === 'DELETE') {
+            const row = payload.old as SeatState
+            if (row?.seat_id) {
+              const allocation = row.allocation ?? 'all_day'
+              const key = stateStorageKey(row.seat_id, allocation)
+              setStates((prev) => {
+                if (!(key in prev)) return prev
+                const next = { ...prev }
+                delete next[key]
+                return next
+              })
+            }
+            return
+          }
           const row = payload.new as SeatState
           if (row?.seat_id) {
             const allocation = row.allocation ?? 'all_day'
@@ -234,6 +266,43 @@ export function useSeatMap(
       const { error } = await supabase
         .from('seat_states')
         .upsert(updated, { onConflict: 'seat_id,allocation' })
+      if (!error) {
+        const key = stateStorageKey(seatId, allocation)
+        setStates((prev) => ({ ...prev, [key]: updated }))
+      }
+      return { error }
+    },
+    [],
+  )
+
+  const clearSeatState = useCallback(
+    async (seatId: string, allocation: SeatState['allocation']) => {
+      if (!isSupabaseConfigured || !supabase) {
+        clearDemoState(seatId, allocation)
+        const key = stateStorageKey(seatId, allocation)
+        setStates((prev) => {
+          if (!(key in prev)) return prev
+          const next = { ...prev }
+          delete next[key]
+          return next
+        })
+        return { error: null }
+      }
+
+      const { error } = await supabase
+        .from('seat_states')
+        .delete()
+        .eq('seat_id', seatId)
+        .eq('allocation', allocation)
+      if (!error) {
+        const key = stateStorageKey(seatId, allocation)
+        setStates((prev) => {
+          if (!(key in prev)) return prev
+          const next = { ...prev }
+          delete next[key]
+          return next
+        })
+      }
       return { error }
     },
     [],
@@ -309,6 +378,7 @@ export function useSeatMap(
     states,
     loading,
     upsertSeatState,
+    clearSeatState,
     updateSeatGeometry,
     insertSeat,
     reloadSeats,

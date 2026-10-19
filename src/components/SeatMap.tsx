@@ -259,7 +259,7 @@ export function SeatMap({
                   <button
                     key={seat.id}
                     type="button"
-                    title={`${seatDisplayTitle(seat, event.slug)}${seat.state.note ? `: ${seat.state.note}` : ''}`}
+                    title={seatDisplayTitle(seat, event.slug)}
                     className={`pointer-events-auto absolute ${overlay}`}
                     {...hitProps}
                   />

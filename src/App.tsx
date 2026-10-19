@@ -46,8 +46,12 @@ function App() {
     return () => window.removeEventListener('seat-map-day-sales-changed', onLog)
   }, [])
 
-  const { seatsWithState, loading: seatsLoading, upsertSeatState } =
-    useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
+  const {
+    seatsWithState,
+    loading: seatsLoading,
+    upsertSeatState,
+    clearSeatState,
+  } = useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
 
   const [highlightAvailable, setHighlightAvailable] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
@@ -55,6 +59,7 @@ function App() {
   const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
     useState<SeatWithState | null>(null)
   const [daySoldBusy, setDaySoldBusy] = useState(false)
+  const [resetBusy, setResetBusy] = useState(false)
   const [daySalesOpen, setDaySalesOpen] = useState(false)
   const [daySalesTick, setDaySalesTick] = useState(0)
   const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
@@ -146,6 +151,14 @@ function App() {
     setOtaStaffChoiceSeat(null)
   }
 
+  const handleResetAvailable = async (
+    seatId: string,
+    allocation: SeatWithState['effectiveAllocation'],
+  ) => {
+    const { error } = await clearSeatState(seatId, allocation)
+    if (error) alert('案内可に戻せませんでした: ' + error.message)
+  }
+
   const handleSaveSeat = async (
     seatId: string,
     allocation: SeatWithState['effectiveAllocation'],
@@ -218,12 +231,6 @@ function App() {
               )}
             </div>
           </div>
-
-          {isStaff && showOtaSeatView && (
-            <p className="text-xs text-emerald-800">
-              指定席タップ →「当日券を販売した」で記録（前売りはCSV）。
-            </p>
-          )}
 
           <div className="flex flex-wrap items-center gap-2">
             {events.map((ev) => (
@@ -327,10 +334,18 @@ function App() {
         onMarkDaySold={() => {
           if (otaStaffChoiceSeat) void handleMarkDaySold(otaStaffChoiceSeat)
         }}
-        onEditStatus={() => {
-          if (otaStaffChoiceSeat) setSelectedSeat(otaStaffChoiceSeat)
-          setOtaStaffChoiceSeat(null)
+        onResetAvailable={() => {
+          if (!otaStaffChoiceSeat) return
+          setResetBusy(true)
+          void handleResetAvailable(
+            otaStaffChoiceSeat.id,
+            otaStaffChoiceSeat.effectiveAllocation,
+          ).finally(() => {
+            setResetBusy(false)
+            setOtaStaffChoiceSeat(null)
+          })
         }}
+        resetBusy={resetBusy}
         onOpen3d={() => {
           if (otaStaffChoiceSeat) {
             const block = otaBlockForSeat(otaStaffChoiceSeat)
@@ -347,6 +362,7 @@ function App() {
         onClose={() => setSelectedSeat(null)}
         isStaff={isStaff}
         onSave={handleSaveSeat}
+        onResetAvailable={handleResetAvailable}
         onPreview3d={
           showOtaSeatView && isStaff && selectedSeat
             ? () => {

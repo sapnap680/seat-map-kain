@@ -8,8 +8,9 @@ type Props = {
   onClose: () => void
   onMarkDaySold: () => void
   onOpen3d: () => void
-  onEditStatus: () => void
+  onResetAvailable: () => void
   busy?: boolean
+  resetBusy?: boolean
 }
 
 export function OtaStaffSeatChoiceModal({
@@ -18,12 +19,15 @@ export function OtaStaffSeatChoiceModal({
   onClose,
   onMarkDaySold,
   onOpen3d,
-  onEditStatus,
+  onResetAvailable,
   busy = false,
+  resetBusy = false,
 }: Props) {
   if (!seat) return null
 
   const sold = seat.state.status === 'daysold' || seat.state.status === 'presold'
+  const canReset =
+    seat.state.status === 'daysold' || seat.state.status === 'hold'
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 sm:items-center">
@@ -37,8 +41,7 @@ export function OtaStaffSeatChoiceModal({
               <p className="truncate text-sm text-slate-500">{seat.category}</p>
             )}
             <p className="mt-1 text-sm text-slate-600">
-              現在:{' '}
-              {statusLabelForDisplay(seat.state.status, { staff: true })}
+              現在：{statusLabelForDisplay(seat.state.status)}
             </p>
           </div>
           <button
@@ -50,10 +53,6 @@ export function OtaStaffSeatChoiceModal({
             ✕
           </button>
         </div>
-
-        <p className="mt-3 text-sm text-slate-500">
-          前売り券は CSV で反映します。窓口では「当日券を販売した」で記録します。
-        </p>
 
         <div className="mt-4 flex flex-col gap-2">
           {!sold && (
@@ -73,13 +72,16 @@ export function OtaStaffSeatChoiceModal({
           >
             3Dで席からの見え方を案内
           </button>
-          <button
-            type="button"
-            onClick={onEditStatus}
-            className="w-full rounded-lg border border-slate-300 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
-          >
-            押さえ・メモ・案内可に戻す
-          </button>
+          {canReset && (
+            <button
+              type="button"
+              disabled={resetBusy}
+              onClick={onResetAvailable}
+              className="w-full rounded-lg border border-slate-300 py-2.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            >
+              {resetBusy ? '保存中…' : '案内可に戻す'}
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}

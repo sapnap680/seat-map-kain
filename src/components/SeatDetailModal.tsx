@@ -1,10 +1,6 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState } from 'react'
 import { allocationDisplayLabel, seatDisplayTitle } from '../lib/allocation'
-import {
-  isSeatSellable,
-  STAFF_STATUSES,
-  statusLabelForDisplay,
-} from '../lib/seatStatus'
+import { isSeatSellable, statusLabelForDisplay } from '../lib/seatStatus'
 import type { GenderView, SeatStatus, SeatWithState } from '../types'
 
 type Props = {
@@ -19,6 +15,10 @@ type Props = {
     status: SeatStatus,
     note: string | null,
   ) => Promise<void>
+  onResetAvailable: (
+    seatId: string,
+    allocation: SeatWithState['effectiveAllocation'],
+  ) => Promise<void>
   onPreview3d?: () => void
 }
 
@@ -29,33 +29,34 @@ export function SeatDetailModal({
   onClose,
   isStaff,
   onSave,
+  onResetAvailable,
   onPreview3d,
 }: Props) {
-  const [status, setStatus] = useState<SeatStatus>('available')
-  const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
-
-  useEffect(() => {
-    if (seat) {
-      setStatus(seat.state.status)
-      setNote(seat.state.note ?? '')
-    }
-  }, [seat])
 
   if (!seat) return null
 
   const sellable = isSeatSellable(seat)
+  const status = seat.state.status
+  const canReset =
+    isStaff &&
+    sellable &&
+    status !== 'available' &&
+    status !== 'presold' &&
+    status !== 'blocked'
+  const canMarkDaySold =
+    isStaff && sellable && status === 'available'
 
-  const submit = async (e: FormEvent) => {
-    e.preventDefault()
-    if (!isStaff) return
+  const markDaySold = async () => {
     setBusy(true)
-    await onSave(
-      seat.id,
-      seat.effectiveAllocation,
-      status,
-      note.trim() || null,
-    )
+    await onSave(seat.id, seat.effectiveAllocation, 'daysold', null)
+    setBusy(false)
+    onClose()
+  }
+
+  const resetAvailable = async () => {
+    setBusy(true)
+    await onResetAvailable(seat.id, seat.effectiveAllocation)
     setBusy(false)
     onClose()
   }
@@ -90,12 +91,8 @@ export function SeatDetailModal({
           </button>
         </div>
 
-        <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-sm">
-          <span className="font-medium text-slate-700">現在: </span>
-          {statusLabelForDisplay(seat.state.status, { staff: isStaff })}
-          {seat.state.note && (
-            <span className="mt-1 block text-slate-600">メモ: {seat.state.note}</span>
-          )}
+        <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
+          現在：{statusLabelForDisplay(status)}
         </p>
 
         {onPreview3d && (
@@ -108,58 +105,36 @@ export function SeatDetailModal({
           </button>
         )}
 
-        {isStaff && sellable ? (
-          <form onSubmit={submit} className="mt-4 space-y-3">
-            <p className="text-xs text-slate-500">
-              前売り済みは CSV 取込で反映されます。窓口販売は「当日券販売済」を選んでください。
-            </p>
-            {seat.state.status === 'presold' && (
-              <p className="rounded bg-amber-50 px-2 py-1.5 text-xs text-amber-900">
-                前売り済み（CSV）。状態の変更は CSV 取込で行います。
-              </p>
-            )}
-            <label className="block text-sm">
-              <span className="font-medium text-slate-700">状態</span>
-              <select
-                value={STAFF_STATUSES.includes(status) ? status : 'available'}
-                onChange={(e) => setStatus(e.target.value as SeatStatus)}
-                disabled={seat.state.status === 'presold'}
-                className="mt-1 w-full rounded border border-slate-300 px-3 py-2 disabled:bg-slate-100"
-              >
-                {STAFF_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {statusLabelForDisplay(s, { staff: true })}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium text-slate-700">メモ（任意）</span>
-              <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={3}
-                placeholder="例: 車椅子、押さえ中、通路側"
-                className="mt-1 w-full rounded border border-slate-300 px-3 py-2"
-              />
-            </label>
+        <div className="mt-4 flex flex-col gap-2">
+          {canMarkDaySold && (
             <button
-              type="submit"
+              type="button"
               disabled={busy}
+              onClick={() => void markDaySold()}
               className="w-full rounded-lg bg-blue-600 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {busy ? '保存中…' : '保存'}
+              {busy ? '保存中…' : '当日券を販売した'}
             </button>
-          </form>
-        ) : (
+          )}
+          {canReset && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void resetAvailable()}
+              className="w-full rounded-lg border border-slate-300 py-2.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            >
+              {busy ? '保存中…' : '案内可に戻す'}
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}
-            className="mt-4 w-full rounded-lg border border-slate-300 py-2.5 text-slate-700 hover:bg-slate-50"
+            className="w-full rounded-lg border border-slate-200 py-2.5 text-slate-600 hover:bg-slate-50"
           >
             閉じる
           </button>
-        )}
+        </div>
+
       </div>
     </div>
   )

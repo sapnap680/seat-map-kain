@@ -1,4 +1,4 @@
-import type { SeatState } from '../types'
+import type { AllocationContext, SeatState } from '../types'
 import { stateStorageKey } from './allocation'
 
 const DEMO_STORAGE_KEY = 'seat-map-demo-states'
@@ -31,4 +31,17 @@ export function saveDemoState(state: SeatState) {
   all[key] = state
   localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(all))
   window.dispatchEvent(new CustomEvent('seat-map-demo-update', { detail: state }))
+}
+
+export function clearDemoState(seatId: string, allocation: AllocationContext) {
+  const all = loadDemoStates()
+  const key = stateStorageKey(seatId, allocation)
+  if (!(key in all)) return
+  delete all[key]
+  localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(all))
+  window.dispatchEvent(
+    new CustomEvent('seat-map-demo-clear', {
+      detail: { seatId, allocation },
+    }),
+  )
 }
