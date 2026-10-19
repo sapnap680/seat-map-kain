@@ -1,7 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
-import { eventHasGenderSwap, isSwappableZone } from '../lib/allocation'
-import { isSold, seatFillClass } from '../lib/seatStatus'
+import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
 
 type Props = {
@@ -128,151 +126,143 @@ export function SeatMap({
     })
   }
 
-  const mapBody = (
-    <div
-      ref={mapRef}
-      className="relative mx-auto select-none bg-slate-100 shadow-inner"
-      style={{
-        width: '100%',
-        maxWidth: event.map_width,
-        aspectRatio: `${event.map_width} / ${event.map_height}`,
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-    >
-      {!bgFailed ? (
-        <img
-          src={event.background_path}
-          alt=""
-          className="pointer-events-none absolute inset-0 h-full w-full object-fill"
-          onError={() => setBgFailed(true)}
-          draggable={false}
-        />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-200 text-sm text-slate-600">
-          会場図を読み込めませんでした
-        </div>
-      )}
+  return (
+    <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
+      <p className="border-b border-slate-200 px-3 py-1.5 text-xs text-slate-500">
+        拡大・縮小は Ctrl + ホイール（ブラウザ標準）。空席は PDF の色のまま、販売済のみ薄いグレー。
+      </p>
+      <div className="flex-1 overflow-auto p-2">
+        <div
+          ref={mapRef}
+          className="relative mx-auto inline-block w-full max-w-full select-none"
+          style={{ maxWidth: event.map_width }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+        >
+          {!bgFailed ? (
+            <img
+              src={event.background_path}
+              alt="会場席図"
+              width={event.map_width}
+              height={event.map_height}
+              className="block h-auto w-full max-w-full"
+              onError={() => setBgFailed(true)}
+              draggable={false}
+            />
+          ) : (
+            <div
+              className="flex items-center justify-center bg-slate-200 text-sm text-slate-600"
+              style={{
+                aspectRatio: `${event.map_width} / ${event.map_height}`,
+              }}
+            >
+              会場図を読み込めませんでした
+            </div>
+          )}
 
-      {seats.map((seat) => {
-        const preview = movePreview?.[seat.id]
-        const sx = preview?.x ?? seat.x
-        const sy = preview?.y ?? seat.y
-        const available = seat.state.status === 'available'
-        const sold = isSold(seat.state.status)
-        const blocked = seat.state.status === 'blocked'
-        const swapDay = eventHasGenderSwap(event.slug)
-        const ring =
-          swapDay && seat.zone === 'floor1'
-            ? 'ring-1 ring-sky-400'
-            : swapDay && isSwappableZone(seat.zone)
-              ? 'ring-1 ring-violet-300'
-              : ''
+          <div className="pointer-events-none absolute inset-0">
+            {seats.map((seat) => {
+              const preview = movePreview?.[seat.id]
+              const sx = preview?.x ?? seat.x
+              const sy = preview?.y ?? seat.y
+              const sellable = isSeatSellable(seat)
+              const status = seat.state.status
+              const sold = isSold(status)
 
-        let visibility =
-          'opacity-90 hover:opacity-100'
-        if (highlightAvailableOnly) {
-          visibility = available
-            ? 'z-20 opacity-100 ring-2 ring-emerald-500 shadow-md scale-[1.05]'
-            : 'pointer-events-none opacity-0'
-        }
+              if (!sellable && !moveLayoutMode) {
+                return null
+              }
 
-        const showLabel = seat.w > 0.012
+              const overlay = seatOverlayClass(
+                seat,
+                status,
+                highlightAvailableOnly,
+                isStaff,
+              )
 
-        return (
-          <button
-            key={seat.id}
-            type="button"
-            title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
-            onPointerDown={(e) => startMoveSeat(e, seat)}
-            onClick={(e) => {
-              e.stopPropagation()
-              if (moveLayoutMode) return
-              onSeatClick(seat)
-            }}
-            className={`absolute flex items-center justify-center border text-[8px] font-semibold leading-none transition-all ${seatFillClass(seat.state.status)} ${sold ? 'text-gray-700' : 'text-slate-800'} ${ring} ${visibility} ${moveLayoutMode && isStaff ? 'cursor-move' : ''}`}
-            style={{
-              left: `${sx * 100}%`,
-              top: `${sy * 100}%`,
-              width: `${seat.w * 100}%`,
-              height: `${seat.h * 100}%`,
-              minWidth: highlightAvailableOnly && available ? 6 : 0,
-              minHeight: highlightAvailableOnly && available ? 6 : 0,
-            }}
-          >
-            {showLabel && (
-              <span className="pointer-events-none truncate px-px">{seat.label}</span>
-            )}
-            {blocked && !highlightAvailableOnly && (
-              <span
-                className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_3px,rgba(255,255,255,.35)_3px,rgba(255,255,255,.35)_6px)]"
-                aria-hidden
+              const needsHitTarget =
+                sellable &&
+                (status === 'available' ||
+                  sold ||
+                  status === 'hold' ||
+                  status === 'blocked' ||
+                  moveLayoutMode)
+
+              if (!needsHitTarget && !moveLayoutMode) {
+                return null
+              }
+
+              if (
+                status === 'available' &&
+                !highlightAvailableOnly &&
+                !isStaff &&
+                !moveLayoutMode
+              ) {
+                return (
+                  <div
+                    key={seat.id}
+                    role="button"
+                    tabIndex={0}
+                    title={`席 ${seat.label}`}
+                    className={`pointer-events-auto absolute cursor-pointer ${overlay}`}
+                    style={{
+                      left: `${sx * 100}%`,
+                      top: `${sy * 100}%`,
+                      width: `${seat.w * 100}%`,
+                      height: `${seat.h * 100}%`,
+                    }}
+                    onClick={() => onSeatClick(seat)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') onSeatClick(seat)
+                    }}
+                  />
+                )
+              }
+
+              return (
+                <button
+                  key={seat.id}
+                  type="button"
+                  title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
+                  onPointerDown={(e) => startMoveSeat(e, seat)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (moveLayoutMode || !sellable) return
+                    onSeatClick(seat)
+                  }}
+                  className={`pointer-events-auto absolute ${overlay} ${moveLayoutMode && isStaff ? 'cursor-move !opacity-40 hover:!opacity-60' : ''}`}
+                  style={{
+                    left: `${sx * 100}%`,
+                    top: `${sy * 100}%`,
+                    width: `${seat.w * 100}%`,
+                    height: `${seat.h * 100}%`,
+                  }}
+                >
+                  {moveLayoutMode && isStaff && (
+                    <span className="pointer-events-none text-[8px] opacity-80">
+                      {seat.label}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+
+            {pendingRect && (
+              <div
+                className="absolute border-2 border-dashed border-blue-500 bg-blue-200/40"
+                style={{
+                  left: `${pendingRect.x * 100}%`,
+                  top: `${pendingRect.y * 100}%`,
+                  width: `${pendingRect.w * 100}%`,
+                  height: `${pendingRect.h * 100}%`,
+                }}
               />
             )}
-          </button>
-        )
-      })}
-
-      {pendingRect && (
-        <div
-          className="pointer-events-none absolute border-2 border-dashed border-blue-500 bg-blue-200/40"
-          style={{
-            left: `${pendingRect.x * 100}%`,
-            top: `${pendingRect.y * 100}%`,
-            width: `${pendingRect.w * 100}%`,
-            height: `${pendingRect.h * 100}%`,
-          }}
-        />
-      )}
-    </div>
-  )
-
-  return (
-    <div className="relative flex-1 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-      <TransformWrapper
-        initialScale={0.85}
-        minScale={0.15}
-        maxScale={6}
-        centerOnInit
-        wheel={{ step: 0.06 }}
-        panning={{ disabled: (placementMode && !!dragStart) || !!moving }}
-      >
-        {({ zoomIn, zoomOut, resetTransform }) => (
-          <>
-            <div className="absolute right-2 top-2 z-30 flex gap-1">
-              <button
-                type="button"
-                onClick={() => zoomIn()}
-                className="rounded border border-slate-200 bg-white/95 px-2 py-1 text-sm shadow"
-              >
-                ＋
-              </button>
-              <button
-                type="button"
-                onClick={() => zoomOut()}
-                className="rounded border border-slate-200 bg-white/95 px-2 py-1 text-sm shadow"
-              >
-                −
-              </button>
-              <button
-                type="button"
-                onClick={() => resetTransform()}
-                className="rounded border border-slate-200 bg-white/95 px-2 py-1 text-xs shadow"
-              >
-                リセット
-              </button>
-            </div>
-            <TransformComponent
-              wrapperClass="!w-full !h-full min-h-[50vh]"
-              contentClass="!w-full flex justify-center p-2"
-            >
-              {mapBody}
-            </TransformComponent>
-          </>
-        )}
-      </TransformWrapper>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,12 +1,13 @@
 """Convert parent-folder venue PDFs to public/backgrounds/*.png"""
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
 
 try:
-    import fitz  # PyMuPDF
+    import fitz
 except ImportError:
     print("PyMuPDF が必要です: pip install pymupdf", file=sys.stderr)
     sys.exit(1)
@@ -14,6 +15,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 PDF_DIR = ROOT.parent
 OUT_DIR = ROOT / "public" / "backgrounds"
+META_DIR = ROOT / "public" / "backgrounds"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 DATE_MAP = {
@@ -47,12 +49,27 @@ def main() -> None:
         out = OUT_DIR / f"{slug}.png"
         doc = fitz.open(pdf)
         page = doc[0]
-        # PDF 座標系と 1:1（席 JSON の正規化座標と一致させる）
-        mat = fitz.Matrix(1, 1)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
+        pw, ph = page.rect.width, page.rect.height
+        # 色再現優先: RGB・注釈込み・2倍解像度（表示サイズは page 座標のまま）
+        mat = fitz.Matrix(2, 2)
+        pix = page.get_pixmap(
+            matrix=mat,
+            alpha=False,
+            annots=True,
+            colorspace=fitz.csRGB,
+        )
         pix.save(out)
         doc.close()
-        print(f"Wrote {out} ({pix.width}x{pix.height}) from {pdf.name}")
+        meta = {
+            "slug": slug,
+            "page_width": pw,
+            "page_height": ph,
+            "image_width": pix.width,
+            "image_height": pix.height,
+        }
+        meta_path = META_DIR / f"{slug}.meta.json"
+        meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        print(f"Wrote {out} ({pix.width}x{pix.height}) page=({pw}x{ph}) from {pdf.name}")
 
 
 if __name__ == "__main__":

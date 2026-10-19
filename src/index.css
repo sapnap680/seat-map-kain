@@ -7,6 +7,18 @@ body,
   margin: 0;
 }
 
+/* 席クリック領域: 空席は完全透明（PDFの色を隠さない） */
+.seat-hit-target {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  color: inherit;
+}
+
 body {
   font-family:
     'Segoe UI',

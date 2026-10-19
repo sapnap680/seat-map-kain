@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { allocationDisplayLabel } from '../lib/allocation'
-import { ALL_STATUSES, STATUS_LABELS } from '../lib/seatStatus'
+import { isSeatSellable, STAFF_STATUSES, STATUS_LABELS } from '../lib/seatStatus'
 import type { GenderView, SeatStatus, SeatWithState } from '../types'
 
 type Props = {
@@ -39,6 +39,8 @@ export function SeatDetailModal({
   }, [seat])
 
   if (!seat) return null
+
+  const sellable = isSeatSellable(seat)
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
@@ -90,7 +92,13 @@ export function SeatDetailModal({
           )}
         </p>
 
-        {isStaff && !placementMode ? (
+        {!sellable && (
+          <p className="mt-3 rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
+            この席は <strong>2階席・チーム席</strong> のため販売・案内の対象外です。
+          </p>
+        )}
+
+        {isStaff && !placementMode && sellable ? (
           <form onSubmit={submit} className="mt-4 space-y-3">
             <label className="block text-sm">
               <span className="font-medium text-slate-700">状態</span>
@@ -99,7 +107,7 @@ export function SeatDetailModal({
                 onChange={(e) => setStatus(e.target.value as SeatStatus)}
                 className="mt-1 w-full rounded border border-slate-300 px-3 py-2"
               >
-                {ALL_STATUSES.map((s) => (
+                {STAFF_STATUSES.map((s) => (
                   <option key={s} value={s}>
                     {STATUS_LABELS[s]}
                   </option>

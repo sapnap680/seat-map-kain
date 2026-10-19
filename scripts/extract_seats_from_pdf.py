@@ -55,6 +55,31 @@ def dedupe_rects(rects: list[fitz.Rect]) -> list[fitz.Rect]:
     return kept
 
 
+def classify_komori_floor1(x: float, y: float) -> bool:
+    """駒オリ 12/11: 中央付近が 1階（販売可）"""
+    return 0.36 <= x <= 0.64 and 0.28 <= y <= 0.82
+
+
+def classify_zone(slug: str, x: float, y: float, w: float, h: float) -> tuple[str, bool]:
+    cx = x + w / 2
+    cy = y + h / 2
+
+    if slug in ("2025-12-12", "2025-12-13"):
+        # チーム席エリア（PDF ラベル付近・右側）
+        if cx >= 0.62 and (
+            (0.28 <= cy <= 0.48) or (0.58 <= cy <= 0.78)
+        ):
+            return "team_ticket", False
+        return "floor1", True
+
+    if slug == "2025-12-11":
+        if classify_komori_floor1(cx, cy):
+            return "floor1", True
+        return "floor2", False
+
+    return "floor1", True
+
+
 def extract_page(pdf_path: Path, slug: str) -> dict:
     doc = fitz.open(pdf_path)
     page = doc[0]
@@ -75,16 +100,19 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
     rects = dedupe_rects(raw)
     seats = []
     for i, r in enumerate(rects, start=1):
+        x, y, w, h = r.x0 / pw, r.y0 / ph, r.width / pw, r.height / ph
+        zone, sellable = classify_zone(slug, x, y, w, h)
         seats.append(
             {
                 "id": str(uuid.uuid5(uuid.NAMESPACE_URL, f"{slug}-{i}-{r.x0}-{r.y0}")),
                 "label": str(i),
                 "section": None,
-                "zone": "floor1",
-                "x": r.x0 / pw,
-                "y": r.y0 / ph,
-                "w": r.width / pw,
-                "h": r.height / ph,
+                "zone": zone,
+                "sellable": sellable,
+                "x": x,
+                "y": y,
+                "w": w,
+                "h": h,
             }
         )
     return {
@@ -104,7 +132,10 @@ def main() -> None:
         data = extract_page(pdf, slug)
         out = OUT_DIR / f"{slug}.json"
         out.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"{pdf.name} -> {out.name} ({data['seat_count']} seats)")
+        sellable = sum(1 for s in data["seats"] if s["sellable"])
+        print(
+            f"{pdf.name} -> {out.name} ({data['seat_count']} seats, sellable {sellable})"
+        )
 
 
 if __name__ == "__main__":

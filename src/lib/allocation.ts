@@ -18,7 +18,9 @@ export function resolveAllocation(
   genderView: GenderView,
 ): AllocationContext {
   if (!eventHasGenderSwap(eventSlug)) return 'all_day'
-  if (zone === 'floor1') return 'all_day'
+  if (zone === 'floor1' || zone === 'floor2' || zone === 'team_ticket') {
+    return 'all_day'
+  }
   return genderView
 }
 
@@ -46,6 +48,8 @@ export function parseStateStorageKey(key: string): {
 
 export const ZONE_LABELS: Record<SeatZone, string> = {
   floor1: '1階席（終日）',
+  floor2: '2階席（販売なし）',
+  team_ticket: 'チーム席（販売なし）',
   courtside: 'コートサイド',
   end: 'エンド',
   special: 'スペシャル',
@@ -76,7 +80,12 @@ export function initialAllocationsForSeat(
   eventSlug: string,
   zone: SeatZone,
 ): AllocationContext[] {
-  if (!eventHasGenderSwap(eventSlug) || zone === 'floor1') {
+  if (
+    !eventHasGenderSwap(eventSlug) ||
+    zone === 'floor1' ||
+    zone === 'floor2' ||
+    zone === 'team_ticket'
+  ) {
     return ['all_day']
   }
   if (isSwappableZone(zone)) {

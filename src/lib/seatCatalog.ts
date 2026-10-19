@@ -42,6 +42,9 @@ export function catalogSeatsForEvent(
     ...s,
     event_id: eventId,
     zone: (s.zone ?? 'floor1') as SeatZone,
+    sellable:
+      s.sellable ??
+      (s.zone !== 'floor2' && s.zone !== 'team_ticket'),
   }))
 }
 

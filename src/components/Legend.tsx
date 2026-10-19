@@ -18,7 +18,9 @@ export function Legend() {
             aria-hidden
           />
           <span className="text-slate-600">
-            {status === 'presold' ? '販売済（前売り・当日）' : STATUS_LABELS[status]}
+            {status === 'presold'
+              ? '販売済（前売り・当日・薄グレー）'
+              : STATUS_LABELS[status]}
           </span>
         </div>
       ))}

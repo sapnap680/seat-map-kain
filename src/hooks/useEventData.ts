@@ -6,7 +6,10 @@ import {
 } from '../lib/allocation'
 import { DEMO_EVENTS } from '../lib/demoData'
 import { loadDemoStates, saveDemoState } from '../lib/demoStates'
-import { defaultSeatState } from '../lib/seatStatus'
+import {
+  defaultSeatState,
+  isSeatSellable,
+} from '../lib/seatStatus'
 import {
   applyCatalogToEvent,
   addManualSeat,
@@ -181,10 +184,23 @@ export function useSeatMap(
     return seats.map((seat) => {
       const effectiveAllocation = resolveAllocation(slug, seat.zone, genderView)
       const key = stateStorageKey(seat.id, effectiveAllocation)
+      const sellable = isSeatSellable(seat)
+      const raw =
+        states[key] ??
+        defaultSeatState(seat.id, effectiveAllocation, sellable)
+      const state =
+        sellable || raw.status !== 'available'
+          ? raw
+          : {
+              ...raw,
+              status: 'blocked' as const,
+              note: raw.note ?? '販売対象外（2階・チーム席）',
+            }
       return {
         ...seat,
+        sellable,
         effectiveAllocation,
-        state: states[key] ?? defaultSeatState(seat.id, effectiveAllocation),
+        state,
       }
     })
   }, [seats, states, slug, genderView])

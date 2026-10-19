@@ -7,6 +7,7 @@ import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap, ZONE_LABELS } from './lib/allocation'
+import { isSeatSellable } from './lib/seatStatus'
 import { isSupabaseConfigured } from './lib/supabase'
 import type { GenderView, SeatWithState, SeatZone } from './types'
 
@@ -59,6 +60,7 @@ function App() {
     let available = 0
     let sold = 0
     for (const s of seatsWithState) {
+      if (!isSeatSellable(s)) continue
       if (s.state.status === 'available') available++
       else if (
         s.state.status === 'presold' ||
@@ -66,7 +68,8 @@ function App() {
       )
         sold++
     }
-    return { available, sold, total: seatsWithState.length }
+    const total = seatsWithState.filter((s) => isSeatSellable(s)).length
+    return { available, sold, total }
   }, [seatsWithState])
 
   const onDragStart = (x: number, y: number) => {
@@ -186,6 +189,10 @@ function App() {
               </p>
             </div>
           )}
+
+          <p className="text-sm text-slate-600">
+            駒オリ: <strong>2階席</strong>と<strong>チーム席</strong>は販売しません（地図はPDFの色のまま、空席に色は付けません）。
+          </p>
 
           <div className="flex flex-wrap items-center gap-2">
             {events.map((ev) => (

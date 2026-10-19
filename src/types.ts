@@ -6,7 +6,13 @@ export type SeatStatus =
   | 'blocked'
 
 /** 1階は終日共通。最終2日のコートサイド/エンド/スペシャルは男子・女子で在庫分離 */
-export type SeatZone = 'floor1' | 'courtside' | 'end' | 'special'
+export type SeatZone =
+  | 'floor1'
+  | 'floor2'
+  | 'team_ticket'
+  | 'courtside'
+  | 'end'
+  | 'special'
 
 export type GenderView = 'men' | 'women'
 
@@ -27,6 +33,8 @@ export interface Seat {
   label: string
   section: string | null
   zone: SeatZone
+  /** false = 2階・チーム席など販売対象外 */
+  sellable?: boolean
   x: number
   y: number
   w: number
