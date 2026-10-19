@@ -5,17 +5,21 @@ export type SeatCatalogFile = {
   map_width: number
   map_height: number
   seat_count: number
+  /** 席ラベル変更時に変わる — ブラウザキャッシュ回避用 */
+  catalog_revision?: string
   seats: Omit<Seat, 'event_id'>[]
 }
 
 const cache = new Map<string, SeatCatalogFile>()
 
 export async function loadSeatCatalog(slug: string): Promise<SeatCatalogFile | null> {
-  if (cache.has(slug)) return cache.get(slug)!
   try {
-    const res = await fetch(`/seats/${slug}.json`)
+    const res = await fetch(`/seats/${slug}.json`, { cache: 'no-store' })
     if (!res.ok) return null
     const data = (await res.json()) as SeatCatalogFile
+    const rev = data.catalog_revision ?? String(data.seat_count)
+    const cached = cache.get(slug)
+    if (cached?.catalog_revision === rev) return cached
     cache.set(slug, data)
     return data
   } catch {

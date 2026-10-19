@@ -3,6 +3,7 @@
   "map_width": 2300,
   "map_height": 2055,
   "seat_count": 1534,
+  "catalog_revision": "0ecb065cf1795d11",
   "seats": [
     {
       "id": "0093df2c-f0e0-5ec0-96fd-48b53a2a5dbe",

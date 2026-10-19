@@ -110,6 +110,7 @@ export function useSeatMap(
     }
 
     setLoading(true)
+    setSeats([])
 
     if (!isSupabaseConfigured || !supabase) {
       void loadCatalogSeats(eventSlug, eventId).then((s) => {

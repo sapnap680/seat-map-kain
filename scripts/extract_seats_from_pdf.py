@@ -1,6 +1,7 @@
 """PDF の塗りつぶし矩形を1席として抽出（色: ピンク/青=販売可、灰=非販売）"""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import statistics
@@ -415,11 +416,17 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         seats = [s for s in seats if s["zone"] != "floor2"]
         apply_ota_seat_labels(seats)
     doc.close()
+    rev_src = json.dumps(
+        [(s["id"], s.get("label"), s.get("zone")) for s in seats],
+        ensure_ascii=False,
+    )
+    catalog_revision = hashlib.sha256(rev_src.encode()).hexdigest()[:16]
     return {
         "slug": slug,
         "map_width": int(pw),
         "map_height": int(ph),
         "seat_count": len(seats),
+        "catalog_revision": catalog_revision,
         "seats": seats,
     }
 
