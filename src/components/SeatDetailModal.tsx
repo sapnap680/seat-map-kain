@@ -1,6 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { allocationDisplayLabel, seatDisplayTitle } from '../lib/allocation'
-import { isSeatSellable, STAFF_STATUSES, STATUS_LABELS } from '../lib/seatStatus'
+import {
+  isSeatSellable,
+  STAFF_STATUSES,
+  statusLabelForDisplay,
+} from '../lib/seatStatus'
 import type { GenderView, SeatStatus, SeatWithState } from '../types'
 
 type Props = {
@@ -88,7 +92,7 @@ export function SeatDetailModal({
 
         <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-sm">
           <span className="font-medium text-slate-700">現在: </span>
-          {STATUS_LABELS[seat.state.status]}
+          {statusLabelForDisplay(seat.state.status, { staff: isStaff })}
           {seat.state.note && (
             <span className="mt-1 block text-slate-600">メモ: {seat.state.note}</span>
           )}
@@ -106,16 +110,25 @@ export function SeatDetailModal({
 
         {isStaff && sellable ? (
           <form onSubmit={submit} className="mt-4 space-y-3">
+            <p className="text-xs text-slate-500">
+              前売り済みは CSV 取込で反映されます。窓口販売は「当日券販売済」を選んでください。
+            </p>
+            {seat.state.status === 'presold' && (
+              <p className="rounded bg-amber-50 px-2 py-1.5 text-xs text-amber-900">
+                前売り済み（CSV）。状態の変更は CSV 取込で行います。
+              </p>
+            )}
             <label className="block text-sm">
               <span className="font-medium text-slate-700">状態</span>
               <select
-                value={status}
+                value={STAFF_STATUSES.includes(status) ? status : 'available'}
                 onChange={(e) => setStatus(e.target.value as SeatStatus)}
-                className="mt-1 w-full rounded border border-slate-300 px-3 py-2"
+                disabled={seat.state.status === 'presold'}
+                className="mt-1 w-full rounded border border-slate-300 px-3 py-2 disabled:bg-slate-100"
               >
                 {STAFF_STATUSES.map((s) => (
                   <option key={s} value={s}>
-                    {STATUS_LABELS[s]}
+                    {statusLabelForDisplay(s, { staff: true })}
                   </option>
                 ))}
               </select>

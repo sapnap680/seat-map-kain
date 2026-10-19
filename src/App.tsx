@@ -46,6 +46,7 @@ function App() {
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
   const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
     useState<SeatWithState | null>(null)
+  const [daySoldBusy, setDaySoldBusy] = useState(false)
   const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
 
   const showOtaSeatView = eventHasOtaSeatView(activeEvent)
@@ -98,18 +99,16 @@ function App() {
 
   const stats = useMemo(() => {
     let available = 0
-    let sold = 0
+    let daySold = 0
+    let preSold = 0
     for (const s of seatsWithState) {
       if (!isSeatSellable(s)) continue
       if (s.state.status === 'available') available++
-      else if (
-        s.state.status === 'presold' ||
-        s.state.status === 'daysold'
-      )
-        sold++
+      else if (s.state.status === 'daysold') daySold++
+      else if (s.state.status === 'presold') preSold++
     }
     const total = seatsWithState.filter((s) => isSeatSellable(s)).length
-    return { available, sold, total }
+    return { available, daySold, preSold, sold: daySold + preSold, total }
   }, [seatsWithState])
 
   const handleSeatClick = (seat: SeatWithState) => {
@@ -123,6 +122,15 @@ function App() {
       return
     }
     setSelectedSeat(seat)
+  }
+
+  const handleMarkDaySoldAnd3d = async (seat: SeatWithState) => {
+    setDaySoldBusy(true)
+    await handleSaveSeat(seat.id, seat.effectiveAllocation, 'daysold', null)
+    setDaySoldBusy(false)
+    setOtaStaffChoiceSeat(null)
+    const block = otaBlockForSeat(seat)
+    if (block) setOtaViewBlock(block)
   }
 
   const handleSaveSeat = async (
@@ -183,7 +191,7 @@ function App() {
           )}
           {isStaff && showOtaSeatView && (
             <p className="text-xs text-emerald-800">
-              指定席をタップ →「販売状態を更新」か「3D」を選べます（未ログイン時は3Dのみ）。
+              指定席タップ →「当日券を販売した」で記録＋3D案内（前売りはCSV）。来場者は3Dのみ。
             </p>
           )}
 
@@ -228,7 +236,17 @@ function App() {
               案内モード（まだ売れていない席だけ強調）
             </label>
             <span className="ml-auto text-sm text-slate-600">
-              未販売 {stats.available} / 販売済 {stats.sold} / 全 {stats.total} 席
+              {isStaff ? (
+                <>
+                  案内可 {stats.available} / 当日券 {stats.daySold} / 前売{' '}
+                  {stats.preSold} / 全 {stats.total}
+                </>
+              ) : (
+                <>
+                  案内可 {stats.available} / 販売済 {stats.sold} / 全{' '}
+                  {stats.total}
+                </>
+              )}
             </span>
           </div>
         </div>
@@ -265,7 +283,11 @@ function App() {
       <OtaStaffSeatChoiceModal
         seat={otaStaffChoiceSeat}
         eventSlug={activeEvent?.slug ?? ''}
+        busy={daySoldBusy}
         onClose={() => setOtaStaffChoiceSeat(null)}
+        onMarkDaySold={() => {
+          if (otaStaffChoiceSeat) void handleMarkDaySoldAnd3d(otaStaffChoiceSeat)
+        }}
         onEditStatus={() => {
           if (otaStaffChoiceSeat) setSelectedSeat(otaStaffChoiceSeat)
           setOtaStaffChoiceSeat(null)

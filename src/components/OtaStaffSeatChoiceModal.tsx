@@ -1,29 +1,35 @@
 import { seatDisplayTitle } from '../lib/allocation'
-import { STATUS_LABELS } from '../lib/seatStatus'
+import { statusLabelForDisplay } from '../lib/seatStatus'
 import type { SeatWithState } from '../types'
 
 type Props = {
   seat: SeatWithState | null
   eventSlug: string
   onClose: () => void
-  onEditStatus: () => void
+  onMarkDaySold: () => void
   onOpen3d: () => void
+  onEditStatus: () => void
+  busy?: boolean
 }
 
 export function OtaStaffSeatChoiceModal({
   seat,
   eventSlug,
   onClose,
-  onEditStatus,
+  onMarkDaySold,
   onOpen3d,
+  onEditStatus,
+  busy = false,
 }: Props) {
   if (!seat) return null
+
+  const sold = seat.state.status === 'daysold' || seat.state.status === 'presold'
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 sm:items-center">
       <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
         <div className="flex items-start justify-between gap-2">
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className="max-w-full truncate text-lg font-bold text-slate-800">
               {seatDisplayTitle(seat, eventSlug)}
             </h2>
@@ -31,7 +37,8 @@ export function OtaStaffSeatChoiceModal({
               <p className="truncate text-sm text-slate-500">{seat.category}</p>
             )}
             <p className="mt-1 text-sm text-slate-600">
-              現在: {STATUS_LABELS[seat.state.status]}
+              現在:{' '}
+              {statusLabelForDisplay(seat.state.status, { staff: true })}
             </p>
           </div>
           <button
@@ -45,23 +52,34 @@ export function OtaStaffSeatChoiceModal({
         </div>
 
         <p className="mt-3 text-sm text-slate-500">
-          販売状態の更新と、3Dの見え方確認のどちらをしますか？
+          前売り券は CSV で反映します。窓口では「当日券を販売した」記録と 3D
+          案内ができます。
         </p>
 
         <div className="mt-4 flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={onEditStatus}
-            className="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            販売状態を更新（前売り済・当日済など）
-          </button>
+          {!sold && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onMarkDaySold}
+              className="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            >
+              {busy ? '保存中…' : '当日券を販売した（記録＋3D案内）'}
+            </button>
+          )}
           <button
             type="button"
             onClick={onOpen3d}
             className="w-full rounded-lg border border-blue-600 py-3 text-sm font-medium text-blue-700 hover:bg-blue-50"
           >
-            3Dで席からの見え方を見る
+            3Dで席からの見え方を案内
+          </button>
+          <button
+            type="button"
+            onClick={onEditStatus}
+            className="w-full rounded-lg border border-slate-300 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+          >
+            押さえ・メモ・案内可に戻す
           </button>
           <button
             type="button"

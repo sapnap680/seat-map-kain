@@ -3,17 +3,27 @@ import type { AllocationContext, Seat, SeatStatus } from '../types'
 export const STATUS_LABELS: Record<SeatStatus, string> = {
   available: '未販売（案内可）',
   presold: '前売り済',
-  daysold: '当日販売済',
+  daysold: '当日券販売済',
   hold: '押さえ',
   blocked: '—',
 }
 
+/** スタッフが手動で選べる状態（前売りは CSV 取込のみ） */
 export const STAFF_STATUSES: SeatStatus[] = [
   'available',
-  'presold',
   'daysold',
   'hold',
 ]
+
+export function statusLabelForDisplay(
+  status: SeatStatus,
+  opts?: { staff?: boolean },
+): string {
+  if (opts?.staff && status === 'presold') {
+    return '前売り済（CSV）'
+  }
+  return STATUS_LABELS[status]
+}
 
 export function isSeatSellable(seat: Pick<Seat, 'sellable' | 'zone'>): boolean {
   if (seat.sellable === false) return false
