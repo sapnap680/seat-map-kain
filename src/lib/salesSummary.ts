@@ -124,4 +124,40 @@ export function salesSummaryToCsv(
   return `\uFEFF${header.join(',')}\n${rows.join('\n')}\n${totalRow}`
 }
 
+/** 当日券・前売りを1ファイルに（区分列で分ける） */
+export function combinedSalesSummaryToCsv(
+  day: SalesSummary,
+  presold: SalesSummary,
+): string {
+  const header = ['区分', '券種', '枚数', '単価', '小計']
+  const section = (title: string, summary: SalesSummary) => {
+    const rows = summary.rows.map((r) =>
+      [
+        title,
+        r.category,
+        String(r.count),
+        r.unitYen != null ? String(r.unitYen) : '',
+        String(r.subtotalYen),
+      ]
+        .map(csvEscape)
+        .join(','),
+    )
+    const totalRow = [
+      title,
+      '合計',
+      String(summary.totalSeats),
+      '',
+      String(summary.totalYen),
+    ]
+      .map(csvEscape)
+      .join(',')
+    return [...rows, totalRow]
+  }
+  const body = [...section('当日券', day), ...section('前売り', presold)]
+  if (body.length === 0) {
+    return `\uFEFF${header.join(',')}\n`
+  }
+  return `\uFEFF${header.join(',')}\n${body.join('\n')}`
+}
+
 export { formatTicketPrice }

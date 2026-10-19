@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { eventTabLabel } from '../lib/allocation'
-import { downloadDaySalesCsv, listDaySales } from '../lib/daySaleLog'
-import { downloadPresoldCsv, presoldSeatsForEvent } from '../lib/presoldExport'
+import { downloadCsvBlob, listDaySales } from '../lib/daySaleLog'
+import { presoldSeatsForEvent } from '../lib/presoldExport'
 import {
+  combinedSalesSummaryToCsv,
   formatTicketPrice,
-  salesSummaryToCsv,
   summarizeDaySales,
   summarizePresoldSeats,
   type SalesSummary,
@@ -24,24 +24,11 @@ function SalesBlock({
   title,
   hint,
   summary,
-  csvLabel,
-  onCsv,
-  csvDisabled,
-  tone,
 }: {
   title: string
   hint: string
   summary: SalesSummary
-  csvLabel: string
-  onCsv: () => void
-  csvDisabled: boolean
-  tone: 'day' | 'presold'
 }) {
-  const btnClass =
-    tone === 'day'
-      ? 'border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100'
-      : 'border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
-
   return (
     <section>
       <h3 className="text-sm font-bold text-slate-800">{title}</h3>
@@ -101,15 +88,6 @@ function SalesBlock({
           )}
         </>
       )}
-
-      <button
-        type="button"
-        onClick={onCsv}
-        disabled={csvDisabled}
-        className={`mt-3 w-full rounded-lg border py-2 text-sm font-medium disabled:opacity-40 ${btnClass}`}
-      >
-        {csvLabel}
-      </button>
     </section>
   )
 }
@@ -154,6 +132,9 @@ export function StaffDaySalesModal({
   const activeEvent = events.find((e) => e.slug === activeSlug)
   const eventTitle = activeEvent ? eventTabLabel(activeEvent) : activeSlug
 
+  const canExport =
+    dayRecords.length > 0 || presoldSeats.length > 0
+
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/40 p-4 sm:items-center">
       <div className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-xl bg-white shadow-xl">
@@ -170,15 +151,6 @@ export function StaffDaySalesModal({
             title="当日券"
             hint="この端末で記録した分（取り消ししてもログは残ります）"
             summary={daySummary}
-            csvLabel="当日券 CSV"
-            csvDisabled={dayRecords.length === 0}
-            tone="day"
-            onCsv={() =>
-              downloadDaySalesCsv(
-                salesSummaryToCsv('当日券', daySummary),
-                `day-sales-${activeSlug}.csv`,
-              )
-            }
           />
 
           <div className="border-t border-slate-100 pt-5">
@@ -186,20 +158,24 @@ export function StaffDaySalesModal({
               title="前売り"
               hint="席状態が「前売り済」の分（全端末で共有）"
               summary={presoldSummary}
-              csvLabel="前売り CSV"
-              csvDisabled={presoldSeats.length === 0}
-              tone="presold"
-              onCsv={() =>
-                downloadPresoldCsv(
-                  salesSummaryToCsv('前売り', presoldSummary),
-                  `presold-${activeSlug}.csv`,
-                )
-              }
             />
           </div>
         </div>
 
-        <div className="border-t border-slate-100 p-4">
+        <div className="flex flex-col gap-2 border-t border-slate-100 p-4">
+          <button
+            type="button"
+            onClick={() =>
+              downloadCsvBlob(
+                combinedSalesSummaryToCsv(daySummary, presoldSummary),
+                `sales-${activeSlug}.csv`,
+              )
+            }
+            disabled={!canExport}
+            className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40"
+          >
+            CSVダウンロード
+          </button>
           <button
             type="button"
             onClick={onClose}

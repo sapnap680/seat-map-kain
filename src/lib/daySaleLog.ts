@@ -89,6 +89,3 @@ export function downloadCsvBlob(content: string, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-export function downloadDaySalesCsv(content: string, filename: string) {
-  downloadCsvBlob(content, filename)
-}

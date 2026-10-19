@@ -1,4 +1,3 @@
-import { downloadCsvBlob } from './daySaleLog'
 import { seatCategoryLabel } from './seatCategorySummary'
 import type { SeatWithState } from '../types'
 
@@ -11,8 +10,4 @@ export function presoldSeatsForEvent(seats: SeatWithState[]): SeatWithState[] {
       if (ca !== cb) return ca.localeCompare(cb, 'ja')
       return a.label.localeCompare(b.label, 'ja')
     })
-}
-
-export function downloadPresoldCsv(content: string, filename: string) {
-  downloadCsvBlob(content, filename)
 }
