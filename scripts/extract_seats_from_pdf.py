@@ -105,6 +105,40 @@ def classify_seat(
     return "floor1", True
 
 
+def refine_komori_12_11_zones(seats: list[dict]) -> None:
+    """12/11 駒沢: 端 2列×4段＝チーム券席。それ以外の灰色は 2 階自由席。"""
+    f1 = [s for s in seats if s["zone"] == "floor1"]
+    if not f1:
+        return
+    f1minx = min(s["x"] for s in f1)
+    f1maxx = max(s["x"] + s["w"] for s in f1)
+    f1ys = sorted(set(round(s["y"], 3) for s in f1))
+    if len(f1ys) < 4:
+        return
+    team_rows = {f1ys[0], f1ys[1], f1ys[2], f1ys[3]}
+
+    left_x: set[float] = set()
+    right_x: set[float] = set()
+    for s in seats:
+        if s["zone"] != "floor2":
+            continue
+        rx = round(s["x"], 3)
+        if s["x"] + s["w"] <= f1minx + 0.008:
+            left_x.add(rx)
+        if s["x"] >= f1maxx - 0.008:
+            right_x.add(rx)
+    team_left = set(sorted(left_x, reverse=True)[:2])
+    team_right = set(sorted(right_x)[:2])
+
+    for s in seats:
+        if s["zone"] != "floor2":
+            continue
+        rx, ry = round(s["x"], 3), round(s["y"], 3)
+        if ry in team_rows and (rx in team_left or rx in team_right):
+            s["zone"] = "team_ticket"
+            s["sellable"] = False
+
+
 def extract_page(pdf_path: Path, slug: str) -> dict:
     doc = fitz.open(pdf_path)
     page = doc[0]
@@ -144,6 +178,8 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
                 "h": h,
             }
         )
+    if slug == "2025-12-11":
+        refine_komori_12_11_zones(seats)
     return {
         "slug": slug,
         "map_width": int(pw),
