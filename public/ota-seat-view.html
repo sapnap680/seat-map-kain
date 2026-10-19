@@ -51,6 +51,7 @@ h2{font-size:.9rem;font-weight:700;margin:18px 0 8px}
 .map .hit:hover .vis{fill:rgba(255,255,255,.25);stroke:#1f59ac;stroke-width:3}
 .map .hit.on .vis{fill:rgba(255,242,0,.35);stroke:#e23b3b;stroke-width:6}
 .map .hit:focus-visible .vis{stroke:#1f59ac;stroke-width:6;stroke-dasharray:10 6}
+.map .hit.disabled{cursor:default;pointer-events:none}
 .map text{font-family:inherit;font-weight:900;pointer-events:none}
 .maphelp{font-size:.75rem;color:var(--sub);margin:6px 0 0;text-align:center}
 button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
@@ -234,7 +235,7 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
     R.forEach((r,ri)=>{ for(let i=0;i<n;i++){
       if(skip&&skip(name,i,n)) continue;
       const [x,z,face]=place(side,r.d,t+SW/2+i*SW);
-      seats.push({p:new THREE.Vector3(x,r.y,z),face,block:name,cat,row:ri+1,num:numbering(i,n),color,selectable:true});
+      seats.push({p:new THREE.Vector3(x,r.y,z),face,block:name,cat,row:ri+1,num:numbering(i,n),color,selectable:cat!=='チーム券席'});
     }});
     t+=n*SW; if(bi<blocks.length-1){ aisleStrip(side,R,t+AISLE/2,AISLE); aisles.push(t+AISLE/2); t+=AISLE; }
   });
@@ -244,9 +245,9 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
 stand1F('L',[['I',3],['H',17],['G',17],['F',17],['E',3]],'1階指定席',COL.pink,(i,n)=>i+1);
 stand1F('T',[['K',12],['L',17],['M',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>n-i);
 stand1F('B',[['C',12],['B',17],['A',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>i+1);
-// ベンチ側：チーム券席は3Dに表示しない（通路のみ）
+// ベンチ側：真ん中（Qの5〜13番の位置）は選手の入口。席は表示するがタップ不可
 const qGap=[-2.03,2.03];
-AISLES.R=[[qGap[0], qGap[1]]];
+stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,(name,i)=>name==='Q'&&i>=4&&i<13,[[qGap[0],qGap[1]]]);
 // 真ん中は床の高さの通路。奥（1階スタンドのいちばん後ろの下）に出入口がある
 (function(){
   const w=qGap[1]-qGap[0], x0=SL+FS, x1=SL+FS+7*RD, side=mat(0x8a6c48);
@@ -334,7 +335,13 @@ n=1; (function(){const groups=[11,12,11],gap=0.8,step=0.62,total=34*step+2*gap;l
 [[-1,1],[1,11]].forEach(([dir,start])=>{let k=start;[-5.25,5.25].forEach(gx=>{for(let i=0;i<5;i++){chair(gx-1.2+i*0.6,dir*(BL+1.5),dir<0?0:Math.PI,'コートエンド','コートエンド',k++,COL.ce);}});});
 [[-4.6,1],[-3.8,2],[-3.0,3],[3.0,4],[3.8,5],[4.6,6]].forEach(([z,k])=>chair(SL+1.6,z,-Math.PI/2,'スペシャルシート','スペシャルシート',k,COL.sp));
 
-seats.forEach(s=>{ s.unsold=s.cat==='1階指定席（ゴール裏）'&&['L','B','C'].includes(s.block); });
+const NO_PICK=new Set(['L','B','C']);
+seats.forEach(s=>{
+  if(s.cat==='1階指定席（ゴール裏）'&&NO_PICK.has(s.block)){
+    s.selectable=false;
+    s.unsold=true;
+  }
+});
 
 // 座席の形：1階は背もたれなしのベンチ、フロアは椅子
 const benchGeo=new THREE.BoxGeometry(0.42,0.42,0.34); benchGeo.translate(0,0.21,-0.12);
@@ -412,15 +419,18 @@ const NAMES={I:'1階指定席 Iブロック',H:'1階指定席 Hブロック',G:'
 // 細い席は押しやすいように範囲を広げる [上,下,左,右]
 const PAD={'コートサイドA':[0,0,2,4],'コートサイドB':[0,0,4,2],'コートエンド':[4,4,2,2],'スペシャルシート':[4,4,4,4]};
 Object.entries(REG).forEach(([key,rects])=>{
-  const g=el('g',{class:'hit',role:'button',tabindex:0,'aria-label':NAMES[key],'aria-pressed':'false'},mapEl);
+  const disabled=NO_PICK.has(key);
+  const g=el('g',{class:'hit'+(disabled?' disabled':''),role:disabled?'presentation':'button',tabindex:disabled?-1:0,'aria-label':NAMES[key],'aria-pressed':'false','aria-disabled':disabled?'true':'false'},mapEl);
   el('title',{},g).textContent=NAMES[key];
   const [pt,pb,pl,pr]=PAD[key]||[0,0,0,0];
   rects.forEach(([x,y,w,h])=>{
     el('rect',{x:x-pl,y:y-pt,width:w+pl+pr,height:h+pt+pb,fill:'#000','fill-opacity':0},g);
     el('rect',{class:'vis',x,y,width:w,height:h,rx:2},g);
   });
-  g.addEventListener('click',()=>selectBlock(key));
-  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectBlock(key);}});
+  if(!disabled){
+    g.addEventListener('click',()=>selectBlock(key));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectBlock(key);}});
+  }
   btns[key]=g;
 });
 function markBlock(k){ Object.entries(btns).forEach(([key,g])=>{ g.classList.toggle('on',key===k); g.setAttribute('aria-pressed',String(key===k)); }); }
@@ -428,6 +438,7 @@ function mapSale(){ /* 会場図はもともと販売しない席が灰色 */ }
 
 function list(){ return seats.filter(s=>s.block===state.block&&s.selectable); }
 function selectBlock(b){
+  if(NO_PICK.has(b)) return;
   state.block=b; markBlock(b);
   const L=list(), rows=[...new Set(L.map(s=>s.row))];
   rowEl.disabled=rows.length<=1; if(rowEl.disabled) rowEl.value=1;
@@ -479,11 +490,6 @@ function showSeat(s){
     const pr=document.createElement('span'); pr.className='price'; pr.textContent='¥'+yen.toLocaleString('ja-JP');
     card.append(pr);
   }
-  if(s.unsold){
-    const sub=document.createElement('span'); sub.className='sub';
-    sub.textContent='当日券の対象外です（窓口では案内のみ）';
-    card.append(sub);
-  }
   move(false);
 }
 // 列ボタン・左右の席ボタン
@@ -506,7 +512,7 @@ paint(); mapSale(); move(true); requestAnimationFrame(loop);
 (function initFromQuery(){
   const p=new URLSearchParams(location.search);
   const b=p.get('block');
-  if(b&&REG[b]){ selectBlock(b); return; }
+  if(b&&REG[b]&&!NO_PICK.has(b)){ selectBlock(b); return; }
   selectBlock('G');
 })();
 })();

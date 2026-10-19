@@ -4,6 +4,13 @@ import type { Seat, SeatZone } from '../types'
 const MAP_W = 1080
 const MAP_H = 1072
 
+/** 12/12–13：ゴール裏 L・C・B は案内・3D対象外 */
+export const OTA_NON_PICK_BLOCKS = new Set(['L', 'B', 'C'])
+
+export function isOtaBlockPickable(block: string): boolean {
+  return !OTA_NON_PICK_BLOCKS.has(block)
+}
+
 type Rect = { x: number; y: number; w: number; h: number }
 
 const REG: Record<string, Rect[]> = {

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { otaBlockAtNorm, otaBlockForSeat } from '../lib/otaBlockMap'
+import {
+  isOtaBlockPickable,
+  otaBlockAtNorm,
+  otaBlockForSeat,
+} from '../lib/otaBlockMap'
 import { isOtaVisitorClickTarget } from '../lib/otaSeatClick'
 import { eventHasOtaSeatView } from '../lib/otaSeatView'
 import { seatDisplayTitle } from '../lib/allocation'
@@ -108,6 +112,7 @@ export function SeatMap({
         },
       ).catch(() => {})
       // #endregion
+      if (!isOtaBlockPickable(block)) return
       onOtaBlockPick(block)
     },
     [clientToNorm, event.slug, onOtaBlockPick],
@@ -119,7 +124,10 @@ export function SeatMap({
 
   const seatClickable = (seat: SeatWithState) => {
     if (otaVisitor || otaStaffPick) {
-      return isOtaVisitorClickTarget(event.slug, seat)
+      if (!isOtaVisitorClickTarget(event.slug, seat)) return false
+      const block = otaBlockForSeat(seat)
+      if (block && !isOtaBlockPickable(block)) return false
+      return true
     }
     return isSeatSellable(seat)
   }
@@ -190,7 +198,7 @@ export function SeatMap({
                     e.stopPropagation()
                     if (otaVisitor && onOtaBlockPick) {
                       const block = otaBlockForSeat(seat)
-                      if (block) {
+                      if (block && isOtaBlockPickable(block)) {
                         onOtaBlockPick(block)
                         return
                       }
