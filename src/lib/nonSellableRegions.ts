@@ -21,7 +21,7 @@ export function nonSellableZoneStyle(zone: SeatZone): {
 
 function otaTeamZone(cx: number, cy: number): boolean {
   if (cx < 0.62) return false
-  return (cy >= 0.275 && cy <= 0.485) || (cy >= 0.575 && cy <= 0.785)
+  return cy >= 0.275 && cy <= 0.785
 }
 
 /** オーバーレイ用: 会場ごとに席データを絞り込み（範囲のずれ防止） */

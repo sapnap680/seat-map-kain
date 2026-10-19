@@ -82,26 +82,38 @@ def redact_map_labels(page: fitz.Page, path: Path, scale: float = 2.0) -> None:
     im.save(path)
 
 
-def pdf_red_lines_to_gray(path: Path) -> None:
-    """PDF の赤い囲い線だけ席灰色に置換（白抜け防止）"""
+def paint_nonsellable_seats(path: Path, slug: str) -> None:
+    """PDF が枠だけの席を、抽出データで灰色塗り（チーム券の中抜け防止）"""
+    seat_path = ROOT / "public" / "seats" / f"{slug}.json"
+    if not seat_path.exists():
+        print(f"  skip seat paint (no {seat_path.name})", file=sys.stderr)
+        return
     try:
-        from PIL import Image
+        from PIL import Image, ImageDraw
     except ImportError:
         return
+    data = json.loads(seat_path.read_text(encoding="utf-8"))
     im = Image.open(path).convert("RGB")
-    px = im.load()
+    draw = ImageDraw.Draw(im)
     w, h = im.size
-    gray = (191, 191, 191)
-    changed = 0
-    for y in range(h):
-        for x in range(w):
-            r, g, b = px[x, y]
-            if r >= 200 and g <= 80 and b <= 80 and r - max(g, b) >= 100:
-                px[x, y] = gray
-                changed += 1
-    if changed:
-        im.save(path)
-        print(f"  red lines -> gray: {changed} px on {path.name}")
+    painted = 0
+    for s in data.get("seats", []):
+        zone = s.get("zone")
+        if zone not in ("team_ticket", "floor2"):
+            continue
+        if slug in ("2025-12-12", "2025-12-13") and zone != "team_ticket":
+            continue
+        x0 = int(s["x"] * w)
+        y0 = int(s["y"] * h)
+        x1 = int((s["x"] + s["w"]) * w)
+        y1 = int((s["y"] + s["h"]) * h)
+        if x1 <= x0 or y1 <= y0:
+            continue
+        fill = (191, 191, 191) if zone == "team_ticket" else (210, 210, 210)
+        draw.rectangle([x0, y0, x1, y1], fill=fill, outline=(160, 160, 160))
+        painted += 1
+    im.save(path)
+    print(f"  painted {painted} nonsellable seats on {path.name}")
 
 
 def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
@@ -115,11 +127,15 @@ def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
     w, h = im.size
     changed = 0
     for y in range(h):
+        ny = y / h
         for x in range(w):
+            nx = x / w
             r, g, b = px[x, y]
             if is_seat_gray(r, g, b):
                 continue
             if slug in ("2025-12-12", "2025-12-13"):
+                if nx >= 0.62:
+                    continue
                 if not is_ota_floor1_blue(r, g, b):
                     continue
             elif not is_pdf_floor1_pink(r, g, b):
@@ -166,11 +182,10 @@ def main() -> None:
         pix.save(out)
         doc.close()
         recolor_floor1_to_pptx_pink(out, slug)
-        if slug in ("2025-12-12", "2025-12-13"):
-            pdf_red_lines_to_gray(out)
         doc = fitz.open(pdf)
         redact_map_labels(doc[0], out, scale=2.0)
         doc.close()
+        paint_nonsellable_seats(out, slug)
         meta = {
             "slug": slug,
             "page_width": pw,

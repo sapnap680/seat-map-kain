@@ -69,10 +69,10 @@ def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
 
 
 def is_ota_team_zone(cx: float, cy: float) -> bool:
-    """大田区 PDF: 東側ベンチ外・メンバー・チーム券（上下2ブロック）"""
+    """大田区 PDF: 東側チーム券列（上下の隙間も含む）"""
     if cx < 0.62:
         return False
-    return (0.275 <= cy <= 0.485) or (0.575 <= cy <= 0.785)
+    return 0.275 <= cy <= 0.785
 
 
 def is_blue_floor1(r: float, g: float, b: float) -> bool:
