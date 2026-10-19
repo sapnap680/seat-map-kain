@@ -61,9 +61,8 @@ export const GENDER_VIEW_LABELS: Record<GenderView, string> = {
 }
 
 /** 3D（ota-seat-view）と同じ表記: 「券種　Gブロック 3列 12番」など */
-export function seatDisplayTitle(seat: Seat, eventSlug: string): string {
+export function seatDisplayTitle(seat: Seat, _eventSlug: string): string {
   if (
-    eventHasGenderSwap(eventSlug) &&
     seat.sellable !== false &&
     seat.category &&
     seat.label &&
@@ -83,17 +82,16 @@ export function allocationDisplayLabel(
   genderView: GenderView,
   allocation: AllocationContext,
 ): string {
-  if (
-    eventHasGenderSwap(eventSlug) &&
-    seat.category &&
-    seat.label &&
-    seat.label !== '—'
-  ) {
+  if (seat.category && seat.label && seat.label !== '—') {
     const base = seatDisplayTitle(seat, eventSlug)
-    if (allocation === 'all_day' || !isSwappableZone(seat.zone)) {
-      if (seat.zone === 'floor1') return `${base}（男女共通・終日）`
-      return base
+    if (eventHasGenderSwap(eventSlug)) {
+      if (allocation === 'all_day' || !isSwappableZone(seat.zone)) {
+        if (seat.zone === 'floor1') return `${base}（男女共通・終日）`
+        return base
+      }
+      return `${GENDER_VIEW_LABELS[genderView]} / ${base}`
     }
+    if (allocation === 'all_day') return base
     return `${GENDER_VIEW_LABELS[genderView]} / ${base}`
   }
 

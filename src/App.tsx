@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
 import { SharePublicLink } from './components/SharePublicLink'
+import { OtaStaffSeatChoiceModal } from './components/OtaStaffSeatChoiceModal'
 import { OtaSeatViewModal } from './components/OtaSeatViewModal'
 import { SeatDetailModal } from './components/SeatDetailModal'
 import { SeatMap } from './components/SeatMap'
@@ -43,6 +44,8 @@ function App() {
   const [highlightAvailable, setHighlightAvailable] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
+  const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
+    useState<SeatWithState | null>(null)
   const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
 
   const showOtaSeatView = eventHasOtaSeatView(activeEvent)
@@ -108,6 +111,19 @@ function App() {
     const total = seatsWithState.filter((s) => isSeatSellable(s)).length
     return { available, sold, total }
   }, [seatsWithState])
+
+  const handleSeatClick = (seat: SeatWithState) => {
+    if (
+      showOtaSeatView &&
+      isStaff &&
+      isSeatSellable(seat) &&
+      activeEvent?.slug
+    ) {
+      setOtaStaffChoiceSeat(seat)
+      return
+    }
+    setSelectedSeat(seat)
+  }
 
   const handleSaveSeat = async (
     seatId: string,
@@ -222,7 +238,7 @@ function App() {
             seats={seatsWithState}
             highlightAvailableOnly={highlightAvailable}
             isStaff={isStaff}
-            onSeatClick={setSelectedSeat}
+            onSeatClick={handleSeatClick}
             onOtaBlockPick={
               showOtaSeatView && !isStaff ? setOtaViewBlock : undefined
             }
@@ -239,6 +255,23 @@ function App() {
         onClose={() => setLoginOpen(false)}
         onSignIn={signIn}
         isDemo={isDemo}
+      />
+
+      <OtaStaffSeatChoiceModal
+        seat={otaStaffChoiceSeat}
+        eventSlug={activeEvent?.slug ?? ''}
+        onClose={() => setOtaStaffChoiceSeat(null)}
+        onEditStatus={() => {
+          if (otaStaffChoiceSeat) setSelectedSeat(otaStaffChoiceSeat)
+          setOtaStaffChoiceSeat(null)
+        }}
+        onOpen3d={() => {
+          if (otaStaffChoiceSeat) {
+            const block = otaBlockForSeat(otaStaffChoiceSeat)
+            if (block) setOtaViewBlock(block)
+          }
+          setOtaStaffChoiceSeat(null)
+        }}
       />
 
       <SeatDetailModal

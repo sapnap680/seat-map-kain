@@ -22,6 +22,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 from pdf_slug import slug_from_pdf_stem  # noqa: E402
 
+from komori_seat_labels import apply_komori_seat_labels  # noqa: E402
 from ota_seat_labels import apply_ota_seat_labels  # noqa: E402
 
 
@@ -410,6 +411,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         )
     if slug == "2025-12-11":
         refine_komori_12_11_zones(seats)
+        apply_komori_seat_labels(seats)
     elif slug in ("2025-12-12", "2025-12-13"):
         refine_ota_team_zones(seats)
         # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外
