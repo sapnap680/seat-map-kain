@@ -22,23 +22,20 @@ type Props = {
 
 function SalesBlock({
   title,
-  hint,
   summary,
 }: {
   title: string
-  hint: string
   summary: SalesSummary
 }) {
   return (
     <section>
-      <h3 className="text-sm font-bold text-slate-800">{title}</h3>
-      <p className="mt-0.5 text-xs text-slate-500">{hint}</p>
+      <h3 className="mb-2 text-sm font-bold text-slate-800">{title}</h3>
 
       {summary.rows.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500">データなし</p>
+        <p className="text-sm text-slate-500">—</p>
       ) : (
         <>
-          <div className="mt-3 overflow-hidden rounded-lg border border-slate-200 text-sm">
+          <div className="overflow-hidden rounded-lg border border-slate-200 text-sm">
             <table className="w-full text-left">
               <thead className="bg-slate-100 text-xs text-slate-600">
                 <tr>
@@ -58,11 +55,6 @@ function SalesBlock({
                     </td>
                     <td className="p-2 text-right tabular-nums font-medium">
                       {formatTicketPrice(r.subtotalYen)}
-                      {r.hasUnknownPrice && (
-                        <span className="ml-1 text-xs font-normal text-amber-700">
-                          ※
-                        </span>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -81,11 +73,6 @@ function SalesBlock({
               </tfoot>
             </table>
           </div>
-          {summary.hasUnknownPrice && (
-            <p className="mt-1 text-xs text-amber-800">
-              ※ 料金が未設定の席は小計に含めていません
-            </p>
-          )}
         </>
       )}
     </section>
@@ -147,18 +134,10 @@ export function StaffDaySalesModal({
         </div>
 
         <div className="space-y-6 overflow-auto p-5">
-          <SalesBlock
-            title="当日券"
-            hint="この端末で記録した分（取り消ししてもログは残ります）"
-            summary={daySummary}
-          />
+          <SalesBlock title="当日券" summary={daySummary} />
 
           <div className="border-t border-slate-100 pt-5">
-            <SalesBlock
-              title="前売り"
-              hint="席状態が「前売り済」の分（全端末で共有）"
-              summary={presoldSummary}
-            />
+            <SalesBlock title="前売り" summary={presoldSummary} />
           </div>
         </div>
 
