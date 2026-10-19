@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { otaBlockAtNorm } from '../lib/otaBlockMap'
+import { isOtaVisitorClickTarget } from '../lib/otaSeatClick'
+import { eventHasOtaSeatView } from '../lib/otaSeatView'
 import { isSeatSellable, isSold, seatOverlayClass } from '../lib/seatStatus'
 import type { SeatWithState, VenueEvent } from '../types'
 
@@ -8,6 +11,7 @@ type Props = {
   highlightAvailableOnly: boolean
   isStaff: boolean
   onSeatClick: (seat: SeatWithState) => void
+  onOtaBlockPick?: (block: string) => void
 }
 
 export function SeatMap({
@@ -16,10 +20,14 @@ export function SeatMap({
   highlightAvailableOnly,
   isStaff,
   onSeatClick,
+  onOtaBlockPick,
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [bgFailed, setBgFailed] = useState(false)
   const [bgCacheKey, setBgCacheKey] = useState<string>('')
+
+  const otaEvent = eventHasOtaSeatView(event)
+  const otaVisitor = otaEvent && !isStaff && !!onOtaBlockPick
 
   useEffect(() => {
     setBgFailed(false)
@@ -62,22 +70,76 @@ export function SeatMap({
     }
   }, [event.background_path, event.slug])
 
+  const clientToNorm = useCallback((clientX: number, clientY: number) => {
+    const el = mapRef.current
+    if (!el) return null
+    const rect = el.getBoundingClientRect()
+    return {
+      x: (clientX - rect.left) / rect.width,
+      y: (clientY - rect.top) / rect.height,
+    }
+  }, [])
+
+  const pickOtaBlockAt = useCallback(
+    (clientX: number, clientY: number) => {
+      const p = clientToNorm(clientX, clientY)
+      if (!p || !onOtaBlockPick) return
+      const block = otaBlockAtNorm(p.x, p.y)
+      if (!block) return
+      // #region agent log
+      fetch(
+        'http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Debug-Session-Id': '0c7e1f',
+          },
+          body: JSON.stringify({
+            sessionId: '0c7e1f',
+            hypothesisId: 'H-ota-3d-click',
+            location: 'SeatMap.tsx:ota-block-pick',
+            message: 'visitor opened 3D block from map',
+            data: { block, nx: p.x, ny: p.y, slug: event.slug },
+            timestamp: Date.now(),
+          }),
+        },
+      ).catch(() => {})
+      // #endregion
+      onOtaBlockPick(block)
+    },
+    [clientToNorm, event.slug, onOtaBlockPick],
+  )
+
   const bgBase =
     event.background_path ?? `/backgrounds/${event.slug}.png`
   const bgSrc = bgCacheKey ? `${bgBase}?v=${bgCacheKey}` : bgBase
+
+  const seatClickable = (seat: SeatWithState) => {
+    if (otaVisitor) return isOtaVisitorClickTarget(event.slug, seat)
+    return isSeatSellable(seat)
+  }
 
   return (
     <div className="flex min-h-[50vh] flex-1 flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex-1 overflow-auto p-2">
         <div className="mx-auto inline-block max-w-full align-top">
-          <div ref={mapRef} className="relative">
+          <div
+            ref={mapRef}
+            className={`relative ${otaVisitor ? 'cursor-pointer' : ''}`}
+            onClick={(e) => {
+              if (!otaVisitor) return
+              if ((e.target as HTMLElement).closest('[data-seat-hit]')) return
+              pickOtaBlockAt(e.clientX, e.clientY)
+            }}
+          >
             {!bgFailed ? (
               <img
                 src={bgSrc}
                 alt="会場席図"
                 width={event.map_width}
                 height={event.map_height}
-                className="block h-auto max-w-full"
+                className="block h-auto max-w-full pointer-events-none select-none"
                 onError={() => setBgFailed(true)}
                 draggable={false}
               />
@@ -96,14 +158,12 @@ export function SeatMap({
 
             <div className="pointer-events-none absolute inset-0">
               {seats.map((seat) => {
-                const sellable = isSeatSellable(seat)
-                const status = seat.state.status
-                const sold = isSold(status)
-
-                if (!sellable) {
+                if (!seatClickable(seat)) {
                   return null
                 }
 
+                const sellable = isSeatSellable(seat)
+                const status = seat.state.status
                 const overlay = seatOverlayClass(
                   seat,
                   status,
@@ -111,9 +171,38 @@ export function SeatMap({
                   isStaff,
                 )
 
-                const showVisibleOverlay = sold || status === 'hold'
+                const showVisibleOverlay =
+                  isSold(status) || status === 'hold'
 
-                if (status === 'available' && !highlightAvailableOnly) {
+                const hitProps = {
+                  'data-seat-hit': '1' as const,
+                  style: {
+                    left: `${seat.x * 100}%`,
+                    top: `${seat.y * 100}%`,
+                    width: `${seat.w * 100}%`,
+                    height: `${seat.h * 100}%`,
+                  },
+                  onClick: (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    if (otaVisitor && onOtaBlockPick) {
+                      const block = otaBlockAtNorm(
+                        seat.x + seat.w / 2,
+                        seat.y + seat.h / 2,
+                      )
+                      if (block) {
+                        onOtaBlockPick(block)
+                        return
+                      }
+                    }
+                    onSeatClick(seat)
+                  },
+                }
+
+                if (
+                  status === 'available' &&
+                  !highlightAvailableOnly &&
+                  !showVisibleOverlay
+                ) {
                   return (
                     <div
                       key={seat.id}
@@ -121,13 +210,7 @@ export function SeatMap({
                       tabIndex={0}
                       title={`席 ${seat.label}`}
                       className="pointer-events-auto absolute cursor-pointer opacity-0"
-                      style={{
-                        left: `${seat.x * 100}%`,
-                        top: `${seat.y * 100}%`,
-                        width: `${seat.w * 100}%`,
-                        height: `${seat.h * 100}%`,
-                      }}
-                      onClick={() => onSeatClick(seat)}
+                      {...hitProps}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
                       }}
@@ -146,19 +229,26 @@ export function SeatMap({
                       role="button"
                       tabIndex={0}
                       className={`pointer-events-auto absolute cursor-pointer ${overlay}`}
-                      style={{
-                        left: `${seat.x * 100}%`,
-                        top: `${seat.y * 100}%`,
-                        width: `${seat.w * 100}%`,
-                        height: `${seat.h * 100}%`,
-                      }}
-                      onClick={() => onSeatClick(seat)}
+                      {...hitProps}
                     />
                   )
                 }
 
-                if (!showVisibleOverlay) {
+                if (!showVisibleOverlay && !otaVisitor) {
                   return null
+                }
+
+                if (!showVisibleOverlay && otaVisitor) {
+                  return (
+                    <div
+                      key={seat.id}
+                      role="button"
+                      tabIndex={0}
+                      title={`席 ${seat.label}`}
+                      className="pointer-events-auto absolute cursor-pointer opacity-0"
+                      {...hitProps}
+                    />
+                  )
                 }
 
                 return (
@@ -166,14 +256,8 @@ export function SeatMap({
                     key={seat.id}
                     type="button"
                     title={`${seat.label}${seat.state.note ? `: ${seat.state.note}` : ''}`}
-                    onClick={() => onSeatClick(seat)}
                     className={`pointer-events-auto absolute ${overlay}`}
-                    style={{
-                      left: `${seat.x * 100}%`,
-                      top: `${seat.y * 100}%`,
-                      width: `${seat.w * 100}%`,
-                      height: `${seat.h * 100}%`,
-                    }}
+                    {...hitProps}
                   />
                 )
               })}

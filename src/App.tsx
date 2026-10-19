@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
+import { OtaSeatViewModal } from './components/OtaSeatViewModal'
 import { SeatDetailModal } from './components/SeatDetailModal'
 import { SeatMap } from './components/SeatMap'
 import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap } from './lib/allocation'
+import { otaBlockAtNorm } from './lib/otaBlockMap'
 import {
   eventHasOtaSeatView,
   OTA_SEAT_VIEW_PATH,
@@ -39,6 +41,7 @@ function App() {
   const [highlightAvailable, setHighlightAvailable] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
+  const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
 
   const showOtaSeatView = eventHasOtaSeatView(activeEvent)
 
@@ -190,6 +193,9 @@ function App() {
             highlightAvailableOnly={highlightAvailable}
             isStaff={isStaff}
             onSeatClick={setSelectedSeat}
+            onOtaBlockPick={
+              showOtaSeatView && !isStaff ? setOtaViewBlock : undefined
+            }
           />
         ) : (
           <p className="py-12 text-center text-slate-500">
@@ -212,6 +218,22 @@ function App() {
         onClose={() => setSelectedSeat(null)}
         isStaff={isStaff}
         onSave={handleSaveSeat}
+        onPreview3d={
+          showOtaSeatView && isStaff && selectedSeat
+            ? () => {
+                const block = otaBlockAtNorm(
+                  selectedSeat.x + selectedSeat.w / 2,
+                  selectedSeat.y + selectedSeat.h / 2,
+                )
+                if (block) setOtaViewBlock(block)
+              }
+            : undefined
+        }
+      />
+
+      <OtaSeatViewModal
+        block={otaViewBlock}
+        onClose={() => setOtaViewBlock(null)}
       />
     </div>
   )

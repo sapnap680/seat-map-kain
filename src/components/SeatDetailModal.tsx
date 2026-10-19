@@ -15,6 +15,7 @@ type Props = {
     status: SeatStatus,
     note: string | null,
   ) => Promise<void>
+  onPreview3d?: () => void
 }
 
 export function SeatDetailModal({
@@ -24,6 +25,7 @@ export function SeatDetailModal({
   onClose,
   isStaff,
   onSave,
+  onPreview3d,
 }: Props) {
   const [status, setStatus] = useState<SeatStatus>('available')
   const [note, setNote] = useState('')
@@ -89,6 +91,16 @@ export function SeatDetailModal({
             <span className="mt-1 block text-slate-600">メモ: {seat.state.note}</span>
           )}
         </p>
+
+        {onPreview3d && (
+          <button
+            type="button"
+            onClick={onPreview3d}
+            className="mt-3 w-full rounded-lg border border-blue-600 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-50"
+          >
+            この付近の席からの見え方（3D）
+          </button>
+        )}
 
         {isStaff && sellable ? (
           <form onSubmit={submit} className="mt-4 space-y-3">

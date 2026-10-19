@@ -491,7 +491,12 @@ function loop(now){
   renderer.render(scene,camera);requestAnimationFrame(loop);
 }
 paint(); mapSale(); move(true); requestAnimationFrame(loop);
-selectBlock('G');
+(function initFromQuery(){
+  const p=new URLSearchParams(location.search);
+  const b=p.get('block');
+  if(b&&REG[b]){ selectBlock(b); return; }
+  selectBlock('G');
+})();
 })();
 </script>
 </body>
