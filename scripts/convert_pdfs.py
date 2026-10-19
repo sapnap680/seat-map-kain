@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 try:
@@ -24,8 +25,27 @@ DATE_MAP = {
     "12.13": "2025-12-13",
 }
 
-from incare_palette import FLOOR1_PINK  # noqa: E402
-from extract_seats_from_pdf import ota_stroke_team_rects  # noqa: E402
+from incare_palette import FLOOR1_PINK, TEAM_GREEN  # noqa: E402
+from extract_seats_from_pdf import is_ota_team_zone, ota_stroke_team_rects  # noqa: E402
+
+DEBUG_LOG = ROOT.parent / "debug-0c7e1f.log"
+DEBUG_SESSION = "0c7e1f"
+
+
+def _agent_log(hypothesis_id: str, message: str, data: dict) -> None:
+    # #region agent log
+    payload = {
+        "sessionId": DEBUG_SESSION,
+        "hypothesisId": hypothesis_id,
+        "location": "convert_pdfs.py",
+        "message": message,
+        "data": data,
+        "timestamp": int(time.time() * 1000),
+    }
+    DEBUG_LOG.parent.mkdir(parents=True, exist_ok=True)
+    with DEBUG_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+    # #endregion
 
 # 説明ラベルだけ消す（ベンチ表記は残す）
 REDACT_TEXT_PARTS = ("ベンチ外", "メンバー", "チーム券")
@@ -96,7 +116,7 @@ def fill_ota_stroke_team_boxes(
         return
     im = Image.open(path).convert("RGB")
     draw = ImageDraw.Draw(im)
-    fill = (191, 191, 191)
+    fill = TEAM_GREEN
     for r in rects:
         x0 = max(0, int(r.x0 * scale))
         y0 = max(0, int(r.y0 * scale))
@@ -108,7 +128,7 @@ def fill_ota_stroke_team_boxes(
 
 
 def paint_nonsellable_seats(path: Path, slug: str) -> None:
-    """PDF が枠だけの席を、抽出データで灰色塗り（チーム券の中抜け防止）"""
+    """チーム券席を料金表の緑 #92D050 で塗る（2階灰色は PNG そのまま）"""
     seat_path = ROOT / "public" / "seats" / f"{slug}.json"
     if not seat_path.exists():
         print(f"  skip seat paint (no {seat_path.name})", file=sys.stderr)
@@ -122,11 +142,13 @@ def paint_nonsellable_seats(path: Path, slug: str) -> None:
     draw = ImageDraw.Draw(im)
     w, h = im.size
     painted = 0
+    team_outline = (
+        max(0, TEAM_GREEN[0] - 25),
+        max(0, TEAM_GREEN[1] - 25),
+        max(0, TEAM_GREEN[2] - 25),
+    )
     for s in data.get("seats", []):
-        zone = s.get("zone")
-        if zone not in ("team_ticket", "floor2"):
-            continue
-        if slug in ("2025-12-12", "2025-12-13") and zone != "team_ticket":
+        if s.get("zone") != "team_ticket":
             continue
         x0 = int(s["x"] * w)
         y0 = int(s["y"] * h)
@@ -134,8 +156,7 @@ def paint_nonsellable_seats(path: Path, slug: str) -> None:
         y1 = int((s["y"] + s["h"]) * h)
         if x1 <= x0 or y1 <= y0:
             continue
-        fill = (191, 191, 191) if zone == "team_ticket" else (210, 210, 210)
-        draw.rectangle([x0, y0, x1, y1], fill=fill, outline=(160, 160, 160))
+        draw.rectangle([x0, y0, x1, y1], fill=TEAM_GREEN, outline=team_outline)
         painted += 1
     im.save(path)
     print(f"  painted {painted} nonsellable seats on {path.name}")
@@ -159,7 +180,7 @@ def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
             if is_seat_gray(r, g, b):
                 continue
             if slug in ("2025-12-12", "2025-12-13"):
-                if nx >= 0.62:
+                if is_ota_team_zone(nx, ny):
                     continue
                 if not is_ota_floor1_blue(r, g, b):
                     continue
@@ -170,6 +191,63 @@ def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
     if changed:
         im.save(path)
         print(f"  recolored {changed} px to #E38AB2 on {path.name}")
+
+
+def scrub_ota_team_zone_pink_blue(path: Path, slug: str) -> None:
+    """チーム券列に残った水色・ピンク（1階色）を緑に統一。灰色は触らない。"""
+    if slug not in ("2025-12-12", "2025-12-13"):
+        return
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    im = Image.open(path).convert("RGB")
+    px = im.load()
+    w, h = im.size
+    changed = 0
+    for y in range(h):
+        ny = y / h
+        for x in range(w):
+            nx = x / w
+            if not is_ota_team_zone(nx, ny):
+                continue
+            r, g, b = px[x, y]
+            if is_seat_gray(r, g, b):
+                continue
+            if is_ota_floor1_blue(r, g, b) or is_pdf_floor1_pink(r, g, b):
+                px[x, y] = TEAM_GREEN
+                changed += 1
+    if changed:
+        im.save(path)
+        print(f"  scrubbed {changed} pink/blue px in team zone on {path.name}")
+
+
+def _team_band_color_sample(path: Path, slug: str) -> dict[str, int]:
+    try:
+        from PIL import Image
+    except ImportError:
+        return {}
+    im = Image.open(path).convert("RGB")
+    w, h = im.size
+    px = im.load()
+    counts = {"pink": 0, "blue": 0, "green": 0, "gray": 0}
+    if slug not in ("2025-12-12", "2025-12-13"):
+        return counts
+    for y in range(int(0.28 * h), int(0.78 * h), 4):
+        for x in range(int(0.62 * w), w, 4):
+            r, g, b = px[x, y]
+            if is_seat_gray(r, g, b):
+                counts["gray"] += 1
+            elif is_ota_floor1_blue(r, g, b) or is_pdf_floor1_pink(r, g, b):
+                if abs(r - TEAM_GREEN[0]) <= 12 and abs(g - TEAM_GREEN[1]) <= 12:
+                    counts["green"] += 1
+                elif is_ota_floor1_blue(r, g, b):
+                    counts["blue"] += 1
+                else:
+                    counts["pink"] += 1
+            elif abs(r - TEAM_GREEN[0]) <= 15 and abs(g - TEAM_GREEN[1]) <= 15:
+                counts["green"] += 1
+    return counts
 
 
 def slug_from_name(name: str) -> str | None:
@@ -214,6 +292,13 @@ def main() -> None:
             fill_ota_stroke_team_boxes(page, out, pw, ph, scale=2.0)
         doc.close()
         paint_nonsellable_seats(out, slug)
+        scrub_ota_team_zone_pink_blue(out, slug)
+        band = _team_band_color_sample(out, slug)
+        _agent_log(
+            "H4",
+            "post-convert team band colors",
+            {"slug": slug, "bandCounts": band, "runId": "convert-post"},
+        )
         meta = {
             "slug": slug,
             "page_width": pw,
