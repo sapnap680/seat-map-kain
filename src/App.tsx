@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GenderViewToggle } from './components/GenderViewToggle'
 import { SharePublicLink } from './components/SharePublicLink'
+import { StaffDaySalesModal } from './components/StaffDaySalesModal'
 import { OtaStaffSeatChoiceModal } from './components/OtaStaffSeatChoiceModal'
 import { OtaSeatViewModal } from './components/OtaSeatViewModal'
 import { SeatDetailModal } from './components/SeatDetailModal'
@@ -14,6 +15,7 @@ import {
   eventHasOtaSeatView,
   OTA_SEAT_VIEW_PATH,
 } from './lib/otaSeatView'
+import { appendDaySale, countDaySales } from './lib/daySaleLog'
 import { isSeatSellable } from './lib/seatStatus'
 import { isSupabaseConfigured } from './lib/supabase'
 import type { GenderView, SeatWithState } from './types'
@@ -38,6 +40,12 @@ function App() {
     setGenderView('men')
   }, [activeEvent?.slug])
 
+  useEffect(() => {
+    const onLog = () => setDaySalesTick((t) => t + 1)
+    window.addEventListener('seat-map-day-sales-changed', onLog)
+    return () => window.removeEventListener('seat-map-day-sales-changed', onLog)
+  }, [])
+
   const { seatsWithState, loading: seatsLoading, upsertSeatState } =
     useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
 
@@ -47,6 +55,8 @@ function App() {
   const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
     useState<SeatWithState | null>(null)
   const [daySoldBusy, setDaySoldBusy] = useState(false)
+  const [daySalesOpen, setDaySalesOpen] = useState(false)
+  const [daySalesTick, setDaySalesTick] = useState(0)
   const [otaViewBlock, setOtaViewBlock] = useState<string | null>(null)
 
   const showOtaSeatView = eventHasOtaSeatView(activeEvent)
@@ -111,6 +121,11 @@ function App() {
     return { available, daySold, preSold, sold: daySold + preSold, total }
   }, [seatsWithState])
 
+  const daySaleLogCount = useMemo(() => {
+    void daySalesTick
+    return activeEvent ? countDaySales(activeEvent.slug) : 0
+  }, [activeEvent?.slug, daySalesTick])
+
   const handleSeatClick = (seat: SeatWithState) => {
     if (
       showOtaSeatView &&
@@ -124,13 +139,11 @@ function App() {
     setSelectedSeat(seat)
   }
 
-  const handleMarkDaySoldAnd3d = async (seat: SeatWithState) => {
+  const handleMarkDaySold = async (seat: SeatWithState) => {
     setDaySoldBusy(true)
     await handleSaveSeat(seat.id, seat.effectiveAllocation, 'daysold', null)
     setDaySoldBusy(false)
     setOtaStaffChoiceSeat(null)
-    const block = otaBlockForSeat(seat)
-    if (block) setOtaViewBlock(block)
   }
 
   const handleSaveSeat = async (
@@ -139,8 +152,31 @@ function App() {
     status: Parameters<typeof upsertSeatState>[2],
     note: string | null,
   ) => {
+    const seat = seatsWithState.find(
+      (s) => s.id === seatId && s.effectiveAllocation === allocation,
+    )
+    const wasDaySold = seat?.state.status === 'daysold'
     const { error } = await upsertSeatState(seatId, allocation, status, note)
-    if (error) alert('保存に失敗しました: ' + error.message)
+    if (error) {
+      alert('保存に失敗しました: ' + error.message)
+      return
+    }
+    if (
+      status === 'daysold' &&
+      !wasDaySold &&
+      seat &&
+      activeEvent?.slug
+    ) {
+      appendDaySale({
+        event_slug: activeEvent.slug,
+        seat_id: seatId,
+        label: seat.label,
+        category: seat.category ?? null,
+        zone: seat.zone,
+        allocation,
+        note,
+      })
+    }
   }
 
   return (
@@ -149,8 +185,7 @@ function App() {
         <div className="mx-auto flex max-w-6xl flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 className="text-lg font-bold text-slate-800 sm:text-xl">
-              <span className="text-incare-brand">第78回</span>{' '}
-              会場席状況（リアルタイム）
+              第78回全日本大学バスケットボール選手権大会 会場席状況
             </h1>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <SharePublicLink />
@@ -184,14 +219,9 @@ function App() {
             </div>
           </div>
 
-          {!isStaff && (
-            <p className="text-xs text-slate-500">
-              ログイン不要で閲覧できます。このURLをそのままお客様・スタッフに共有してください。
-            </p>
-          )}
           {isStaff && showOtaSeatView && (
             <p className="text-xs text-emerald-800">
-              指定席タップ →「当日券を販売した」で記録＋3D案内（前売りはCSV）。来場者は3Dのみ。
+              指定席タップ →「当日券を販売した」で記録（前売りはCSV）。
             </p>
           )}
 
@@ -235,17 +265,26 @@ function App() {
               />
               案内モード（まだ売れていない席だけ強調）
             </label>
-            <span className="ml-auto text-sm text-slate-600">
+            <span className="ml-auto flex flex-wrap items-center gap-2 text-sm text-slate-600">
               {isStaff ? (
                 <>
-                  案内可 {stats.available} / 当日券 {stats.daySold} / 前売{' '}
-                  {stats.preSold} / 全 {stats.total}
+                  <span>
+                    案内可 {stats.available} / 当日券 {stats.daySold} / 前売{' '}
+                    {stats.preSold} / 全 {stats.total}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setDaySalesOpen(true)}
+                    className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    当日券集計（{daySaleLogCount}件）
+                  </button>
                 </>
               ) : (
-                <>
+                <span>
                   案内可 {stats.available} / 販売済 {stats.sold} / 全{' '}
                   {stats.total}
-                </>
+                </span>
               )}
             </span>
           </div>
@@ -286,7 +325,7 @@ function App() {
         busy={daySoldBusy}
         onClose={() => setOtaStaffChoiceSeat(null)}
         onMarkDaySold={() => {
-          if (otaStaffChoiceSeat) void handleMarkDaySoldAnd3d(otaStaffChoiceSeat)
+          if (otaStaffChoiceSeat) void handleMarkDaySold(otaStaffChoiceSeat)
         }}
         onEditStatus={() => {
           if (otaStaffChoiceSeat) setSelectedSeat(otaStaffChoiceSeat)
@@ -321,6 +360,13 @@ function App() {
       <OtaSeatViewModal
         block={otaViewBlock}
         onClose={() => setOtaViewBlock(null)}
+      />
+
+      <StaffDaySalesModal
+        open={daySalesOpen}
+        onClose={() => setDaySalesOpen(false)}
+        events={events}
+        activeSlug={activeEvent?.slug ?? ''}
       />
     </div>
   )

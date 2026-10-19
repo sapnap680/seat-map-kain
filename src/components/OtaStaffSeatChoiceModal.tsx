@@ -52,8 +52,7 @@ export function OtaStaffSeatChoiceModal({
         </div>
 
         <p className="mt-3 text-sm text-slate-500">
-          前売り券は CSV で反映します。窓口では「当日券を販売した」記録と 3D
-          案内ができます。
+          前売り券は CSV で反映します。窓口では「当日券を販売した」で記録します。
         </p>
 
         <div className="mt-4 flex flex-col gap-2">
@@ -64,7 +63,7 @@ export function OtaStaffSeatChoiceModal({
               onClick={onMarkDaySold}
               className="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {busy ? '保存中…' : '当日券を販売した（記録＋3D案内）'}
+              {busy ? '保存中…' : '当日券を販売した'}
             </button>
           )}
           <button
