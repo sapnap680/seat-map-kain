@@ -40,6 +40,7 @@ body{background:var(--bg);color:var(--ink);font-family:"Zen Kaku Gothic New","Hi
 .seatcard b{display:block;font-size:1.25rem;font-weight:900}
 .seatcard .price{display:block;font-size:1.05rem;font-weight:900;margin-top:6px;letter-spacing:.02em}
 .seatcard .sub{display:block;font-size:.78rem;opacity:.8;margin-top:2px}
+.seatcard .bench-hint{display:block;font-size:.74rem;opacity:.72;margin-top:6px;line-height:1.45}
 .stepper .chev{display:inline-block;width:.65em;font-size:1.1em;font-weight:900;line-height:1;opacity:.75;vertical-align:-1px}
 .panel{background:var(--panel);border-left:1px solid var(--line);overflow-y:auto;padding:20px 20px 28px}
 h1{font-size:1.15rem;font-weight:900;margin:0 0 4px;line-height:1.4}
@@ -68,6 +69,15 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .overview{margin-top:18px;width:100%;font:inherit;font-weight:700;padding:10px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.78rem;color:var(--sub);margin-top:10px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.legend i.tone-light{background:linear-gradient(145deg,#ece8e0,#cfc9bf);box-shadow:inset 0 0 0 1px rgba(0,0,0,.07)}
+.legend i.tone-dark{background:linear-gradient(145deg,#525862,#2f343c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.legend-bench{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:2px;padding-top:8px;border-top:1px dashed var(--line)}
+.map .bench-tag{font-size:11px;font-weight:700;fill:var(--sub);pointer-events:none;user-select:none}
+.map .bench-zone{pointer-events:none;opacity:.55}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .map .bench-tag{fill:#b8c0cc}
+}
+:root[data-theme="dark"] .map .bench-tag{fill:#b8c0cc}
 .note{font-size:.75rem;color:var(--sub);line-height:1.65;margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
 @media (max-width:820px){
   .app{grid-template-columns:1fr;grid-template-rows:58vh auto;height:auto;min-height:100%}
@@ -108,6 +118,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <span><i style="background:#ccc2dd"></i>コートサイドB</span>
       <span><i style="background:#4f81bd"></i>コートエンド</span>
       <span><i style="background:#bf9000"></i>スペシャルシート</span>
+      <div class="legend-bench">
+        <span><i class="tone-light"></i>淡色（K・L側）</span>
+        <span><i class="tone-dark"></i>濃色（A・B側）</span>
+      </div>
     </div>
   </aside>
 </div>
@@ -191,10 +205,31 @@ function hoop(dir){
 }
 hoop(-1);hoop(1);
 
-// ベンチ側（右）：TO・チームベンチ
-const dark=mat(0x2f343c);
-box(0.8,0.85,4.4,SL+2.0,0.43,0,dark);
-[-1,1].forEach(d=>{ for(let i=0;i<12;i++) box(0.5,0.45,0.5,SL+2.2,0.23,d*(5.6+i*0.62),mat(0x3d4652)); });
+// ベンチ側（右）：TO・チームベンチ（K側＝淡色 / A側＝濃色）
+const TO=mat(0x2f343c);
+box(0.8,0.85,4.4,SL+2.0,0.43,0,TO);
+const BENCH_TONE={
+  light:{zSign:1,chair:0xd9d5cc,apron:0xddd6c8,mark:'淡色'},
+  dark:{zSign:-1,chair:0x3d4652,apron:0x2a2e36,mark:'濃色'}
+};
+function floorMark(text,x,z,ry){
+  const cv=document.createElement('canvas');cv.width=192;cv.height=64;
+  const g=cv.getContext('2d');
+  g.clearRect(0,0,192,64);
+  g.fillStyle='rgba(255,255,255,.78)';g.font='600 36px "Zen Kaku Gothic New",sans-serif';
+  g.textAlign='center';g.textBaseline='middle';g.fillText(text,96,34);
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(2.6,0.85),new THREE.MeshLambertMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthWrite:false}));
+  m.rotation.x=-Math.PI/2;m.rotation.z=ry||0;m.position.set(x,0.022,z);scene.add(m);
+}
+function benchApron(tone,zSign){
+  const t=BENCH_TONE[tone], zMid=zSign*9.2;
+  const ap=new THREE.Mesh(new THREE.PlaneGeometry(1.15,11.5),new THREE.MeshLambertMaterial({color:t.apron,transparent:true,opacity:0.38,depthWrite:false}));
+  ap.rotation.x=-Math.PI/2;ap.position.set(SL+0.55,0.018,zMid);scene.add(ap);
+  for(let i=0;i<12;i++) box(0.5,0.45,0.5,SL+2.2,0.23,zSign*(5.6+i*0.62),mat(t.chair));
+  floorMark(t.mark,SL+1.05,zSign*8.4,-Math.PI/2);
+}
+benchApron('light',1);
+benchApron('dark',-1);
 
 // 中央の吊り下げスコアボード・屋根のトラス
 box(4,3.2,4,0,15.5,0,mat(0x15181d));
@@ -240,6 +275,20 @@ function aisleStrip(side,rows,u,w){
     if(side==='T') box(w,0.03,dep,u,r.y+0.015,-r.d,aisleM);
     if(side==='B') box(w,0.03,dep,u,r.y+0.015,r.d,aisleM);
   });
+}
+// 通路：列と列の間の立ち上がり（正面から見た段の面）
+function aisleRiserFill1F(side,frontD,u,w){
+  const m=stepM;
+  for(let ri=0;ri<6;ri++){
+    const y0=PLATFORM+ri*RR, y1=PLATFORM+(ri+1)*RR;
+    const d0=frontD+ri*RD+RD/2, d1=frontD+(ri+1)*RD+RD/2;
+    const h=y1-y0+0.04, yC=(y0+y1)/2;
+    const dC=(d0+d1)/2, td=RD*0.42;
+    if(side==='L') box(td,h,w,-dC,yC,u,m);
+    if(side==='R') box(td,h,w,dC,yC,u,m);
+    if(side==='T') box(w,h,td,u,yC,-dC,m);
+    if(side==='B') box(w,h,td,u,yC,dC,m);
+  }
 }
 function place(side,d,u){ if(side==='L')return [-d,u,Math.PI/2]; if(side==='R')return [d,u,-Math.PI/2]; if(side==='T')return [u,-d,0]; return [u,d,Math.PI]; }
 
@@ -343,11 +392,6 @@ function blockEndRails1F(side,frontD,blockRanges){
     });
   });
 }
-function aisleGaps1F(blockRanges){
-  const g=[];
-  for(let i=0;i<blockRanges.length-1;i++) g.push([blockRanges[i].u1,blockRanges[i+1].u0]);
-  return g;
-}
 function aisleStairs1F(side,frontD,u,w){
   const n=3, rise=PLATFORM/n, T=0.28;
   const dFace=frontD-RD*0.25;
@@ -380,10 +424,10 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
   rows1.forEach((r,i)=>r.d=front+i*RD+RD/2);
   const R=rows1.map(r=>({...r}));
   const total=blocks.reduce((s,b)=>s+b[1],0)*SW+(blocks.length-1)*AISLE;
+  treads(side,R,-total/2,total/2,gaps);
   let t=-total/2; const aisles=[]; const blockRanges=[];
   blocks.forEach(([name,n],bi)=>{
     const u0=t;
-    treads(side,R,u0,u0+n*SW,gaps);
     R.forEach((r,ri)=>{ for(let i=0;i<n;i++){
       if(skip&&skip(name,i,n)) continue;
       const [x,z,face]=place(side,r.d,t+SW/2+i*SW);
@@ -401,25 +445,30 @@ const S1={
   L:stand1F('L',[['I',3],['H',17],['G',17],['F',17],['E',3]],'1階指定席',COL.pink,(i,n)=>i+1),
   T:stand1F('T',[['K',12],['L',17],['M',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>n-i),
   B:stand1F('B',[['C',12],['B',17],['A',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>i+1),
-  R:stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,(name,i)=>name==='Q'&&i>=4&&i<13,[[qGap[0],qGap[1]]]),
+  R:stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,null,[[qGap[0],qGap[1]]]),
 };
 ['L','T','B','R'].forEach(side=>{
   const m=S1[side]; if(!m) return;
   const u0=-m.total/2, u1=m.total/2;
-  const platGaps=[...(m.gaps||[]),...aisleGaps1F(m.blockRanges)];
-  platformSlab1F(side,m.front,m.back,u0,u1,platGaps);
+  platformSlab1F(side,m.front,m.back,u0,u1,m.gaps);
   courtFenceBlocks1F(side,m.front,m.blockRanges);
   blockEndRails1F(side,m.front,m.blockRanges);
-  (AISLES[side]||[]).forEach(u=> aisleStairs1F(side,m.front,u,AISLE*0.95));
+  (AISLES[side]||[]).forEach(u=>{
+    aisleStairs1F(side,m.front,u,AISLE*0.95);
+    aisleRiserFill1F(side,m.front,u,AISLE*0.95);
+  });
 });
 // ベンチ側：Qブロック中央はコート床と繋がる選手入口（フェンス開口＋階段）
-aisleStairs1F('R',S1.R.front,(qGap[0]+qGap[1])/2,qGap[1]-qGap[0]+0.35);
+const qAisleW=qGap[1]-qGap[0]+0.35, qAisleU=(qGap[0]+qGap[1])/2;
+aisleStairs1F('R',S1.R.front,qAisleU,qAisleW);
+aisleRiserFill1F('R',S1.R.front,qAisleU,qAisleW);
 (function(){
   const w=qGap[1]-qGap[0], x0=SL+FS, x1=SL+FS+7*RD, side=mat(0x8a6c48);
   [-1,1].forEach(sg=>{ for(let r=0;r<7;r++){ const h=r*RR+0.5; box(RD,h,0.12,x0+r*RD+RD/2,PLATFORM+h/2,sg*(qGap[1]+0.06),side); } });
   const H=PLATFORM+6*RR+0.6;
+  box(x1-x0+0.2,PLATFORM,w,(x0+x1)/2-0.1,PLATFORM/2,0,platM);
   box(0.3,H,w+0.24,x1+0.15,H/2,0,mat(0x6b5a45));
-  box(0.12,2.2,2.4,x1-0.02,PLATFORM+0.55,0,holeM);
+  box(0.12,2.2,2.4,x1-0.02,PLATFORM+1.1,0,holeM);
 })();
 
 // ===== 2階・3階（常設席）：1階の後ろからそのまま続く =====
@@ -445,52 +494,48 @@ fence('L',D0s-0.9,-20.5,20.5,AISLES.L);
 fence('R',D0s-0.9,-20.5,20.5,[...AISLES.R]);
 fence('T',D0e-0.9,-17,17,AISLES.T);
 fence('B',D0e-0.9,-17,17,AISLES.B);
-const seats2=[];
-const ENT=3.0;   // 2階と3階の間の通路にある入口の幅
-function straight2(side,blocks,nRows,entrances,D0){
-  const total=blocks.reduce((s,b)=>s+b[1],0)*0.5+(blocks.length-1)*1.0;
-  const R=[...Array(nRows)].map((_,k)=>row2(k,D0));
-  const gaps=entrances.map(u=>[u-ENT/2,u+ENT/2,[4,5,6,7]]);
-  treads(side,R,-total/2,total/2,gaps);
-  // 2階と3階の間の横の通路
-  if(nRows>4){ const a=R[3], b=R[4], w=b.d-a.d-0.85; treads(side,[{d:a.d+0.425+w/2,y:a.y+0.05,dep:w}],-total/2,total/2); }
-  let t=-total/2;
-  blocks.forEach(([name,n],bi)=>{
-    R.forEach((r,k)=>{ for(let i=0;i<n;i++){ const u=t+0.25+i*0.5;
-      if(k>=4&&k<=7&&entrances.some(e=>Math.abs(u-e)<ENT/2)) continue;
-      const [x,z,f]=place(side,r.d,u); seats2.push([x,r.y,z,f,k<4]); }});
-    t+=n*0.5; if(bi<blocks.length-1){ aisleStrip(side,R,t+0.5,1.0); t+=1.0; }
-  });
-  return total;
+// 2階自由席（会場図：黄色＝内側リング3段、緑＝外側ブロック）— 形状のみ・選択不可
+const F2Y=0xffcc66, F2G=0x66cc66;
+const f2YM=mat(F2Y), f2GM=mat(F2G);
+const U_LR=20.5, U_TB=17;
+const F2_DEP=0.82, F2_H=0.36;
+function f2RowSlab(side,k,D0,u0,u1,material){
+  const r=row2(k,D0);
+  const len=u1-u0, mid=(u0+u1)/2;
+  if(side==='L') box(F2_DEP,F2_H,len,-r.d,r.y+F2_H/2,mid,material);
+  if(side==='R') box(F2_DEP,F2_H,len,r.d,r.y+F2_H/2,mid,material);
+  if(side==='T') box(len,F2_H,F2_DEP,mid,r.y+F2_H/2,-r.d,material);
+  if(side==='B') box(len,F2_H,F2_DEP,mid,r.y+F2_H/2,r.d,material);
 }
-// 長辺の入口：左は I・G・E、右は O・Q・S の真ん中
-function centers(blocks,picks){ const total=blocks.reduce((s,b)=>s+b[1],0)*0.5+(blocks.length-1)*1.0; let t=-total/2; const out=[];
-  blocks.forEach(([name,n])=>{ if(picks.includes(name)) out.push(t+n*0.25); t+=n*0.5+1.0; }); return out; }
-const LB=[['I',13],['H',16],['G',16],['F',16],['E',13]], RB=[['O',13],['P',16],['Q',16],['R',16],['S',13]];
-straight2('L',LB,11,[],D0s);
-straight2('R',RB,11,[],D0s);
-
-straight2('T',[['J',10],['K',12],['L',16],['M',12],['M',10]],6,[],D0e);
-straight2('B',[['D',10],['C',12],['B',16],['A',12],['T',10]],4,[],D0e);
-// 四隅（だ円のカーブで長辺と端をつなぐ）
-[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>{
-  const cx=17, cz=20.5, ax=D0s-cx, az=D0e-cz;
-  for(let k=0;k<8;k++){
-    const r=row2(k,0), off=r.d, rx=ax+off, rz=az+off, n=Math.max(3,Math.round((Math.PI/2)*(rx+rz)/2/0.5));
-    for(let i=0;i<n;i++){
-      const th=(i+0.5)/n*Math.PI/2, x=sx*(cx+rx*Math.cos(th)), z=sz*(cz+rz*Math.sin(th));
-      const f=Math.atan2(-sx*Math.cos(th),-sz*Math.sin(th));
-      seats2.push([x,r.y,z,f,k<4]);
-      box(0.6,r.y,0.9,x,r.y/2,z,treadM,f);
-    }
-  }
+function f2CornerArc(kList,material){
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>{
+    const cx=17, cz=20.5, ax=D0s-cx, az=D0e-cz;
+    kList.forEach(k=>{
+      const r=row2(k,0), off=r.d, rx=ax+off, rz=az+off;
+      const n=Math.max(2,Math.round((Math.PI/2)*(rx+rz)/2/F2_DEP));
+      for(let i=0;i<n;i++){
+        const th=(i+0.5)/n*Math.PI/2;
+        const x=sx*(cx+rx*Math.cos(th)), z=sz*(cz+rz*Math.sin(th));
+        const ry=Math.atan2(-sx*Math.cos(th),-sz*Math.sin(th));
+        box(F2_DEP,F2_H,F2_DEP,x,r.y+F2_H/2,z,material,ry);
+      }
+    });
+  });
+}
+[0,1,2].forEach(k=>{
+  f2RowSlab('L',k,D0s,-U_LR,U_LR,f2YM);
+  f2RowSlab('R',k,D0s,-U_LR,U_LR,f2YM);
+  f2RowSlab('T',k,D0e,-U_TB,U_TB,f2YM);
+  f2RowSlab('B',k,D0e,-U_TB,U_TB,f2YM);
 });
-(function(){
-  const geo=new THREE.BoxGeometry(0.44,0.5,0.4); geo.translate(0,0.25,0);
-  const m=new THREE.InstancedMesh(geo,new THREE.MeshLambertMaterial({color:0xffffff}),seats2.length), o=new THREE.Object3D(), c=new THREE.Color();
-  seats2.forEach(([x,y,z,f,front],i)=>{o.position.set(x,y,z);o.rotation.set(0,f,0);o.updateMatrix();m.setMatrixAt(i,o.matrix);c.setHex(front?0xb88f5c:0xa98352);m.setColorAt(i,c);});
-  scene.add(m);
-})();
+f2CornerArc([0,1,2],f2YM);
+for(let k=3;k<=10;k++){
+  f2RowSlab('L',k,D0s,-U_LR,U_LR,f2GM);
+  f2RowSlab('R',k,D0s,-U_LR,U_LR,f2GM);
+}
+f2RowSlab('T',3,D0e,-U_TB,U_TB,f2GM);
+f2RowSlab('B',3,D0e,-U_TB,U_TB,f2GM);
+f2CornerArc([3,4,5,6],f2GM);
 
 // ===== フロアの席（パイプ椅子）=====
 function chair(x,z,face,block,cat,num,color){ seats.push({p:new THREE.Vector3(x,0,z),face,block,cat,row:0,num,color,selectable:true,chair:true}); }
@@ -501,11 +546,17 @@ n=1; (function(){const groups=[11,12,11],gap=0.8,step=0.62,total=34*step+2*gap;l
 [[-4.6,1],[-3.8,2],[-3.0,3],[3.0,4],[3.8,5],[4.6,6]].forEach(([z,k])=>chair(SL+1.6,z,-Math.PI/2,'スペシャルシート','スペシャルシート',k,COL.sp));
 
 const NO_PICK=new Set(['L','B','C']);
+function otaTeamGray(block,num){
+  if(block==='Q'&&num>=5&&num<=13) return true;
+  if(block==='S'&&num>=9) return true;
+  return false;
+}
 seats.forEach(s=>{
   if(s.cat==='1階指定席（ゴール裏）'&&NO_PICK.has(s.block)){
     s.selectable=false;
     s.unsold=true;
   }
+  if(s.cat==='チーム券席'&&otaTeamGray(s.block,s.num)) s.unsold=true;
 });
 
 // 座席の形：1階は背もたれなしのベンチ、フロアは椅子
@@ -583,6 +634,13 @@ const NAMES={I:'1階指定席 Iブロック',H:'1階指定席 Hブロック',G:'
   'コートサイドA':'コートサイドA（1列目）','コートサイドB':'コートサイドB（2列目）','コートエンド':'コートエンド','スペシャルシート':'スペシャルシート'};
 // 細い席は押しやすいように範囲を広げる [上,下,左,右]
 const PAD={'コートサイドA':[0,0,2,4],'コートサイドB':[0,0,4,2],'コートエンド':[4,4,2,2],'スペシャルシート':[4,4,4,4]};
+(function(){
+  const g=el('g',{class:'bench-key','aria-hidden':'true'},mapEl);
+  el('rect',{class:'bench-zone',x:768,y:118,width:10,height:168,rx:2,fill:'#e3ddd4','fill-opacity':0.82},g);
+  const t1=el('text',{class:'bench-tag',x:782,y:205},g); t1.textContent='淡';
+  el('rect',{class:'bench-zone',x:768,y:748,width:10,height:168,rx:2,fill:'#3a424c','fill-opacity':0.82},g);
+  const t2=el('text',{class:'bench-tag',x:782,y:835},g); t2.textContent='濃';
+})();
 Object.entries(REG).forEach(([key,rects])=>{
   const disabled=NO_PICK.has(key);
   const g=el('g',{class:'hit'+(disabled?' disabled':''),role:disabled?'presentation':'button',tabindex:disabled?-1:0,'aria-label':NAMES[key],'aria-pressed':'false','aria-disabled':disabled?'true':'false'},mapEl);
@@ -640,6 +698,12 @@ function ticketYen(s){
   if(s.cat==='コートサイドB'||(s.cat&&s.cat.includes('コートサイドB'))) return 6000;
   return TICKET_YEN[s.cat]??null;
 }
+function benchHint(s){
+  const label=s.p.z>=0?'淡色（K・L側）':'濃色（A・B側）';
+  if(s.p.x>=SL-0.5) return 'チームベンチ '+label;
+  if(s.p.x<=-SL+0.5) return 'ベンチ反対側（向かい '+label+'）';
+  return null;
+}
 function showSeat(s){
   const isStand=s.row>0;
   state.seat=s; state.mode='seat'; state.yaw=0; state.pitch=0; paint();
@@ -654,6 +718,11 @@ function showSeat(s){
   if(yen!=null){
     const pr=document.createElement('span'); pr.className='price'; pr.textContent='¥'+yen.toLocaleString('ja-JP');
     card.append(pr);
+  }
+  const bh=benchHint(s);
+  if(bh){
+    const sp=document.createElement('span'); sp.className='bench-hint'; sp.textContent=bh;
+    card.append(sp);
   }
   move(false);
 }
