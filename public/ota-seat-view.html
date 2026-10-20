@@ -330,15 +330,19 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     }
   });
 }
-// 端柵：席配置と同じ u0/u1・各行 d/y に直結
+// 端柵：席と同じ d/y。u はブロック端のうち通路側は席内側へ、スタンド外側だけ外へ
+const RAIL_U_IN=SW*0.24;
+const RAIL_U_OUT=SW*0.08;
 function blockEndRails1F(side,frontD,blockRanges){
   const h=RAIL_PANEL_H;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
-    [
-      {u:u0,outer:bi===0},
-      {u:u1,outer:bi===last},
-    ].forEach(({u,outer})=>{
+    const caps=[];
+    if(bi===0) caps.push({u:u0-RAIL_U_OUT,outer:true});
+    else caps.push({u:u0+RAIL_U_IN,outer:false});
+    if(bi===last) caps.push({u:u1+RAIL_U_OUT,outer:true});
+    else caps.push({u:u1-RAIL_U_IN,outer:false});
+    caps.forEach(({u,outer})=>{
       const panelD=outer?RD*0.5:RD*0.34;
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
