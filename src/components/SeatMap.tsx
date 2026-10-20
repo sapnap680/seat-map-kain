@@ -55,19 +55,22 @@ export function SeatMap({
   const mapH = event.map_height
   const otaLandscape = otaMapLandscapeLayout(event)
   const { layoutW, layoutH } = otaLayoutSize(mapW, mapH, otaLandscape)
+  const otaVenue = eventHasOtaSeatView(event)
   const maxPinchScale = 2
+  /** 大田12/12・12/13: 幅フィットより少し大きく（はみ出しはパンで） */
+  const otaFitBoost = otaVenue ? 1.22 : 1
 
   const computeFitView = useCallback(() => {
     const vp = viewportRef.current
     if (!vp) return { scale: 1, x: 0, y: 0 }
     const availW = Math.max(1, vp.clientWidth)
-    const fit = Math.min(1, availW / layoutW)
+    const fit = Math.min(1, (availW / layoutW) * otaFitBoost)
     return {
       scale: fit,
       x: (availW - layoutW * fit) / 2,
       y: 0,
     }
-  }, [layoutW])
+  }, [layoutW, otaFitBoost])
 
   const clampPan = useCallback(
     (x: number, y: number, s: number) => {
@@ -108,9 +111,9 @@ export function SeatMap({
   const resetView = useCallback(() => {
     const { scale: fit, x, y } = computeFitView()
     fitScaleRef.current = fit
-    setViewportHeight(Math.ceil(layoutH * fit + 16))
+    setViewportHeight(Math.ceil(layoutH * fit + (otaVenue ? 8 : 16)))
     applyPanScale(fit, { x, y })
-  }, [applyPanScale, computeFitView, layoutH])
+  }, [applyPanScale, computeFitView, layoutH, otaVenue])
 
   const zoomAt = useCallback(
     (focalClientX: number, focalClientY: number, newScale: number) => {
@@ -233,9 +236,8 @@ export function SeatMap({
     }
   }, [clampPan, maxPinchScale, zoomAt])
 
-  const otaEvent = eventHasOtaSeatView(event)
-  const otaVisitor = otaEvent && !isStaff && !!onOtaBlockPick
-  const otaStaffPick = otaEvent && isStaff
+  const otaVisitor = otaVenue && !isStaff && !!onOtaBlockPick
+  const otaStaffPick = otaVenue && isStaff
 
   useEffect(() => {
     setBgFailed(false)
@@ -349,7 +351,7 @@ export function SeatMap({
     <div className="flex w-full flex-col rounded-lg border border-slate-200 bg-white">
       <div
         ref={viewportRef}
-        className="seat-map-viewport w-full shrink-0 overflow-hidden p-2"
+        className={`seat-map-viewport w-full shrink-0 overflow-hidden ${otaVenue ? 'p-1' : 'p-2'}`}
         style={{ height: viewportHeight }}
       >
         <div className="relative h-full w-full overflow-hidden">

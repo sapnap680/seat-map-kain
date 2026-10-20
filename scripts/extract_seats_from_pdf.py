@@ -34,11 +34,12 @@ def seat_size_ok(slug: str, w: float, h: float) -> bool:
     if slug == "2025-12-11":
         return 14 <= w <= 28 and 18 <= h <= 32
     if slug in ("2025-12-12", "2025-12-13"):
+        # 通常PDF (~8.6pt) と 横_拡大PDF (~12.2pt)。~4.7pt は外枠の二重描画なので除外
         if 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5:
             return True
-        if 12 <= w <= 18 and 12 <= h <= 22:
+        if 11 <= w <= 19 and 11 <= h <= 23:
             return True
-        if 24 <= w <= 32 and 24 <= h <= 32:
+        if 24 <= w <= 42 and 24 <= h <= 42:
             return True
         return False
     return 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5
@@ -210,15 +211,16 @@ def ota_stroke_team_rects(page: fitz.Page, pw: float, ph: float) -> list[fitz.Re
 
 
 def ota_seat_dims_norm(page: fitz.Page, pw: float, ph: float) -> tuple[float, float]:
-    for d in page.get_drawings():
-        if d.get("type") != "f":
-            continue
-        r = d.get("rect")
-        if not r:
-            continue
-        if abs(r.width - 8.6) <= 0.6 and abs(r.height - 8.6) <= 0.6:
-            return r.width / pw, r.height / ph
-    return 8.6 / pw, 8.6 / ph
+    for target in (12.2, 8.6, 4.7):
+        for d in page.get_drawings():
+            if d.get("type") != "f":
+                continue
+            r = d.get("rect")
+            if not r:
+                continue
+            if abs(r.width - target) <= 0.8 and abs(r.height - target) <= 0.8:
+                return r.width / pw, r.height / ph
+    return 12.2 / pw, 12.2 / ph
 
 
 def _seat_overlaps(seats: list[dict], x: float, y: float, w: float, h: float) -> bool:
