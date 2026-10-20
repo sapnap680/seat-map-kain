@@ -38,6 +38,9 @@ def seat_size_ok(slug: str, w: float, h: float) -> bool:
         if 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5:
             return True
         if 11 <= w <= 19 and 11 <= h <= 23:
+            # 拡大PDF: ~11.9pt は ~12.3pt 席の重複レイヤー
+            if w < 12.0 or h < 12.0:
+                return False
             return True
         if 24 <= w <= 42 and 24 <= h <= 42:
             return True
@@ -61,6 +64,21 @@ def dedupe_items(items: list[tuple[fitz.Rect, tuple]]) -> list[tuple[fitz.Rect, 
             continue
         kept.append((r, fill))
     return kept
+
+
+def dedupe_ota_items(
+    items: list[tuple[fitz.Rect, tuple]], pw: float, ph: float
+) -> list[tuple[fitz.Rect, tuple]]:
+    """拡大PDFなど: 同じ位置の多重矩形を格子で1席にまとめる"""
+    cell = max(12.0 / ph, 0.004)
+    cells: dict[tuple[int, int], tuple[fitz.Rect, tuple]] = {}
+    for r, fill in sorted(items, key=lambda x: x[0].width * x[0].height, reverse=True):
+        cx = (r.x0 + r.x1) / 2 / pw
+        cy = (r.y0 + r.y1) / 2 / ph
+        key = (round(cx / cell), round(cy / cell))
+        if key not in cells:
+            cells[key] = (r, fill)
+    return list(cells.values())
 
 
 def is_gray_fill(r: float, g: float, b: float) -> bool:
@@ -406,7 +424,10 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
             continue
         raw.append((fitz.Rect(r), tuple(fill)))
 
-    items = dedupe_items(raw)
+    if slug in ("2025-12-12", "2025-12-13"):
+        items = dedupe_ota_items(raw, pw, ph)
+    else:
+        items = dedupe_items(raw)
     seats = []
     for i, (r, fill) in enumerate(items, start=1):
         x, y, w, h = r.x0 / pw, r.y0 / ph, r.width / pw, r.height / ph
