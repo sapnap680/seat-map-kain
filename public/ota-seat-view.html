@@ -314,9 +314,11 @@ function frontPanelCount(name,u0,u1){
   const len=u1-u0;
   return Math.max(2, Math.min(4, Math.round(len/0.85)));
 }
+function row1F(frontD,ri){ return {d:frontD+ri*RD+RD/2,y:PLATFORM+ri*RR}; }
 function courtFenceBlocks1F(side,frontD,blockRanges){
-  const dEdge=frontD+RD*0.05;
-  const yFoot=PLATFORM+0.05;
+  const r0=row1F(frontD,0);
+  const dEdge=r0.d-RD*0.4;
+  const yFoot=r0.y+0.02;
   const h=0.72, gap=0.06;
   blockRanges.forEach(({name,u0,u1})=>{
     const n=frontPanelCount(name,u0,u1);
@@ -328,23 +330,19 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     }
   });
 }
-// 端柵は席の上ではなく u0/u1 の外側（通路側・スタンド外）に置く
-const END_U_AISLE=SW*0.05;
+// 端柵：席配置と同じ u0/u1・各行 d/y に直結
 function blockEndRails1F(side,frontD,blockRanges){
-  const h=0.46;
-  const panelOuter=SW*0.98;
-  const panelAisle=SW*0.72;
-  const dOnTread=RD*0.26;
+  const h=0.44;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
     [
-      {u:u0-END_U_AISLE,outer:bi===0},
-      {u:u1+END_U_AISLE,outer:bi===last},
+      {u:u0,outer:bi===0},
+      {u:u1,outer:bi===last},
     ].forEach(({u,outer})=>{
-      const panelD=outer?panelOuter:panelAisle;
+      const panelD=outer?RD*0.5:RD*0.34;
       for(let ri=0;ri<7;ri++){
-        const d=frontD+ri*RD+dOnTread;
-        pipeRailPanelAlongD(side,u,d,panelD,PLATFORM+ri*RR+0.04,h);
+        const r=row1F(frontD,ri);
+        pipeRailPanelAlongD(side,u,r.d,panelD,r.y+0.02,h);
       }
     });
   });
