@@ -46,6 +46,8 @@ export function SeatMap({
   } | null>(null)
   const [scale, setScale] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
+  /** 全体表示時の枠高さ（拡大してもページは伸ばさない） */
+  const [viewportHeight, setViewportHeight] = useState(240)
   const [bgFailed, setBgFailed] = useState(false)
   const [bgCacheKey, setBgCacheKey] = useState<string>('')
 
@@ -67,14 +69,48 @@ export function SeatMap({
     }
   }, [layoutW])
 
+  const clampPan = useCallback(
+    (x: number, y: number, s: number) => {
+      const vp = viewportRef.current
+      if (!vp) return { x, y }
+      const vw = vp.clientWidth
+      const vh = vp.clientHeight
+      const cw = layoutW * s
+      const ch = layoutH * s
+      let nx = x
+      let ny = y
+      if (cw <= vw) {
+        nx = Math.min(vw - cw, Math.max(0, nx))
+      } else {
+        nx = Math.min(0, Math.max(vw - cw, nx))
+      }
+      if (ch <= vh) {
+        ny = Math.min(vh - ch, Math.max(0, ny))
+      } else {
+        ny = Math.min(0, Math.max(vh - ch, ny))
+      }
+      return { x: nx, y: ny }
+    },
+    [layoutW, layoutH],
+  )
+
+  const applyPanScale = useCallback(
+    (nextScale: number, nextPan: { x: number; y: number }) => {
+      const clamped = clampPan(nextPan.x, nextPan.y, nextScale)
+      panRef.current = clamped
+      scaleRef.current = nextScale
+      setPan(clamped)
+      setScale(nextScale)
+    },
+    [clampPan],
+  )
+
   const resetView = useCallback(() => {
     const { scale: fit, x, y } = computeFitView()
     fitScaleRef.current = fit
-    scaleRef.current = fit
-    panRef.current = { x, y }
-    setScale(fit)
-    setPan({ x, y })
-  }, [computeFitView])
+    setViewportHeight(Math.ceil(layoutH * fit + 16))
+    applyPanScale(fit, { x, y })
+  }, [applyPanScale, computeFitView, layoutH])
 
   const zoomAt = useCallback(
     (focalClientX: number, focalClientY: number, newScale: number) => {
@@ -87,16 +123,12 @@ export function SeatMap({
       const p = panRef.current
       const mx = (fx - p.x) / oldS
       const my = (fy - p.y) / oldS
-      const nextPan = {
+      applyPanScale(newScale, {
         x: fx - mx * newScale,
         y: fy - my * newScale,
-      }
-      panRef.current = nextPan
-      scaleRef.current = newScale
-      setPan(nextPan)
-      setScale(newScale)
+      })
     },
-    [],
+    [applyPanScale],
   )
 
   useLayoutEffect(() => {
@@ -174,12 +206,13 @@ export function SeatMap({
         e.preventDefault()
         const start = panStartRef.current
         const t = e.touches[0]
-        const nextPan = {
+        const raw = {
           x: start.px + (t.clientX - start.cx),
           y: start.py + (t.clientY - start.cy),
         }
-        panRef.current = nextPan
-        setPan(nextPan)
+        const clamped = clampPan(raw.x, raw.y, scaleRef.current)
+        panRef.current = clamped
+        setPan(clamped)
       }
     }
 
@@ -198,7 +231,7 @@ export function SeatMap({
       vp.removeEventListener('touchend', onTouchEnd)
       vp.removeEventListener('touchcancel', onTouchEnd)
     }
-  }, [maxPinchScale, zoomAt])
+  }, [clampPan, maxPinchScale, zoomAt])
 
   const otaEvent = eventHasOtaSeatView(event)
   const otaVisitor = otaEvent && !isStaff && !!onOtaBlockPick
@@ -312,14 +345,12 @@ export function SeatMap({
     return isSeatSellable(seat)
   }
 
-  const viewportH = Math.ceil(layoutH * scale + 16)
-
   return (
     <div className="flex w-full flex-col rounded-lg border border-slate-200 bg-white">
       <div
         ref={viewportRef}
-        className="seat-map-viewport w-full overflow-hidden p-2"
-        style={{ height: viewportH }}
+        className="seat-map-viewport w-full shrink-0 overflow-hidden p-2"
+        style={{ height: viewportHeight }}
       >
         <div className="relative h-full w-full overflow-hidden">
         <div

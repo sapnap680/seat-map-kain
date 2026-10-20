@@ -14,6 +14,10 @@ body,
   margin: 0;
 }
 
+html {
+  overscroll-behavior-y: none;
+}
+
 
 /* 席クリック領域: 空席は完全透明（PDFの色を隠さない） */
 .seat-hit-target {
@@ -47,6 +51,7 @@ body,
 /* ピンチ／ドラッグは JS（translate+scale）。ブラウザのジェスチャと競合しない */
 .seat-map-viewport {
   touch-action: none;
+  overscroll-behavior: none;
 }
 
 .seat-map-canvas {
