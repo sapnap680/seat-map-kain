@@ -319,18 +319,33 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
 }
 const BENCH_HALF_U=0.21;
 function seatEdgeU(u0,u1,left){ return left?u0+SW/2-BENCH_HALF_U:u1-SW/2+BENCH_HALF_U; }
+function isFullEndCap(name,left,bi,last){
+  if(left&&bi===0) return true;
+  if(!left&&bi===last) return true;
+  if(name==='M'&&left) return true;
+  if(name==='K'&&!left) return true;
+  return false;
+}
 function blockEndRails1F(side,frontD,blockRanges){
   const h=RAIL_PANEL_H;
-  const panelD=RD*0.92;
+  const panelFull=RD*0.92;
+  const panelSeatU=SW*0.96;
   const last=blockRanges.length-1;
-  blockRanges.forEach(({u0,u1},bi)=>{
+  blockRanges.forEach(({name,u0,u1},bi)=>{
     [
-      {u:seatEdgeU(u0,u1,true),outer:bi===0},
-      {u:seatEdgeU(u0,u1,false),outer:bi===last},
-    ].forEach(({u})=>{
+      {left:true},
+      {left:false},
+    ].forEach(({left})=>{
+      const full=isFullEndCap(name,left,bi,last);
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
-        pipeRailPanelAlongD(side,u,r.d,panelD,r.y+0.02,h);
+        if(full){
+          const u=seatEdgeU(u0,u1,left);
+          pipeRailPanelAlongD(side,u,r.d,panelFull,r.y+0.02,h);
+        }else{
+          const uC=left?u0+SW/2:u1-SW/2;
+          pipeRailPanel(side,r.d,uC,panelSeatU,r.y+0.02,h);
+        }
       }
     });
   });
