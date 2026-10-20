@@ -209,7 +209,8 @@ box(78,0.2,90,0,21.9,0,mat(0x22252b));
 const seats=[];  // 選べる席 {p,face,block,cat,row,num,label}
 const COL={pink:0xe48bb4,goal:0xcc4d90,csA:0x7030a0,csB:0xccc2dd,ce:0x4f81bd,sp:0xbf9000,team:0x92d050,wood:0xd9b27a};
 const treadM=mat(0xc49a63), aisleM=mat(0xe2c793), holeM=mat(0x121418);
-const COURT_FENCE=mat(0x141418), stepM=mat(0x6a5d52), platM=mat(0x7a6248);
+const stepM=mat(0x6a5d52), platM=mat(0x7a6248);
+const railM=mat(0x18181c);
 // 看板（入口の表示）
 function sign(text,x,y,z){
   const cv=document.createElement('canvas');cv.width=256;cv.height=96;const g=cv.getContext('2d');
@@ -251,26 +252,57 @@ function fenceSegments(u0,u1,openings,pad){
   });
   return segs;
 }
-// 1階1列目の手前縁から垂直に：黒いあみ柵（通路だけ開口・低め）
+// 黒パイプ手すりパネル（写真：逆U枠＋内側2本）
+function railPost(side,d,u,y0,h,t){
+  t=t??0.024;
+  if(side==='L') box(t,h,t,-d,y0+h/2,u,railM);
+  if(side==='R') box(t,h,t,d,y0+h/2,u,railM);
+  if(side==='T') box(t,h,t,u,y0+h/2,-d,railM);
+  if(side==='B') box(t,h,t,u,y0+h/2,d,railM);
+}
+function railTop(side,d,u0,u1,y,t){
+  t=t??0.026;
+  const len=Math.abs(u1-u0), mid=(u0+u1)/2;
+  if(side==='L') box(t,t,len,-d,y,mid,railM);
+  if(side==='R') box(t,t,len,d,y,mid,railM);
+  if(side==='T') box(len,t,t,mid,y,-d,railM);
+  if(side==='B') box(len,t,t,mid,y,d,railM);
+}
+function pipeRailPanel(side,d,uCenter,panelU,yFoot,h){
+  const half=panelU*0.46, uL=uCenter-half, uR=uCenter+half;
+  railPost(side,d,uL,yFoot,h);
+  railPost(side,d,uR,yFoot,h);
+  railTop(side,d,uL,uR,yFoot+h);
+  railTop(side,d,uL,uR,yFoot+h*0.46);
+  railPost(side,d,uCenter-panelU*0.18,yFoot,h*0.9);
+  railPost(side,d,uCenter+panelU*0.18,yFoot,h*0.9);
+}
+// 1階最前列の手前：同型パネルを並べる（通路は開口）
 function courtFence1F(side,frontD,u0,u1,openings){
-  const dEdge=frontD+RD*0.06;
-  const yBase=PLATFORM+0.08;
-  const railH=0.58;
-  const barT=0.022, barGap=0.36;
-  const railM=mat(0x1c1c20);
+  const dEdge=frontD+RD*0.05;
+  const yFoot=PLATFORM+0.05;
+  const h=0.5, pw=0.4, gap=0.05;
   fenceSegments(u0,u1,openings).forEach(([a,b])=>{
-    for(let u=a+barGap*0.5;u<b;u+=barGap){
-      if(side==='L') box(barT,railH,barT,-dEdge,yBase+railH/2,u,railM);
-      if(side==='R') box(barT,railH,barT,dEdge,yBase+railH/2,u,railM);
-      if(side==='T') box(barT,railH,barT,u,yBase+railH/2,-dEdge,railM);
-      if(side==='B') box(barT,railH,barT,u,yBase+railH/2,dEdge,railM);
-    }
-    const len=b-a, mid=(a+b)/2, yMid=yBase+railH/2, rT=0.028;
-    if(side==='L'){ box(rT,0.04,len,-dEdge,yBase+railH*0.92,mid,railM); box(rT,0.04,len,-dEdge,yBase+railH*0.45,mid,railM); }
-    if(side==='R'){ box(rT,0.04,len,dEdge,yBase+railH*0.92,mid,railM); box(rT,0.04,len,dEdge,yBase+railH*0.45,mid,railM); }
-    if(side==='T'){ box(len,0.04,rT,mid,yBase+railH*0.92,-dEdge,railM); box(len,0.04,rT,mid,yBase+railH*0.45,-dEdge,railM); }
-    if(side==='B'){ box(len,0.04,rT,mid,yBase+railH*0.92,dEdge,railM); box(len,0.04,rT,mid,yBase+railH*0.45,dEdge,railM); }
+    for(let u=a+pw/2;u<b;u+=pw+gap) pipeRailPanel(side,dEdge,u,pw,yFoot,h);
   });
+}
+// 通路脇：段ごとに手すりが段差で下がる（写真の横柵）
+function aisleSideRails1F(side,frontD,uAisle){
+  const pw=0.36, h=0.46, off=AISLE*0.47;
+  for(let i=0;i<7;i++){
+    const yFoot=PLATFORM+i*RR+0.04;
+    const d=frontD+i*RD+RD*0.07;
+    pipeRailPanel(side,d,uAisle-off,pw,yFoot,h);
+    pipeRailPanel(side,d,uAisle+off,pw,yFoot,h);
+  }
+  const steps=3, stepH=PLATFORM/steps;
+  const courtD=frontD-RD*0.62, standD=frontD-RD*0.22;
+  for(let s=0;s<steps;s++){
+    const yFoot=Math.max(0.03,(s+0.4)*stepH);
+    const d=courtD+(standD-courtD)*((s+0.5)/steps);
+    pipeRailPanel(side,d,uAisle-off,pw*0.92,yFoot,h*0.92);
+    pipeRailPanel(side,d,uAisle+off,pw*0.92,yFoot,h*0.92);
+  }
 }
 // 通路：コート側（下）→ 1列目の段（上）へ登る階段
 function aisleStairs1F(side,frontD,u,w){
@@ -332,7 +364,10 @@ const S1={
   const u0=-m.total/2, u1=m.total/2;
   platformSlab1F(side,m.front,m.back,u0,u1,m.gaps);
   courtFence1F(side,m.front,u0,u1,AISLES[side]);
-  (AISLES[side]||[]).forEach(u=>aisleStairs1F(side,m.front,u,AISLE*0.95));
+  (AISLES[side]||[]).forEach(u=>{
+    aisleStairs1F(side,m.front,u,AISLE*0.95);
+    aisleSideRails1F(side,m.front,u);
+  });
 });
 // ベンチ側：Qブロック中央はコート床と繋がる選手入口（フェンス開口＋階段）
 aisleStairs1F('R',S1.R.front,(qGap[0]+qGap[1])/2,qGap[1]-qGap[0]+0.35);
