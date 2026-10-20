@@ -11,9 +11,9 @@
 html,
 body,
 #root {
-  height: 100%;
   margin: 0;
 }
+
 
 /* 席クリック領域: 空席は完全透明（PDFの色を隠さない） */
 .seat-hit-target {
@@ -50,7 +50,7 @@ body,
 }
 
 .seat-map-canvas {
-  position: relative;
+  position: absolute;
 }
 
 .seat-map-bg {
@@ -66,6 +66,7 @@ body,
 }
 
 body {
+  overflow-x: hidden;
   font-family:
     'Segoe UI',
     'Hiragino Sans',

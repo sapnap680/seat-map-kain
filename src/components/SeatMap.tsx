@@ -312,24 +312,19 @@ export function SeatMap({
     return isSeatSellable(seat)
   }
 
-  const atFitView = scale <= fitScaleRef.current + 0.001
+  const viewportH = Math.ceil(layoutH * scale + 16)
 
   return (
     <div className="flex w-full flex-col rounded-lg border border-slate-200 bg-white">
       <div
         ref={viewportRef}
-        className={`seat-map-viewport w-full overflow-hidden p-2 ${
-          atFitView ? '' : 'min-h-[45vh] flex-1'
-        }`}
-        style={
-          atFitView
-            ? { height: Math.ceil(layoutH * scale + 16) }
-            : undefined
-        }
+        className="seat-map-viewport w-full overflow-hidden p-2"
+        style={{ height: viewportH }}
       >
+        <div className="relative h-full w-full overflow-hidden">
         <div
           ref={mapRef}
-          className={`seat-map-canvas ${otaVisitor || otaStaffPick ? 'cursor-pointer' : ''}`}
+          className={`seat-map-canvas absolute left-0 top-0 ${otaVisitor || otaStaffPick ? 'cursor-pointer' : ''}`}
           style={{
             width: layoutW,
             height: layoutH,
@@ -493,6 +488,7 @@ export function SeatMap({
               })}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
