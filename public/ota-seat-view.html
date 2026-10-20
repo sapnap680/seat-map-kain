@@ -318,9 +318,10 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
 // 端柵は席の上ではなく u0/u1 の外側（通路側・スタンド外）に置く
 const END_U_AISLE=SW*0.05;
 function blockEndRails1F(side,frontD,blockRanges){
-  const h=0.58;
-  const panelOuter=RD*0.86;
-  const panelAisle=RD*0.72;
+  const h=0.46;
+  const panelOuter=SW*0.98;
+  const panelAisle=SW*0.72;
+  const dOnTread=RD*0.26;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
     [
@@ -329,7 +330,7 @@ function blockEndRails1F(side,frontD,blockRanges){
     ].forEach(({u,outer})=>{
       const panelD=outer?panelOuter:panelAisle;
       for(let ri=0;ri<7;ri++){
-        const d=frontD+ri*RD+RD/2;
+        const d=frontD+ri*RD+dOnTread;
         pipeRailPanelAlongD(side,u,d,panelD,PLATFORM+ri*RR+0.04,h);
       }
     });
