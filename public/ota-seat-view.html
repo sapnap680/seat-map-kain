@@ -132,6 +132,7 @@ const SL=7.5, BL=14;           // サイドライン・エンドライン（コ�
 const FS=3.6, FE=3.0;          // ライン→1階スタンド最前列（写真からの推定）
 const RD=0.8, RR=0.4;          // 1階スタンド：1列の奥行き・段差
 const SW=0.45, AISLE=1.0;      // 1席の幅・通路
+const PLATFORM=0.52;           // 1階席床（コート面 y=0 より上・通路だけ階段で繋ぐ）
 
 const mat=c=>new THREE.MeshLambertMaterial({color:c});
 function box(w,h,d,x,y,z,m,ry){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);if(ry)o.rotation.y=ry;scene.add(o);return o;}
@@ -208,6 +209,7 @@ box(78,0.2,90,0,21.9,0,mat(0x22252b));
 const seats=[];  // 選べる席 {p,face,block,cat,row,num,label}
 const COL={pink:0xe48bb4,goal:0xcc4d90,csA:0x7030a0,csB:0xccc2dd,ce:0x4f81bd,sp:0xbf9000,team:0x92d050,wood:0xd9b27a};
 const treadM=mat(0xc49a63), aisleM=mat(0xe2c793), holeM=mat(0x121418);
+const COURT_FENCE=mat(0x141418), stepM=mat(0x6a5d52), platM=mat(0x7a6248);
 // 看板（入口の表示）
 function sign(text,x,y,z){
   const cv=document.createElement('canvas');cv.width=256;cv.height=96;const g=cv.getContext('2d');
@@ -240,9 +242,53 @@ function aisleStrip(side,rows,u,w){
 }
 function place(side,d,u){ if(side==='L')return [-d,u,Math.PI/2]; if(side==='R')return [d,u,-Math.PI/2]; if(side==='T')return [u,-d,0]; return [u,d,Math.PI]; }
 
+function fenceSegments(u0,u1,openings,pad){
+  pad=pad??AISLE*0.52;
+  let segs=[[u0,u1]];
+  (openings||[]).forEach(o=>{
+    const lo=Array.isArray(o)?o[0]:o-pad, hi=Array.isArray(o)?o[1]:o+pad;
+    segs=segs.flatMap(([a,b])=>(hi<=a||lo>=b)?[[a,b]]:[[a,lo],[hi,b]].filter(([c,d])=>d-c>0.05));
+  });
+  return segs;
+}
+// 1階最前列の手前：黒いフェンス（通路のところだけ開口）
+function courtFence1F(side,frontD,u0,u1,openings){
+  const dF=frontD-RD*0.32, y0=PLATFORM*0.5, h=1.08, t=0.075;
+  fenceSegments(u0,u1,openings).forEach(([a,b])=>{
+    const len=b-a, mid=(a+b)/2;
+    if(side==='L'){ box(t,h,len,-dF,y0+h/2,mid,COURT_FENCE); box(t,0.06,len,-dF,y0+0.05,mid,COURT_FENCE); }
+    if(side==='R'){ box(t,h,len,dF,y0+h/2,mid,COURT_FENCE); box(t,0.06,len,dF,y0+0.05,mid,COURT_FENCE); }
+    if(side==='T'){ box(len,h,t,mid,y0+h/2,-dF,COURT_FENCE); box(len,0.06,t,mid,y0+0.05,-dF,COURT_FENCE); }
+    if(side==='B'){ box(len,h,t,mid,y0+h/2,dF,COURT_FENCE); box(len,0.06,t,mid,y0+0.05,dF,COURT_FENCE); }
+  });
+}
+// 通路だけ：コート面 → 1階床への階段
+function aisleStairs1F(side,frontD,u,w){
+  const steps=3, stepH=PLATFORM/steps, dep=0.26, d0=frontD-RD*0.45;
+  for(let s=0;s<steps;s++){
+    const y=(s+0.5)*stepH, h=stepH*0.9, d=d0-s*dep*0.4;
+    if(side==='L') box(dep,h,w,-d,y,u,stepM);
+    if(side==='R') box(dep,h,w,d,y,u,stepM);
+    if(side==='T') box(w,h,dep,u,y,-d,stepM);
+    if(side==='B') box(w,h,dep,u,y,d,stepM);
+  }
+}
+function platformSlab1F(side,front,back,u0,u1,gaps){
+  const dep=back-front+RD*0.5, dMid=(front+back)/2;
+  let segs=[[u0,u1]];
+  (gaps||[]).forEach(([a,b])=>{ segs=segs.flatMap(([c,d])=>(b<=c||a>=d)?[[c,d]]:[[c,a],[b,d]].filter(([e,f])=>f-e>0.05)); });
+  segs.forEach(([a,b])=>{
+    const len=b-a, mid=(a+b)/2;
+    if(side==='L') box(dep,PLATFORM,len,-dMid,PLATFORM/2,mid,platM);
+    if(side==='R') box(dep,PLATFORM,len,dMid,PLATFORM/2,mid,platM);
+    if(side==='T') box(len,PLATFORM,dep,mid,PLATFORM/2,-dMid,platM);
+    if(side==='B') box(len,PLATFORM,dep,mid,PLATFORM/2,dMid,platM);
+  });
+}
+
 // ===== 1階（可動席・7列）=====
 const AISLES={};
-const rows1=[...Array(7)].map((_,i)=>({y:i*RR,dep:RD}));
+const rows1=[...Array(7)].map((_,i)=>({y:PLATFORM+i*RR,dep:RD}));
 function stand1F(side,blocks,cat,color,numbering,skip,gaps){
   const front=(side==='L'||side==='R')?SL+FS:BL+FE;
   rows1.forEach((r,i)=>r.d=front+i*RD+RD/2);
@@ -259,35 +305,44 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
     t+=n*SW; if(bi<blocks.length-1){ aisleStrip(side,R,t+AISLE/2,AISLE); aisles.push(t+AISLE/2); t+=AISLE; }
   });
   AISLES[side]=aisles;
-  return {total,back:front+7*RD};
+  return {total,front,back:front+7*RD,gaps:gaps||[]};
 }
-stand1F('L',[['I',3],['H',17],['G',17],['F',17],['E',3]],'1階指定席',COL.pink,(i,n)=>i+1);
-stand1F('T',[['K',12],['L',17],['M',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>n-i);
-stand1F('B',[['C',12],['B',17],['A',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>i+1);
-// ベンチ側：真ん中（Qの5〜13番の位置）は選手の入口。席は表示するがタップ不可
 const qGap=[-2.03,2.03];
-stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,(name,i)=>name==='Q'&&i>=4&&i<13,[[qGap[0],qGap[1]]]);
-// 真ん中は床の高さの通路。奥（1階スタンドのいちばん後ろの下）に出入口がある
+const S1={
+  L:stand1F('L',[['I',3],['H',17],['G',17],['F',17],['E',3]],'1階指定席',COL.pink,(i,n)=>i+1),
+  T:stand1F('T',[['K',12],['L',17],['M',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>n-i),
+  B:stand1F('B',[['C',12],['B',17],['A',12]],'1階指定席（ゴール裏）',COL.goal,(i,n)=>i+1),
+  R:stand1F('R',[['O',13],['P',17],['Q',17],['R',17],['S',13]],'チーム券席',COL.team,(i,n)=>i+1,(name,i)=>name==='Q'&&i>=4&&i<13,[[qGap[0],qGap[1]]]),
+};
+['L','T','B','R'].forEach(side=>{
+  const m=S1[side]; if(!m) return;
+  const u0=-m.total/2, u1=m.total/2;
+  platformSlab1F(side,m.front,m.back,u0,u1,m.gaps);
+  courtFence1F(side,m.front,u0,u1,AISLES[side]);
+  (AISLES[side]||[]).forEach(u=>aisleStairs1F(side,m.front,u,AISLE*0.95));
+});
+// ベンチ側：Qブロック中央はコート床と繋がる選手入口（フェンス開口＋階段）
+aisleStairs1F('R',S1.R.front,(qGap[0]+qGap[1])/2,qGap[1]-qGap[0]+0.35);
 (function(){
   const w=qGap[1]-qGap[0], x0=SL+FS, x1=SL+FS+7*RD, side=mat(0x8a6c48);
-  [-1,1].forEach(sg=>{ for(let r=0;r<7;r++){ const h=r*RR+0.5; box(RD,h,0.12,x0+r*RD+RD/2,h/2,sg*(qGap[1]+0.06),side); } });
-  const H=6*RR+0.6;
-  box(0.3,H,w+0.24,x1+0.15,H/2,0,mat(0x6b5a45));      // 奥の壁
-  box(0.12,2.2,2.4,x1-0.02,1.1,0,holeM);              // 出入口（床の高さ）
+  [-1,1].forEach(sg=>{ for(let r=0;r<7;r++){ const h=r*RR+0.5; box(RD,h,0.12,x0+r*RD+RD/2,PLATFORM+h/2,sg*(qGap[1]+0.06),side); } });
+  const H=PLATFORM+6*RR+0.6;
+  box(0.3,H,w+0.24,x1+0.15,H/2,0,mat(0x6b5a45));
+  box(0.12,2.2,2.4,x1-0.02,PLATFORM+0.55,0,holeM);
 })();
 
 // ===== 2階・3階（常設席）：1階の後ろからそのまま続く =====
-const D0s=SL+FS+7*RD+0.9, D0e=BL+FE+7*RD+0.9, Y0=6*RR+0.45;
+const D0s=SL+FS+7*RD+0.9, D0e=BL+FE+7*RD+0.9, Y0=PLATFORM+6*RR+0.45;
 const row2=(k,D0)=>({d:D0+k*0.85+(k>=4?1.2:0), y:Y0+k*0.45+(k>=4?0.45:0)});
 // 1階と2階のあいだの段（つながっている）
-[['L',D0s],['R',D0s]].forEach(([sd,D])=>treads(sd,[{d:D-0.45,y:6*RR+0.2,dep:0.9}],-20.5,20.5));
-[['T',D0e],['B',D0e]].forEach(([sd,D])=>treads(sd,[{d:D-0.45,y:6*RR+0.2,dep:0.9}],-17,17));
+[['L',D0s],['R',D0s]].forEach(([sd,D])=>treads(sd,[{d:D-0.45,y:PLATFORM+6*RR+0.2,dep:0.9}],-20.5,20.5));
+[['T',D0e],['B',D0e]].forEach(([sd,D])=>treads(sd,[{d:D-0.45,y:PLATFORM+6*RR+0.2,dep:0.9}],-17,17));
 // 柵：1階の最後列のすぐ後ろ。ブロックの間の通路のところだけ開いていて、2階へ上がれる
 const fenceM=mat(0xf1f1ef);
 function fence(side,D,u0,u1,openings){
   let segs=[[u0,u1]];
   openings.forEach(o=>{ const [lo,hi]=Array.isArray(o)?o:[o-0.55,o+0.55]; segs=segs.flatMap(([a,b])=>(hi<=a||lo>=b)?[[a,b]]:[[a,lo],[hi,b]].filter(([c,d])=>d-c>0.05)); });
-  const y0=6*RR, h=1.0;
+  const y0=PLATFORM+6*RR, h=1.0;
   segs.forEach(([a,b])=>{ const len=b-a, mid=(a+b)/2;
     if(side==='L') box(0.08,h,len,-D,y0+h/2,mid,fenceM);
     if(side==='R') box(0.08,h,len,D,y0+h/2,mid,fenceM);
@@ -392,7 +447,7 @@ function goal(){
     hr=Math.min(hr,34/sx,40/sz); y=Math.min(y,16);
     return {pos:new THREE.Vector3(hr*Math.sin(th),y,hr*Math.cos(th)),look:new THREE.Vector3(0,0,0)};
   }
-  const s=state.seat, eye=s.p.clone().add(new THREE.Vector3(0,s.chair?1.15:1.2,0));
+  const s=state.seat, eye=s.p.clone().add(new THREE.Vector3(0,s.chair?1.12:1.18,0));
   const v=new THREE.Vector3().subVectors(center,eye);
   const yaw=Math.atan2(v.x,v.z)+state.yaw, pitch=Math.max(-1.2,Math.min(0.7,Math.atan2(v.y,Math.hypot(v.x,v.z))+state.pitch));
   return {pos:eye,look:eye.clone().add(new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),Math.cos(yaw)*Math.cos(pitch)))};
