@@ -313,6 +313,7 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     const pw=(len-gap*(n-1))/n;
     for(let i=0;i<n;i++){
       const u=u0+pw/2+i*(pw+gap);
+      if(side==='R'&&u+pw/2>qGap[0]&&u-pw/2<qGap[1]) continue;
       pipeRailPanel(side,dEdge,u,pw,yFoot,h);
     }
   });
@@ -326,22 +327,25 @@ function isFullEndCap(name,left,bi,last){
   if(name==='K'&&!left) return true;
   return false;
 }
+const SEAT_D_OFF=0.12, SEAT_DEP=0.34, RAIL_U_EDGE=0.012;
 function blockEndRails1F(side,frontD,blockRanges){
   const h=RAIL_PANEL_H;
   const panelFull=RD*0.92;
-  const panelAisle=SW*0.92;
+  const panelAisle=SEAT_DEP/0.96;
   const last=blockRanges.length-1;
   blockRanges.forEach(({name,u0,u1},bi)=>{
     [
-      {left:true},
-      {left:false},
-    ].forEach(({left})=>{
+      {left:true,uA:u0-RAIL_U_EDGE},
+      {left:false,uA:u1+RAIL_U_EDGE},
+    ].forEach(({left,uA})=>{
       const full=isFullEndCap(name,left,bi,last);
-      const u=seatEdgeU(u0,u1,left);
-      const panelD=full?panelFull:panelAisle;
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
-        pipeRailPanelAlongD(side,u,r.d,panelD,r.y+0.02,h);
+        if(full){
+          pipeRailPanelAlongD(side,seatEdgeU(u0,u1,left),r.d,panelFull,r.y+0.02,h);
+        }else{
+          pipeRailPanelAlongD(side,uA,r.d+SEAT_D_OFF,panelAisle,r.y,h);
+        }
       }
     });
   });
@@ -352,26 +356,14 @@ function aisleGaps1F(blockRanges){
   return g;
 }
 function aisleStairs1F(side,frontD,u,w){
-  const steps=4, stepH=PLATFORM/steps;
-  const dBot=frontD-RD*0.62;
-  const dTop=frontD-RD*0.17;
-  const td=(dTop-dBot)/steps;
-  const m=stepM;
-  for(let s=0;s<steps;s++){
-    const y0=s*stepH, y1=(s+1)*stepH;
-    const d=dBot+(s+0.5)*td;
-    if(side==='L') box(td,y1-y0,w,-d,(y0+y1)/2,u,m);
-    if(side==='R') box(td,y1-y0,w,d,(y0+y1)/2,u,m);
-    if(side==='T') box(w,y1-y0,td,u,(y0+y1)/2,-d,m);
-    if(side==='B') box(w,y1-y0,td,u,(y0+y1)/2,d,m);
-  }
-  const gapD=frontD-dTop;
-  if(gapD>0.03){
-    const dMid=dTop+gapD/2;
-    if(side==='L') box(gapD,0.05,w,-dMid,PLATFORM-0.025,u,aisleM);
-    if(side==='R') box(gapD,0.05,w,dMid,PLATFORM-0.025,u,aisleM);
-    if(side==='T') box(w,0.05,gapD,u,PLATFORM-0.025,-dMid,aisleM);
-    if(side==='B') box(w,0.05,gapD,u,PLATFORM-0.025,dMid,aisleM);
+  const n=3, rise=PLATFORM/n, T=0.28;
+  const dFace=frontD-RD*0.25;
+  for(let s=0;s<n;s++){
+    const dFront=dFace-(n-s)*T, dep=dFace-dFront, h=(s+1)*rise, dC=dFront+dep/2;
+    if(side==='L') box(dep,h,w,-dC,h/2,u,stepM);
+    if(side==='R') box(dep,h,w,dC,h/2,u,stepM);
+    if(side==='T') box(w,h,dep,u,h/2,-dC,stepM);
+    if(side==='B') box(w,h,dep,u,h/2,dC,stepM);
   }
 }
 function platformSlab1F(side,front,back,u0,u1,gaps){
