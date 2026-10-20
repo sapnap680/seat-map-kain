@@ -46,11 +46,22 @@ const REG: Record<string, Rect[]> = {
   ],
 }
 
+/** 1階・ゴール裏ブロック（viewBox 1080 基準・会場図の文字付近） */
+const STAND_BLOCK_PAD: [number, number, number, number] = [10, 10, 14, 14]
+
 const PAD: Record<string, [number, number, number, number]> = {
-  コートサイドA: [0, 0, 2, 4],
-  コートサイドB: [0, 0, 4, 2],
-  コートエンド: [4, 4, 2, 2],
-  スペシャルシート: [4, 4, 4, 4],
+  I: STAND_BLOCK_PAD,
+  H: STAND_BLOCK_PAD,
+  G: STAND_BLOCK_PAD,
+  F: STAND_BLOCK_PAD,
+  E: STAND_BLOCK_PAD,
+  K: STAND_BLOCK_PAD,
+  M: STAND_BLOCK_PAD,
+  A: STAND_BLOCK_PAD,
+  コートサイドA: [6, 6, 18, 24],
+  コートサイドB: [6, 6, 24, 18],
+  コートエンド: [14, 14, 10, 10],
+  スペシャルシート: [12, 12, 20, 20],
 }
 
 function hitRect(

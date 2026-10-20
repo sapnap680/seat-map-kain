@@ -36,6 +36,14 @@ body,
   color: inherit;
 }
 
+/* 会場席状況：見える矩形はDB座標のまま、::before でだけタップ領域を広げる */
+.seat-hit-expand::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  z-index: 1;
+}
+
 body {
   font-family:
     'Segoe UI',

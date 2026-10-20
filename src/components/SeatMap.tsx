@@ -122,6 +122,13 @@ export function SeatMap({
     event.background_path ?? `/backgrounds/${event.slug}.png`
   const bgSrc = bgCacheKey ? `${bgBase}?v=${bgCacheKey}` : bgBase
 
+  const seatBoxStyle = (seat: SeatWithState) => ({
+    left: `${seat.x * 100}%`,
+    top: `${seat.y * 100}%`,
+    width: `${seat.w * 100}%`,
+    height: `${seat.h * 100}%`,
+  })
+
   const seatClickable = (seat: SeatWithState) => {
     if (otaVisitor || otaStaffPick) {
       if (!isOtaVisitorClickTarget(event.slug, seat)) return false
@@ -192,14 +199,9 @@ export function SeatMap({
                       key={seat.id}
                       type="button"
                       title={seatDisplayTitle(seat, event.slug)}
-                      className={`pointer-events-auto absolute touch-manipulation ${overlay}`}
+                      className={`seat-hit-expand pointer-events-auto absolute touch-manipulation ${overlay}`}
                       data-seat-hit="1"
-                      style={{
-                        left: `${seat.x * 100}%`,
-                        top: `${seat.y * 100}%`,
-                        width: `${seat.w * 100}%`,
-                        height: `${seat.h * 100}%`,
-                      }}
+                      style={seatBoxStyle(seat)}
                       onClick={(e) => {
                         e.stopPropagation()
                         onSeatClick(seat)
@@ -210,12 +212,6 @@ export function SeatMap({
 
                 const hitProps = {
                   'data-seat-hit': '1' as const,
-                  style: {
-                    left: `${seat.x * 100}%`,
-                    top: `${seat.y * 100}%`,
-                    width: `${seat.w * 100}%`,
-                    height: `${seat.h * 100}%`,
-                  },
                   onClick: (e: React.MouseEvent) => {
                     e.stopPropagation()
                     if (otaVisitor && onOtaBlockPick) {
@@ -240,8 +236,9 @@ export function SeatMap({
                       role="button"
                       tabIndex={0}
                       title={seatDisplayTitle(seat, event.slug)}
-                      className="pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
+                      className="seat-hit-expand pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
                       {...hitProps}
+                      style={seatBoxStyle(seat)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
                       }}
@@ -259,8 +256,9 @@ export function SeatMap({
                       key={seat.id}
                       role="button"
                       tabIndex={0}
-                      className={`pointer-events-auto absolute cursor-pointer touch-manipulation ${overlay}`}
+                      className={`seat-hit-expand pointer-events-auto absolute cursor-pointer touch-manipulation ${overlay}`}
                       {...hitProps}
+                      style={seatBoxStyle(seat)}
                     />
                   )
                 }
@@ -276,8 +274,9 @@ export function SeatMap({
                       role="button"
                       tabIndex={0}
                       title={seatDisplayTitle(seat, event.slug)}
-                      className="pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
+                      className="seat-hit-expand pointer-events-auto absolute cursor-pointer opacity-0 touch-manipulation"
                       {...hitProps}
+                      style={seatBoxStyle(seat)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
                       }}
@@ -290,8 +289,9 @@ export function SeatMap({
                     key={seat.id}
                     type="button"
                     title={seatDisplayTitle(seat, event.slug)}
-                    className={`pointer-events-auto absolute touch-manipulation ${overlay}`}
+                    className={`seat-hit-expand pointer-events-auto absolute touch-manipulation ${overlay}`}
                     {...hitProps}
+                    style={seatBoxStyle(seat)}
                   />
                 )
               })}
