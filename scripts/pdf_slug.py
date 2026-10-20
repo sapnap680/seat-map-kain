@@ -10,7 +10,7 @@ def slug_from_pdf_stem(stem: str) -> str | None:
     for key, slug in DATE_MAP.items():
         if key in stem or key.replace(".", "_") in stem:
             return slug
-    m = re.search(r"12[\._](\d{2})", stem)
+    m = re.search(r"12[\-._](\d{2})", stem)
     if m:
         return f"2025-12-{m.group(1)}"
     normalized = stem.replace("_", ".")

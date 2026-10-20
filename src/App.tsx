@@ -5,7 +5,6 @@ import { OtaStaffSeatChoiceModal } from './components/OtaStaffSeatChoiceModal'
 import { OtaSeatViewModal } from './components/OtaSeatViewModal'
 import { SeatDetailModal } from './components/SeatDetailModal'
 import { SeatMap } from './components/SeatMap'
-import { StaffLoginModal } from './components/StaffLoginModal'
 import { useAuth } from './hooks/useAuth'
 import { useEvents, useSeatMap } from './hooks/useEventData'
 import { eventHasGenderSwap, eventTabLabel } from './lib/allocation'
@@ -17,7 +16,6 @@ import {
 import { appendDaySale } from './lib/daySaleLog'
 import { useDaySales } from './hooks/useDaySales'
 import { isSeatSellable } from './lib/seatStatus'
-import { isSupabaseConfigured } from './lib/supabase'
 import type { GenderView, SeatWithState } from './types'
 
 function App() {
@@ -29,8 +27,7 @@ function App() {
     return events.find((e) => e.slug === slug) ?? events[0]
   }, [events, activeSlug])
 
-  const { isStaff, signIn, signOut, isDemo, loading: authLoading } =
-    useAuth()
+  const { isStaff, loading: authLoading } = useAuth()
   const [genderView, setGenderView] = useState<GenderView>('women')
   const swapActive = activeEvent
     ? eventHasGenderSwap(activeEvent.slug)
@@ -48,7 +45,6 @@ function App() {
   } = useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
 
   const [highlightAvailable, setHighlightAvailable] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
   const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
     useState<SeatWithState | null>(null)
@@ -86,27 +82,6 @@ function App() {
     }).catch(() => {})
     // #endregion
   }, [showOtaSeatView, activeEvent?.slug, isStaff, events.length])
-
-  useEffect(() => {
-    if (authLoading || isStaff) return
-    // #region agent log
-    fetch('http://127.0.0.1:7500/ingest/19379df4-9811-4df9-970f-970d9b07ac55', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Debug-Session-Id': '0c7e1f',
-      },
-      body: JSON.stringify({
-        sessionId: '0c7e1f',
-        hypothesisId: 'H-public-visitor',
-        location: 'App.tsx:public-view',
-        message: 'public visitor session',
-        data: { isDemo, hasSupabase: isSupabaseConfigured },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {})
-    // #endregion
-  }, [authLoading, isStaff, isDemo])
 
   const stats = useMemo(() => {
     let available = 0
@@ -205,26 +180,7 @@ function App() {
               <span className="font-normal text-slate-500"> 会場席状況</span>
             </h1>
             <div className="flex flex-wrap items-center justify-end gap-1.5 text-xs">
-              {isStaff ? (
-                <>
-                  <span className="text-emerald-700">編集中</span>
-                  <button
-                    type="button"
-                    onClick={() => signOut()}
-                    className="rounded-md border border-slate-300 px-2 py-1 hover:bg-slate-50"
-                  >
-                    ログアウト
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setLoginOpen(true)}
-                  className="text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline"
-                >
-                  スタッフログイン
-                </button>
-              )}
+              <span className="text-emerald-700">編集中</span>
             </div>
           </div>
 
@@ -277,48 +233,32 @@ function App() {
               残席のみ
             </label>
             <div className="ml-auto flex flex-wrap items-center gap-1.5">
-              {isStaff ? (
-                <>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    案内可 {stats.available}
-                  </span>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    当日券 {stats.daySold}
-                  </span>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    前売 {stats.preSold}
-                  </span>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    全 {stats.total}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setDaySalesOpen(true)}
-                    className="rounded-md border border-slate-200 bg-white px-2 py-0.5 font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    集計 {daySaleLogCount}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    案内可 {stats.available}
-                  </span>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    販売済 {stats.sold}
-                  </span>
-                  <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
-                    全 {stats.total}
-                  </span>
-                </>
-              )}
+              <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                案内可 {stats.available}
+              </span>
+              <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                当日券 {stats.daySold}
+              </span>
+              <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                前売 {stats.preSold}
+              </span>
+              <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
+                全 {stats.total}
+              </span>
+              <button
+                type="button"
+                onClick={() => setDaySalesOpen(true)}
+                className="rounded-md border border-slate-200 bg-white px-2 py-0.5 font-medium text-slate-700 hover:bg-slate-50"
+              >
+                集計 {daySaleLogCount}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col p-3">
-        {eventsLoading || seatsLoading ? (
+        {eventsLoading || seatsLoading || authLoading ? (
           <p className="py-12 text-center text-slate-500">読み込み中…</p>
         ) : activeEvent ? (
           <SeatMap
@@ -327,9 +267,7 @@ function App() {
             highlightAvailableOnly={highlightAvailable}
             isStaff={isStaff}
             onSeatClick={handleSeatClick}
-            onOtaBlockPick={
-              showOtaSeatView && !isStaff ? setOtaViewBlock : undefined
-            }
+            onOtaBlockPick={undefined}
           />
         ) : (
           <p className="py-12 text-center text-slate-500">
@@ -337,13 +275,6 @@ function App() {
           </p>
         )}
       </main>
-
-      <StaffLoginModal
-        open={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        onSignIn={signIn}
-        isDemo={isDemo}
-      />
 
       <OtaStaffSeatChoiceModal
         seat={otaStaffChoiceSeat}

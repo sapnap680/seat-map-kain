@@ -44,6 +44,27 @@ body,
   z-index: 1;
 }
 
+/* ピンチ／ドラッグは JS（translate+scale）。ブラウザのジェスチャと競合しない */
+.seat-map-viewport {
+  touch-action: none;
+}
+
+.seat-map-canvas {
+  position: relative;
+}
+
+.seat-map-bg {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+/* 大田: 東側を上にして横向き（PDF座標はそのまま、表示だけ回転） */
+.ota-map-landscape-inner {
+  transform: rotate(-90deg) translateX(-100%);
+  transform-origin: top left;
+}
+
 body {
   font-family:
     'Segoe UI',

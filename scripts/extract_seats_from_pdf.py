@@ -85,8 +85,19 @@ def is_team_green_fill(r: float, g: float, b: float) -> bool:
     return r >= 0.48 and g >= 0.72 and b <= 0.45 and g >= r + 0.08
 
 
-def is_ota_team_zone(cx: float, cy: float) -> bool:
-    """大田区 PDF: 東側チーム券列（上下の隙間も含む）"""
+def is_ota_team_zone(
+    cx: float,
+    cy: float,
+    *,
+    page_w: float = 0,
+    page_h: float = 0,
+) -> bool:
+    """大田区 PDF: チーム券（縦PDF=東側、横PDF=上側）"""
+    landscape = page_w > page_h if page_w and page_h else False
+    if landscape:
+        if cy > 0.38:
+            return False
+        return 0.12 <= cx <= 0.95
     if cx < 0.62:
         return False
     return 0.275 <= cy <= 0.785
@@ -189,7 +200,10 @@ def ota_stroke_team_rects(page: fitz.Page, pw: float, ph: float) -> list[fitz.Re
             continue
         cx = (r.x0 + r.x1) / 2 / pw
         cy = (r.y0 + r.y1) / 2 / ph
-        if cx < 0.80 or not (0.275 <= cy <= 0.785):
+        if pw > ph:
+            if cy > 0.38 or not (0.12 <= cx <= 0.95):
+                continue
+        elif cx < 0.80 or not (0.275 <= cy <= 0.785):
             continue
         rects.append(fitz.Rect(r))
     return rects
@@ -248,7 +262,7 @@ def add_ota_team_row_gaps(
                 if _seat_overlaps(seats, x, y, w_n, h_n):
                     continue
                 cx = x + w_n / 2
-                if not is_ota_team_zone(cx, cy):
+                if not is_ota_team_zone(cx, cy, page_w=pw, page_h=ph):
                     continue
                 seats.append(
                     {
@@ -321,14 +335,14 @@ def add_ota_stroke_box_seats(
     return added
 
 
-def refine_ota_team_zones(seats: list[dict]) -> None:
+def refine_ota_team_zones(seats: list[dict], pw: float, ph: float) -> None:
     """チーム券は灰色席のみ（ピンク1階は触らない）"""
     for s in seats:
         if s["zone"] == "floor1":
             continue
         cx = s["x"] + s["w"] / 2
         cy = s["y"] + s["h"] / 2
-        in_team = is_ota_team_zone(cx, cy)
+        in_team = is_ota_team_zone(cx, cy, page_w=pw, page_h=ph)
         if s["zone"] == "team_ticket" and not in_team:
             s["zone"] = "floor2"
             s["sellable"] = False
@@ -413,7 +427,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         refine_komori_12_11_zones(seats)
         apply_komori_seat_labels(seats, page, pw, ph)
     elif slug in ("2025-12-12", "2025-12-13"):
-        refine_ota_team_zones(seats)
+        refine_ota_team_zones(seats, pw, ph)
         # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外
         seats = [s for s in seats if s["zone"] != "floor2"]
         apply_ota_seat_labels(seats)

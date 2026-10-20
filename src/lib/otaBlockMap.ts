@@ -135,23 +135,26 @@ function blockFromSeatMeta(
   return null
 }
 
-/** 1階スタンド：座標からおおよそのブロック（SVGヒット漏れ用） */
+/** 1階スタンド：横向き座席表PDF上のおおよそのブロック */
 function floor1BlockFallback(cx: number, cy: number): string {
-  if (cy < 0.22) {
-    if (cx < 0.38) return 'K'
-    if (cx < 0.62) return 'L'
-    return 'M'
+  if (cx < 0.22) {
+    if (cy < 0.42) return 'M'
+    if (cy < 0.58) return 'L'
+    return 'K'
   }
-  if (cy > 0.78) {
-    if (cx < 0.38) return 'C'
-    if (cx < 0.62) return 'B'
-    return 'A'
+  if (cx > 0.78) {
+    if (cy < 0.42) return 'A'
+    if (cy < 0.58) return 'B'
+    return 'C'
   }
-  if (cx < 0.28) return 'I'
-  if (cx < 0.38) return 'H'
-  if (cx < 0.55) return 'G'
-  if (cx < 0.72) return 'F'
-  return 'E'
+  if (cy > 0.72) {
+    if (cx < 0.22) return 'I'
+    if (cx < 0.35) return 'H'
+    if (cx < 0.52) return 'G'
+    if (cx < 0.68) return 'F'
+    return 'E'
+  }
+  return 'G'
 }
 
 /** 席タップ → 3D会場図のブロック（座標ヒット＋プレミアム席のゾーンフォールバック） */

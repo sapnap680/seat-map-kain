@@ -177,7 +177,7 @@ def recolor_floor1_to_pptx_pink(path: Path, slug: str) -> None:
             if is_seat_gray(r, g, b):
                 continue
             if slug in ("2025-12-12", "2025-12-13"):
-                if is_ota_team_zone(nx, ny):
+                if is_ota_team_zone(nx, ny, page_w=w, page_h=h):
                     continue
                 if not is_ota_floor1_blue(r, g, b):
                     continue
@@ -206,7 +206,7 @@ def scrub_ota_team_zone_pink_blue(path: Path, slug: str) -> None:
         ny = y / h
         for x in range(w):
             nx = x / w
-            if not is_ota_team_zone(nx, ny):
+            if not is_ota_team_zone(nx, ny, page_w=w, page_h=h):
                 continue
             r, g, b = px[x, y]
             if is_seat_gray(r, g, b):
