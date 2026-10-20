@@ -269,26 +269,25 @@ function railTop(side,d,u0,u1,y,t){
   if(side==='B') box(len,t,t,mid,y,d,railM);
 }
 function pipeRailPanel(side,d,uCenter,panelU,yFoot,h){
-  const half=panelU*0.46, uL=uCenter-half, uR=uCenter+half;
+  const half=panelU*0.48, uL=uCenter-half, uR=uCenter+half;
   railPost(side,d,uL,yFoot,h);
   railPost(side,d,uR,yFoot,h);
   railTop(side,d,uL,uR,yFoot+h);
-  railTop(side,d,uL,uR,yFoot+h*0.46);
-  railPost(side,d,uCenter-panelU*0.18,yFoot,h*0.9);
-  railPost(side,d,uCenter+panelU*0.18,yFoot,h*0.9);
+  railPost(side,d,uCenter-panelU*0.22,yFoot,h*0.92);
+  railPost(side,d,uCenter+panelU*0.22,yFoot,h*0.92);
 }
 // 1階最前列の手前：同型パネルを並べる（通路は開口）
 function courtFence1F(side,frontD,u0,u1,openings){
   const dEdge=frontD+RD*0.05;
   const yFoot=PLATFORM+0.05;
-  const h=0.5, pw=0.4, gap=0.05;
+  const h=0.72, pw=0.58, gap=0.06;
   fenceSegments(u0,u1,openings).forEach(([a,b])=>{
     for(let u=a+pw/2;u<b;u+=pw+gap) pipeRailPanel(side,dEdge,u,pw,yFoot,h);
   });
 }
 // 通路脇：段ごとに手すりが段差で下がる（写真の横柵）
 function aisleSideRails1F(side,frontD,uAisle){
-  const pw=0.36, h=0.46, off=AISLE*0.47;
+  const pw=0.54, h=0.68, off=AISLE*0.47;
   for(let i=0;i<7;i++){
     const yFoot=PLATFORM+i*RR+0.04;
     const d=frontD+i*RD+RD*0.07;
