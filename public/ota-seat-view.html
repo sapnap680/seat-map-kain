@@ -317,40 +317,40 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     }
   });
 }
-// 端柵：u は席ブロック端（u0/u1）。d は段のコート側縁から奥へ（通路方向 d にはみ出さない）
-function rowTreadDFront(frontD,ri){ return frontD+ri*RD; }
 function blockEndRails1F(side,frontD,blockRanges){
   const h=RAIL_PANEL_H;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
-    const uEdges=[];
-    if(bi===0) uEdges.push({u:u0,outer:true});
-    uEdges.push({u:u1,outer:bi===last});
-    uEdges.forEach(({u,outer})=>{
+    [
+      {u:u0,outer:bi===0},
+      {u:u1,outer:bi===last},
+    ].forEach(({u,outer})=>{
       const panelD=outer?RD*0.5:RD*0.34;
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
-        const dFront=rowTreadDFront(frontD,ri);
-        const dCenter=dFront+panelD*0.5;
-        pipeRailPanelAlongD(side,u,dCenter,panelD,r.y+0.02,h);
+        pipeRailPanelAlongD(side,u,r.d,panelD,r.y+0.02,h);
       }
     });
   });
 }
-// 通路階段：フロア → 1列目ひな壇手前（d=frontD）まで
+function aisleGaps1F(blockRanges){
+  const g=[];
+  for(let i=0;i<blockRanges.length-1;i++) g.push([blockRanges[i].u1,blockRanges[i+1].u0]);
+  return g;
+}
 function aisleStairs1F(side,frontD,u,w){
-  const steps=4, stepH=PLATFORM/steps;
-  const dBot=frontD-RD*0.48;
-  const dTop=frontD;
-  const dz=(dTop-dBot)/steps;
+  const steps=3, stepH=PLATFORM/steps;
+  const courtD=frontD-RD*0.55;
+  const standD=frontD-RD*0.06;
   const m=stepM;
   for(let s=0;s<steps;s++){
     const y0=s*stepH, y1=(s+1)*stepH;
-    const dC=dBot+(s+0.5)*dz;
-    if(side==='L') box(dz,y1-y0,w,-dC,(y0+y1)/2,u,m);
-    if(side==='R') box(dz,y1-y0,w,dC,(y0+y1)/2,u,m);
-    if(side==='T') box(w,y1-y0,dz,u,(y0+y1)/2,-dC,m);
-    if(side==='B') box(w,y1-y0,dz,u,(y0+y1)/2,dC,m);
+    const d=courtD+(standD-courtD)*((s+0.5)/steps);
+    const td=(standD-courtD)/steps*1.01;
+    if(side==='L') box(td,y1-y0,w,-d,(y0+y1)/2,u,m);
+    if(side==='R') box(td,y1-y0,w,d,(y0+y1)/2,u,m);
+    if(side==='T') box(w,y1-y0,td,u,(y0+y1)/2,-d,m);
+    if(side==='B') box(w,y1-y0,td,u,(y0+y1)/2,d,m);
   }
 }
 function platformSlab1F(side,front,back,u0,u1,gaps){
@@ -374,10 +374,10 @@ function stand1F(side,blocks,cat,color,numbering,skip,gaps){
   rows1.forEach((r,i)=>r.d=front+i*RD+RD/2);
   const R=rows1.map(r=>({...r}));
   const total=blocks.reduce((s,b)=>s+b[1],0)*SW+(blocks.length-1)*AISLE;
-  treads(side,R,-total/2,total/2,gaps);
   let t=-total/2; const aisles=[]; const blockRanges=[];
   blocks.forEach(([name,n],bi)=>{
     const u0=t;
+    treads(side,R,u0,u0+n*SW,gaps);
     R.forEach((r,ri)=>{ for(let i=0;i<n;i++){
       if(skip&&skip(name,i,n)) continue;
       const [x,z,face]=place(side,r.d,t+SW/2+i*SW);
@@ -400,7 +400,8 @@ const S1={
 ['L','T','B','R'].forEach(side=>{
   const m=S1[side]; if(!m) return;
   const u0=-m.total/2, u1=m.total/2;
-  platformSlab1F(side,m.front,m.back,u0,u1,m.gaps);
+  const platGaps=[...(m.gaps||[]),...aisleGaps1F(m.blockRanges)];
+  platformSlab1F(side,m.front,m.back,u0,u1,platGaps);
   courtFenceBlocks1F(side,m.front,m.blockRanges);
   blockEndRails1F(side,m.front,m.blockRanges);
   (AISLES[side]||[]).forEach(u=> aisleStairs1F(side,m.front,u,AISLE*0.95));
