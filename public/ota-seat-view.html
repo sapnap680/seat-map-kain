@@ -276,6 +276,23 @@ function pipeRailPanel(side,d,uCenter,panelU,yFoot,h){
   railPost(side,d,uCenter-panelU*0.22,yFoot,h*0.92);
   railPost(side,d,uCenter+panelU*0.22,yFoot,h*0.92);
 }
+// 端柵（写真）：席列に垂直・各段の端で奥行き（d）方向にパネル
+function railTopAlongD(side,u,dLo,dHi,y,t){
+  t=t??0.026;
+  const len=dHi-dLo, mid=(dLo+dHi)/2;
+  if(side==='L') box(len,t,t,-mid,y,u,railM);
+  if(side==='R') box(len,t,t,mid,y,u,railM);
+  if(side==='T') box(t,t,len,u,y,-mid,railM);
+  if(side==='B') box(t,t,len,u,y,mid,railM);
+}
+function pipeRailPanelAlongD(side,u,dCenter,panelD,yFoot,h){
+  const half=panelD*0.48, dLo=dCenter-half, dHi=dCenter+half;
+  railPost(side,dLo,u,yFoot,h);
+  railPost(side,dHi,u,yFoot,h);
+  railTopAlongD(side,u,dLo,dHi,yFoot+h);
+  railPost(side,dCenter-panelD*0.22,u,yFoot,h*0.92);
+  railPost(side,dCenter+panelD*0.22,u,yFoot,h*0.92);
+}
 const FRONT_PANELS8=new Set(['H','G','F']);
 const FRONT_PANELS1=new Set(['I','E']);
 function frontPanelCount(name,u0,u1){
@@ -298,36 +315,22 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     }
   });
 }
-function endPanelCount(name){
-  if(FRONT_PANELS8.has(name)) return 8;
-  if(FRONT_PANELS1.has(name)) return 1;
-  return 4;
-}
-function placeEndCapPanels(side,frontD,uC,n,h,pw){
-  const gapD=0.06;
-  const d0=frontD+RD*0.08;
-  const d1=frontD+6*RD+RD*0.92;
-  const span=d1-d0;
-  const pd=n===1?RD*0.88:(span-gapD*(n-1))/n;
-  if(n===1){
-    pipeRailPanel(side,frontD+RD/2,uC,pw,PLATFORM+0.04,h);
-    return;
-  }
-  for(let pi=0;pi<n;pi++){
-    const d=d0+pd/2+pi*(pd+gapD);
-    const ri=Math.max(0,Math.min(6,Math.round((d-frontD-RD*0.15)/RD)));
-    pipeRailPanel(side,d,uC,pw,PLATFORM+ri*RR+0.04,h);
-  }
-}
 function blockEndRails1F(side,frontD,blockRanges){
-  const h=0.72, pw=SW*0.92;
-  const last=blockRanges.length-1;
+  const h=0.72, panelD=RD*0.86;
   blockRanges.forEach(({name,u0,u1},bi)=>{
-    const n=endPanelCount(name);
-    const caps=[];
-    if(bi===0) caps.push(u0+pw*0.5);
-    caps.push(u1-pw*0.5);
-    caps.forEach(uC=> placeEndCapPanels(side,frontD,uC,n,h,pw));
+    const uEdges=[];
+    if(bi===0) uEdges.push(u0);
+    uEdges.push(u1);
+    uEdges.forEach(uEdge=>{
+      if(FRONT_PANELS1.has(name)){
+        pipeRailPanelAlongD(side,uEdge,frontD+RD/2,panelD,PLATFORM+0.04,h);
+        return;
+      }
+      for(let ri=0;ri<7;ri++){
+        const d=frontD+ri*RD+RD/2;
+        pipeRailPanelAlongD(side,uEdge,d,panelD,PLATFORM+ri*RR+0.04,h);
+      }
+    });
   });
 }
 // 通路：コート側（下）→ 1列目の段（上）へ登る階段
