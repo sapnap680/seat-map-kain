@@ -251,26 +251,39 @@ function fenceSegments(u0,u1,openings,pad){
   });
   return segs;
 }
-// 1階最前列の手前：黒いフェンス（通路のところだけ開口）
+// 1階1列目の手前縁から垂直に：黒いあみ柵（通路だけ開口・低め）
 function courtFence1F(side,frontD,u0,u1,openings){
-  const dF=frontD-RD*0.32, y0=PLATFORM*0.5, h=1.08, t=0.075;
+  const dEdge=frontD+RD*0.06;
+  const yBase=PLATFORM+0.08;
+  const railH=0.58;
+  const barT=0.022, barGap=0.36;
+  const railM=mat(0x1c1c20);
   fenceSegments(u0,u1,openings).forEach(([a,b])=>{
-    const len=b-a, mid=(a+b)/2;
-    if(side==='L'){ box(t,h,len,-dF,y0+h/2,mid,COURT_FENCE); box(t,0.06,len,-dF,y0+0.05,mid,COURT_FENCE); }
-    if(side==='R'){ box(t,h,len,dF,y0+h/2,mid,COURT_FENCE); box(t,0.06,len,dF,y0+0.05,mid,COURT_FENCE); }
-    if(side==='T'){ box(len,h,t,mid,y0+h/2,-dF,COURT_FENCE); box(len,0.06,t,mid,y0+0.05,-dF,COURT_FENCE); }
-    if(side==='B'){ box(len,h,t,mid,y0+h/2,dF,COURT_FENCE); box(len,0.06,t,mid,y0+0.05,dF,COURT_FENCE); }
+    for(let u=a+barGap*0.5;u<b;u+=barGap){
+      if(side==='L') box(barT,railH,barT,-dEdge,yBase+railH/2,u,railM);
+      if(side==='R') box(barT,railH,barT,dEdge,yBase+railH/2,u,railM);
+      if(side==='T') box(barT,railH,barT,u,yBase+railH/2,-dEdge,railM);
+      if(side==='B') box(barT,railH,barT,u,yBase+railH/2,dEdge,railM);
+    }
+    const len=b-a, mid=(a+b)/2, yMid=yBase+railH/2, rT=0.028;
+    if(side==='L'){ box(rT,0.04,len,-dEdge,yBase+railH*0.92,mid,railM); box(rT,0.04,len,-dEdge,yBase+railH*0.45,mid,railM); }
+    if(side==='R'){ box(rT,0.04,len,dEdge,yBase+railH*0.92,mid,railM); box(rT,0.04,len,dEdge,yBase+railH*0.45,mid,railM); }
+    if(side==='T'){ box(len,0.04,rT,mid,yBase+railH*0.92,-dEdge,railM); box(len,0.04,rT,mid,yBase+railH*0.45,-dEdge,railM); }
+    if(side==='B'){ box(len,0.04,rT,mid,yBase+railH*0.92,dEdge,railM); box(len,0.04,rT,mid,yBase+railH*0.45,dEdge,railM); }
   });
 }
-// 通路だけ：コート面 → 1階床への階段
+// 通路：コート側（下）→ 1列目の段（上）へ登る階段
 function aisleStairs1F(side,frontD,u,w){
-  const steps=3, stepH=PLATFORM/steps, dep=0.26, d0=frontD-RD*0.45;
+  const steps=3, stepH=PLATFORM/steps, tread=0.24;
+  const courtD=frontD-RD*0.62;
+  const standD=frontD-RD*0.22;
   for(let s=0;s<steps;s++){
-    const y=(s+0.5)*stepH, h=stepH*0.9, d=d0-s*dep*0.4;
-    if(side==='L') box(dep,h,w,-d,y,u,stepM);
-    if(side==='R') box(dep,h,w,d,y,u,stepM);
-    if(side==='T') box(w,h,dep,u,y,-d,stepM);
-    if(side==='B') box(w,h,dep,u,y,d,stepM);
+    const y=(s+0.5)*stepH, h=stepH*0.88;
+    const d=courtD+(standD-courtD)*((s+0.5)/steps);
+    if(side==='L') box(tread,h,w,-d,y,u,stepM);
+    if(side==='R') box(tread,h,w,d,y,u,stepM);
+    if(side==='T') box(w,h,tread,u,y,-d,stepM);
+    if(side==='B') box(w,h,tread,u,y,d,stepM);
   }
 }
 function platformSlab1F(side,front,back,u0,u1,gaps){
