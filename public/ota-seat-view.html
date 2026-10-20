@@ -211,6 +211,7 @@ const COL={pink:0xe48bb4,goal:0xcc4d90,csA:0x7030a0,csB:0xccc2dd,ce:0x4f81bd,sp:
 const treadM=mat(0xc49a63), aisleM=mat(0xe2c793), holeM=mat(0x121418);
 const stepM=mat(0x6a5d52), platM=mat(0x7a6248);
 const railM=mat(0x18181c);
+const RAIL_PANEL_H=0.72;
 // 看板（入口の表示）
 function sign(text,x,y,z){
   const cv=document.createElement('canvas');cv.width=256;cv.height=96;const g=cv.getContext('2d');
@@ -319,7 +320,7 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
   const r0=row1F(frontD,0);
   const dEdge=r0.d-RD*0.4;
   const yFoot=r0.y+0.02;
-  const h=0.72, gap=0.06;
+  const h=RAIL_PANEL_H, gap=0.06;
   blockRanges.forEach(({name,u0,u1})=>{
     const n=frontPanelCount(name,u0,u1);
     const len=u1-u0;
@@ -332,7 +333,7 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
 }
 // 端柵：席配置と同じ u0/u1・各行 d/y に直結
 function blockEndRails1F(side,frontD,blockRanges){
-  const h=0.44;
+  const h=RAIL_PANEL_H;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
     [
