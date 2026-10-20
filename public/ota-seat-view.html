@@ -320,11 +320,9 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
 }
 const BENCH_HALF_U=0.21;
 function seatEdgeU(u0,u1,left){ return left?u0+SW/2-BENCH_HALF_U:u1-SW/2+BENCH_HALF_U; }
-function isFullEndCap(name,left,bi,last){
+function isFullEndCap(left,bi,last){
   if(left&&bi===0) return true;
   if(!left&&bi===last) return true;
-  if(name==='M'&&left) return true;
-  if(name==='K'&&!left) return true;
   return false;
 }
 function blockEndRails1F(side,frontD,blockRanges){
@@ -336,7 +334,7 @@ function blockEndRails1F(side,frontD,blockRanges){
       {left:true},
       {left:false},
     ].forEach(({left})=>{
-      if(!isFullEndCap(name,left,bi,last)) return;
+      if(!isFullEndCap(left,bi,last)) return;
       const u=seatEdgeU(u0,u1,left);
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
