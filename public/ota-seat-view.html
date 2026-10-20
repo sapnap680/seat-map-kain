@@ -315,24 +315,26 @@ function courtFenceBlocks1F(side,frontD,blockRanges){
     }
   });
 }
-const END_ENTRY_U_INSET=SW*0.82;
-function endCapAtRow(side,frontD,u,ri,h,panelD){
-  const d=frontD+ri*RD+RD/2;
-  pipeRailPanelAlongD(side,u,d,panelD,PLATFORM+ri*RR+0.04,h);
+const END_OUTER_U=SW*0.1;
+const END_ENTRY_U=SW*0.14;
+function endCapAtRow(side,frontD,u,ri,h,panelD,courtBias){
+  const dMid=frontD+ri*RD+RD/2;
+  const d=courtBias?dMid-RD*0.28:dMid;
+  pipeRailPanelAlongD(side,u,d,panelD,PLATFORM+ri*RR+0.03,h);
 }
 function blockEndRails1F(side,frontD,blockRanges){
-  const h=0.72;
-  const panelFull=RD*0.92;
-  const panelEntry=RD*0.78;
+  const h=0.44;
+  const panelOuter=RD*0.4;
+  const panelEntry=RD*0.26;
   const last=blockRanges.length-1;
   blockRanges.forEach(({u0,u1},bi)=>{
-    [
-      {u:u0,outer:bi===0,toward:+1},
-      {u:u1,outer:bi===last,toward:-1},
-    ].forEach(({u,outer,toward})=>{
-      const uRail=outer?u:u+toward*END_ENTRY_U_INSET;
-      const panelD=outer?panelFull:panelEntry;
-      for(let ri=0;ri<7;ri++) endCapAtRow(side,frontD,uRail,ri,h,panelD);
+    const caps=[];
+    if(bi===0) caps.push({u:u0-END_OUTER_U,outer:true});
+    if(bi<last) caps.push({u:u1-END_ENTRY_U,outer:false});
+    else caps.push({u:u1+END_OUTER_U,outer:true});
+    caps.forEach(({u,outer})=>{
+      const panelD=outer?panelOuter:panelEntry;
+      for(let ri=0;ri<7;ri++) endCapAtRow(side,frontD,u,ri,h,panelD,!outer);
     });
   });
 }
