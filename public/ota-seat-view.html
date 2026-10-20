@@ -329,7 +329,7 @@ function isFullEndCap(name,left,bi,last){
 function blockEndRails1F(side,frontD,blockRanges){
   const h=RAIL_PANEL_H;
   const panelFull=RD*0.92;
-  const panelSeatU=SW*0.96;
+  const panelAisle=SW*0.92;
   const last=blockRanges.length-1;
   blockRanges.forEach(({name,u0,u1},bi)=>{
     [
@@ -337,15 +337,11 @@ function blockEndRails1F(side,frontD,blockRanges){
       {left:false},
     ].forEach(({left})=>{
       const full=isFullEndCap(name,left,bi,last);
+      const u=seatEdgeU(u0,u1,left);
+      const panelD=full?panelFull:panelAisle;
       for(let ri=0;ri<7;ri++){
         const r=row1F(frontD,ri);
-        if(full){
-          const u=seatEdgeU(u0,u1,left);
-          pipeRailPanelAlongD(side,u,r.d,panelFull,r.y+0.02,h);
-        }else{
-          const uC=left?u0+SW/2:u1-SW/2;
-          pipeRailPanel(side,r.d,uC,panelSeatU,r.y+0.02,h);
-        }
+        pipeRailPanelAlongD(side,u,r.d,panelD,r.y+0.02,h);
       }
     });
   });
