@@ -190,11 +190,14 @@ def label_special(seats: list[SeatDict]) -> None:
 
 
 def apply_ota_seat_labels(seats: list[SeatDict]) -> None:
-    left = [s for s in seats if s["zone"] == "floor1" and _cx(s) < 0.28]
+    """横向き拡大PDFの座標帯（会場図 viewBox とは別）"""
+    left = [s for s in seats if _cx(s) < 0.22]
     top_goal = [
-        s for s in seats if s["zone"] == "floor1" and _cx(s) >= 0.28 and _cy(s) < 0.32
+        s for s in seats if 0.21 <= _cx(s) <= 0.80 and _cy(s) < 0.17
     ]
-    bot_goal = [s for s in seats if s["zone"] == "floor1" and _cy(s) > 0.68]
+    bot_goal = [
+        s for s in seats if 0.28 <= _cx(s) <= 0.85 and _cy(s) > 0.88
+    ]
 
     label_stand_rows(
         left,
@@ -206,7 +209,7 @@ def apply_ota_seat_labels(seats: list[SeatDict]) -> None:
     )
     label_stand_rows(
         top_goal,
-        [("K", 12), ("M", 12)],
+        [("K", 12), ("L", 17), ("M", 12)],
         row_axis="y",
         row_tol=0.004,
         along_axis="x",
@@ -215,7 +218,7 @@ def apply_ota_seat_labels(seats: list[SeatDict]) -> None:
     )
     label_stand_rows(
         bot_goal,
-        [("C", 12)],
+        [("C", 12), ("B", 17), ("A", 12)],
         row_axis="y",
         row_tol=0.004,
         along_axis="x",
@@ -225,8 +228,31 @@ def apply_ota_seat_labels(seats: list[SeatDict]) -> None:
     label_courtside([s for s in seats if s["zone"] == "courtside"])
     label_end([s for s in seats if s["zone"] == "end"])
     label_special([s for s in seats if s["zone"] == "special"])
+    stand_blocks = frozenset({"I", "H", "G", "F", "E", "K", "L", "M", "C", "B", "A"})
+    label_ota_team_right(
+        [
+            s
+            for s in seats
+            if s["zone"] == "team_ticket"
+            and (s.get("section") or "") not in stand_blocks
+        ]
+    )
 
     for s in seats:
-        if s["zone"] == "team_ticket":
-            s["section"] = None
+        if s["zone"] == "team_ticket" and not s.get("section"):
             s["label"] = "—"
+
+
+def label_ota_team_right(seats: list[SeatDict]) -> None:
+    """ベンチ側 O–P–Q–R–S（Q列 1–4・14以降は灰色非販売）"""
+    if not seats:
+        return
+    cat = "チーム券席"
+    label_stand_rows(
+        seats,
+        [("O", 13), ("P", 17), ("Q", 17), ("R", 17), ("S", 13)],
+        row_axis="y",
+        row_tol=0.004,
+        along_axis="x",
+        cat=cat,
+    )

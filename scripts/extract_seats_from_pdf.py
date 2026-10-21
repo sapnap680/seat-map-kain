@@ -233,6 +233,62 @@ def refine_ota_sellable_from_png(
     im.close()
 
 
+# 座席表公式: ゴール裏 L・B・C は灰色非販売（K/M/A は前売り）
+OTA_GRAY_GOAL_BLOCKS = frozenset({"L", "B", "C"})
+
+
+def refine_ota_gray_goal_blocks(seats: list[dict]) -> None:
+    for s in seats:
+        sec = (s.get("section") or "").strip()
+        if sec not in OTA_GRAY_GOAL_BLOCKS:
+            continue
+        s["zone"] = "floor2"
+        s["sellable"] = False
+        s["category"] = "1階（販売なし・灰色）"
+
+
+def _ota_q_seat_num(label: str | None) -> int | None:
+    if not label:
+        return None
+    m = re.match(r"Q\d+列(\d+)番", label.strip())
+    return int(m.group(1)) if m else None
+
+
+def refine_ota_q_team_gray(seats: list[dict]) -> None:
+    """Q列 1–4番・14番以降＝通路わき灰色（56席）"""
+    for s in seats:
+        if (s.get("section") or "").strip() != "Q":
+            continue
+        num = _ota_q_seat_num(s.get("label"))
+        if num is None:
+            continue
+        if num <= 4 or num >= 14:
+            s["zone"] = "floor2"
+            s["sellable"] = False
+            s["category"] = "チーム券席（非販売・灰色）"
+
+
+def refine_ota_team_presale(seats: list[dict]) -> None:
+    """緑チーム券＝当日販売対象（在庫カウント用）"""
+    for s in seats:
+        if s["zone"] != "team_ticket":
+            continue
+        s["sellable"] = True
+
+
+def refine_ota_floor2_free(seats: list[dict]) -> None:
+    """2階自由席（灰色＝当日自由席販売）"""
+    for s in seats:
+        if s["zone"] != "floor2":
+            continue
+        cat = s.get("category") or ""
+        if "非販売" in cat or "販売なし" in cat:
+            continue
+        s["sellable"] = True
+        if not cat or cat == "1階指定席":
+            s["category"] = "2階自由席"
+
+
 def is_gray_fill(r: float, g: float, b: float) -> bool:
     spread = max(r, g, b) - min(r, g, b)
     avg = (r + g + b) / 3
@@ -619,6 +675,8 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         refine_ota_team_zones(seats, pw, ph)
         apply_ota_seat_labels(seats)
         refine_ota_sellable_from_png(seats, slug, pw, ph)
+        refine_ota_gray_goal_blocks(seats)
+        refine_ota_q_team_gray(seats)
     doc.close()
     rev_src = json.dumps(
         [(s["id"], s.get("label"), s.get("zone")) for s in seats],
