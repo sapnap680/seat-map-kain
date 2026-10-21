@@ -88,7 +88,7 @@ def is_gray_fill(r: float, g: float, b: float) -> bool:
 
 def is_pink_floor1_komori(r: float, g: float, b: float) -> bool:
     """駒オリ 1階席（料金表 #E38AB2 および PDF ピンク）"""
-    if r >= 0.85 and 0.5 <= g <= 0.58 and 0.68 <= b <= 0.72:
+    if r >= 0.85 and 0.48 <= g <= 0.58 and 0.65 <= b <= 0.72:
         return True
     return r >= 0.9 and 0.65 <= g <= 0.78 and b >= 0.75
 
@@ -99,8 +99,15 @@ def is_pink_floor1(r: float, g: float, b: float) -> bool:
 
 
 def is_team_green_fill(r: float, g: float, b: float) -> bool:
-    """料金表 チーム券席 #92D050"""
-    return r >= 0.48 and g >= 0.72 and b <= 0.45 and g >= r + 0.08
+    """料金表 チーム券席 #92D050 / 拡大PDFの緑"""
+    if r >= 0.48 and g >= 0.72 and b <= 0.45 and g >= r + 0.08:
+        return True
+    return (
+        g >= 0.78
+        and 0.45 <= r <= 0.65
+        and 0.25 <= b <= 0.42
+        and g >= r + 0.12
+    )
 
 
 def is_ota_team_zone(
@@ -450,8 +457,6 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         apply_komori_seat_labels(seats, page, pw, ph)
     elif slug in ("2025-12-12", "2025-12-13"):
         refine_ota_team_zones(seats, pw, ph)
-        # 大田会場に 2 階自由席はない — 灰色の誤分類席はデータから除外
-        seats = [s for s in seats if s["zone"] != "floor2"]
         apply_ota_seat_labels(seats)
     doc.close()
     rev_src = json.dumps(
