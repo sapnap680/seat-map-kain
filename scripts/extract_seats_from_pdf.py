@@ -34,14 +34,13 @@ def seat_size_ok(slug: str, w: float, h: float) -> bool:
     if slug == "2025-12-11":
         return 14 <= w <= 28 and 18 <= h <= 32
     if slug in ("2025-12-12", "2025-12-13"):
-        # 通常PDF (~8.6pt) と 横_拡大PDF (~12.2pt)。~4.7pt は外枠の二重描画なので除外
+        # 通常PDF (~8.6pt) / 横_拡大 (~12.2pt) / 横_拡大最新 (~14pt)
         if 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5:
             return True
-        if 11 <= w <= 19 and 11 <= h <= 23:
-            # 拡大PDF: ~11.9pt は ~12.3pt 席の重複レイヤー
-            if w < 12.0 or h < 12.0:
-                return False
+        if 13.9 <= w <= 14.5 and 13.9 <= h <= 14.5:
             return True
+        if 11 <= w <= 19 and 11 <= h <= 23:
+            return False
         if 24 <= w <= 42 and 24 <= h <= 42:
             return True
         return False
@@ -70,12 +69,12 @@ def dedupe_ota_items(
     items: list[tuple[fitz.Rect, tuple]], pw: float, ph: float
 ) -> list[tuple[fitz.Rect, tuple]]:
     """拡大PDFなど: 同じ位置の多重矩形を格子で1席にまとめる"""
-    cell = max(12.0 / ph, 0.004)
+    cell = max(14.0 / ph, 0.004)
     cells: dict[tuple[int, int], tuple[fitz.Rect, tuple]] = {}
     for r, fill in sorted(items, key=lambda x: x[0].width * x[0].height, reverse=True):
         cx = (r.x0 + r.x1) / 2 / pw
         cy = (r.y0 + r.y1) / 2 / ph
-        key = (round(cx / cell), round(cy / cell))
+        key = (round(cx / cell), round(cy / cell))  # int だと隣席が同一セルになり得る
         if key not in cells:
             cells[key] = (r, fill)
     return list(cells.values())
@@ -229,7 +228,7 @@ def ota_stroke_team_rects(page: fitz.Page, pw: float, ph: float) -> list[fitz.Re
 
 
 def ota_seat_dims_norm(page: fitz.Page, pw: float, ph: float) -> tuple[float, float]:
-    for target in (12.2, 8.6, 4.7):
+    for target in (14.0, 12.2, 8.6, 4.7):
         for d in page.get_drawings():
             if d.get("type") != "f":
                 continue
