@@ -310,57 +310,94 @@ def _label_team(seats: list[dict], specs: dict) -> list[dict]:
     return out
 
 
-def _label_premium(seats: list[dict], defn: dict) -> list[dict]:
-    """コートサイド等。番号は図面の数字。足りない分は座標順。"""
-    if not seats:
-        return []
+def _premium_hit(name: str, num: int, cx: float, cy: float, bw: float, bh: float, zone: str) -> dict:
+    return {
+        "id": str(uuid.uuid5(uuid.NAMESPACE_URL, f"ota-{name}-{num}-{cx:.4f}-{cy:.4f}")),
+        "label": f"{num}番" if name == "スペシャルシート" else f"{name}{num}番",
+        "section": name,
+        "category": name,
+        "zone": zone,
+        "sellable": True,
+        "x": cx - bw / 2,
+        "y": cy - bh / 2,
+        "w": bw,
+        "h": bh,
+    }
+
+
+def _premium_from_glyphs(pdf_path: Path, defn: dict) -> list[dict]:
+    """コートサイド・コートエンド・スペシャルは通常席より大きく、数字の位置が席そのもの。"""
     specs = defn["premium"]
-    # x で左右、y で上下に割る
-    seats = sorted(seats, key=lambda s: (s["cx"], s["cy"]))
-    mid_x = 0.5
-    left = [s for s in seats if s["cx"] < mid_x]
-    right = [s for s in seats if s["cx"] >= mid_x]
+    glyphs = _glyphs(pdf_path)
     out: list[dict] = []
 
-    def take(group: list[dict], name: str) -> None:
+    def add(pred, name: str, bw: float, bh: float) -> None:
         spec = specs[name]
-        ordered = sorted(group, key=lambda s: (s["cy"], s["cx"]))
-        for i, s in enumerate(ordered[: spec["count"]], start=1):
-            num = int(s["num"]) if s.get("num") else i
-            out.append(
-                {
-                    "id": str(
-                        uuid.uuid5(
-                            uuid.NAMESPACE_URL,
-                            f"ota-{name}-{num}-{s['x']:.5f}",
-                        )
-                    ),
-                    "label": f"{num}番" if name == "スペシャルシート" else f"{name}{num}番",
-                    "section": name,
-                    "category": name,
-                    "zone": spec["zone"],
-                    "sellable": True,
-                    "x": s["x"],
-                    "y": s["y"],
-                    "w": s["w"],
-                    "h": s["h"],
-                }
-            )
+        seen: set[int] = set()
+        for n, x, y in glyphs:
+            if n in seen or not pred(n, x, y):
+                continue
+            if n < 1 or n > spec["count"]:
+                continue
+            seen.add(n)
+            out.append(_premium_hit(name, n, x, y, bw, bh, spec["zone"]))
 
-    # 左ストリップを B、右を A、上下の短い列をエンド、残りスペシャル
-    left.sort(key=lambda s: s["cy"])
-    right.sort(key=lambda s: s["cy"])
-    take(left[:34], "コートサイドB")
-    take(right[:24], "コートサイドA")
-    used = {(round(s["cx"], 4), round(s["cy"], 4)) for s in left[:34] + right[:24]}
-    rest = [s for s in seats if (round(s["cx"], 4), round(s["cy"], 4)) not in used]
-    top = [s for s in rest if s["cy"] < 0.45]
-    bot = [s for s in rest if s["cy"] >= 0.45]
-    take(top + bot, "コートエンド")
-    used2 = used | {(round(s["cx"], 4), round(s["cy"], 4)) for s in (top + bot)[:20]}
-    special = [s for s in rest if (round(s["cx"], 4), round(s["cy"], 4)) not in used2]
-    take(special, "スペシャルシート")
+    # 青の縦列（左 1–10、右 11–20）
+    add(
+        lambda n, x, y: 0.30 < y < 0.72 and (0.18 < x < 0.26 or 0.74 < x < 0.84),
+        "コートエンド",
+        28 / 1584,
+        21 / 1200,
+    )
+    # コート下の濃い紫（VIP の左右）
+    add(
+        lambda n, x, y: 0.725 < y < 0.750 and 0.18 < x < 0.85,
+        "コートサイドA",
+        0.014,
+        0.018,
+    )
+    # その下の薄い紫
+    add(
+        lambda n, x, y: 0.750 < y < 0.785 and 0.18 < x < 0.85,
+        "コートサイドB",
+        0.014,
+        0.018,
+    )
+    # ベンチ間の金
+    add(
+        lambda n, x, y: 0.27 < y < 0.33 and 0.35 < x < 0.70,
+        "スペシャルシート",
+        22 / 1584,
+        22 / 1200,
+    )
     return out
+
+
+def _snap_to_pdf_rects(seats: list[dict], pdf_path: Path) -> None:
+    """PNG で見つけた中心を、図面に描かれた矩形へ寄せる（半マス分のずれを消す）"""
+    import fitz
+
+    page = fitz.open(pdf_path)[0]
+    pw, ph = page.rect.width, page.rect.height
+    rects: list[tuple[float, float, float, float]] = []
+    for d in page.get_drawings():
+        if d.get("type") != "f" or d.get("fill") is None:
+            continue
+        r = d["rect"]
+        if 13.4 <= r.width <= 14.2 and 13.4 <= r.height <= 14.2:
+            rects.append((r.x0 / pw, r.y0 / ph, r.width / pw, r.height / ph))
+    page.parent.close()
+    if not rects:
+        return
+    pts = np.array([(x + w / 2, y + h / 2) for x, y, w, h in rects])
+    limit = 0.005 ** 2
+    for s in seats:
+        cx = s["x"] + s["w"] / 2
+        cy = s["y"] + s["h"] / 2
+        d2 = (pts[:, 0] - cx) ** 2 + (pts[:, 1] - cy) ** 2
+        i = int(d2.argmin())
+        if d2[i] < limit:
+            s["x"], s["y"], s["w"], s["h"] = rects[i]
 
 
 def build_png_seats(slug: str, pdf_path: Path | None, defn: dict) -> list[dict]:
@@ -376,9 +413,6 @@ def build_png_seats(slug: str, pdf_path: Path | None, defn: dict) -> list[dict]:
     top = [s for s in seats if 0.07 < s["cy"] < 0.18 and 0.10 < s["cx"] < 0.92]
     left = [s for s in seats if s["cx"] < 0.18 and 0.18 < s["cy"] < 0.84]
     right = [s for s in seats if s["cx"] > 0.82 and 0.18 < s["cy"] < 0.84]
-    claimed = {id(s) for s in bottom + top + left + right}
-    mid = [s for s in seats if id(s) not in claimed]
-
     out: list[dict] = []
     out += _label_sideline(
         bottom,
@@ -406,5 +440,7 @@ def build_png_seats(slug: str, pdf_path: Path | None, defn: dict) -> list[dict]:
         row_from_left=True,
     )
     out += _label_team(top, specs)
-    out += _label_premium(mid, defn)
+    if pdf_path and pdf_path.is_file():
+        _snap_to_pdf_rects(out, pdf_path)
+        out += _premium_from_glyphs(pdf_path, defn)
     return out
