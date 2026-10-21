@@ -20,6 +20,7 @@ from ota_seat_definition import (  # noqa: E402
     expand_all_logical,
     load_definition,
 )
+from ota_geom_assign import assign_all_geometry  # noqa: E402
 from pdf_slug import slug_from_pdf_stem  # noqa: E402
 
 OTA_SLUGS = frozenset({"2025-12-12", "2025-12-13"})
@@ -61,7 +62,11 @@ def load_geometry_norm(pdf_path: Path) -> list[dict]:
         fill = d.get("fill")
         if not r or fill is None:
             continue
-        if not (13.4 <= r.width <= 13.85 and 13.4 <= r.height <= 13.85):
+        if 13.4 <= r.width <= 13.85 and 13.4 <= r.height <= 13.85:
+            pass
+        elif 15.5 <= r.width <= 16.8 and 15.5 <= r.height <= 16.8:
+            pass
+        else:
             continue
         raw.append((fitz.Rect(r), tuple(fill)))
     items = dedupe_rects(raw, pw, ph)
@@ -79,58 +84,28 @@ def load_geometry_norm(pdf_path: Path) -> list[dict]:
     return out
 
 
-def _in_band(g: dict, stand: str, defn: dict) -> bool:
-    cx, cy = _cx(g), _cy(g)
-    if stand == "left":
-        return cx < 0.22
-    if stand == "topGoal":
-        s = defn["stands"]["topGoal"]
-        return s["cxMin"] <= cx <= s["cxMax"] and cy < s["cyMax"]
-    if stand == "botGoal":
-        s = defn["stands"]["botGoal"]
-        return s["cxMin"] <= cx <= s["cxMax"] and cy > s["cyMin"]
-    if stand == "team":
-        return cx > 0.78 or cy < 0.2
-    return False
-
-
-def _sort_key(g: dict, stand: str, along: str) -> tuple:
-    if along == "y":
-        return (_cx(g), _cy(g))
-    return (_cy(g), _cx(g))
+def _logical_key(log: dict) -> tuple:
+    if log["stand"] == "premium":
+        return (log["section"], 0, log["num"])
+    return (log["section"], log["row"], log["num"])
 
 
 def assign_geometry(
     logical: list[dict], geom: list[dict], defn: dict
 ) -> list[dict]:
-    """論理席に PDF 矩形を順序マッチ（足りなければ等間隔グリッド）"""
-    used: set[int] = set()
+    """定義席 (ブロック,列,番) ↔ ブロック帯内の PDF 矩形"""
+    by_key = assign_all_geometry(geom, logical)
     seats: list[dict] = []
-
-    for stand_key in ("left", "topGoal", "botGoal", "team"):
-        stand = defn["stands"][stand_key]
-        along = stand.get("along", "y")
-        pool = [
-            (i, g)
-            for i, g in enumerate(geom)
-            if i not in used and _in_band(g, stand_key, defn)
-        ]
-        pool.sort(key=lambda t: _sort_key(t[1], stand_key, along))
-        logical_stand = [s for s in logical if s["stand"] == stand_key]
-        logical_stand.sort(
-            key=lambda s: (s["row"], s["slotIndex"], s["section"])
-        )
-        for j, log in enumerate(logical_stand):
-            if j < len(pool):
-                idx, g = pool[j]
-                used.add(idx)
-                box = dict(g)
-            else:
-                box = _synthetic_box(log, j, stand_key)
-            seats.append(_merge_log_geometry(log, box))
     for log in logical:
-        if log["stand"] == "premium":
-            seats.append(_merge_log_geometry(log, _synthetic_premium_box(log)))
+        key = _logical_key(log)
+        g = by_key.get(key)
+        if g:
+            box = {k: g[k] for k in ("x", "y", "w", "h")}
+        elif log["stand"] == "premium":
+            box = _synthetic_premium_box(log)
+        else:
+            box = _synthetic_box(log, log["slotIndex"], log["stand"])
+        seats.append(_merge_log_geometry(log, box))
     return seats
 
 

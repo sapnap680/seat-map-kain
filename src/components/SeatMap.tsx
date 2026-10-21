@@ -338,7 +338,14 @@ export function SeatMap({
   })
 
   const seatClickable = (seat: SeatWithState) => {
-    if (otaVisitor || otaStaffPick) {
+    if (otaVisitor) {
+      if (!isOtaVisitorClickTarget(event.slug, seat)) return false
+      const block = otaBlockForSeat(seat)
+      if (block && !isOtaBlockPickable(block)) return false
+      return true
+    }
+    if (otaStaffPick) {
+      if (isSeatSellable(seat)) return true
       if (!isOtaVisitorClickTarget(event.slug, seat)) return false
       const block = otaBlockForSeat(seat)
       if (block && !isOtaBlockPickable(block)) return false
