@@ -21,6 +21,7 @@ from ota_seat_definition import (  # noqa: E402
     load_definition,
 )
 from ota_geom_assign import assign_all_geometry  # noqa: E402
+from ota_png_seats import build_png_seats  # noqa: E402
 from pdf_slug import slug_from_pdf_stem  # noqa: E402
 
 OTA_SLUGS = frozenset({"2025-12-12", "2025-12-13"})
@@ -47,6 +48,48 @@ def dedupe_rects(raw: list[tuple], pw: float, ph: float) -> list[tuple]:
     return list(cells.values())
 
 
+def _png_center_class(
+    g: dict, im, width: int, height: int
+) -> str:
+    px = max(0, min(width - 1, int(_cx(g) * width)))
+    py = max(0, min(height - 1, int(_cy(g) * height)))
+    r, gb, b = im.getpixel((px, py))[:3]
+    if r >= 250 and gb >= 250 and b >= 250:
+        return "white"
+    if abs(r - gb) <= 22 and abs(gb - b) <= 22 and 130 <= (r + gb + b) / 3 <= 225:
+        return "gray"
+    return "color"
+
+
+def filter_geom_to_visible_seats(
+    geom: list[dict], slug: str
+) -> list[dict]:
+    """拡大PDFの「白抜け」矩形を除外（表示PNGと一致する席だけ残す）"""
+    try:
+        from PIL import Image
+    except ImportError:
+        return geom
+    png = ROOT / "public" / "backgrounds" / f"{slug}.png"
+    if not png.is_file():
+        return geom
+    im = Image.open(png).convert("RGB")
+    w, h = im.size
+    kept = [g for g in geom if _png_center_class(g, im, w, h) != "white"]
+    im.close()
+    return kept
+
+
+def dedupe_geom_cells(geom: list[dict]) -> list[dict]:
+    cell = 0.0086
+    cells: dict[tuple[int, int], dict] = {}
+    for g in sorted(geom, key=lambda x: x["w"] * x["h"], reverse=True):
+        cx, cy = _cx(g), _cy(g)
+        key = (round(cx / cell), round(cy / cell))
+        if key not in cells:
+            cells[key] = g
+    return list(cells.values())
+
+
 def load_geometry_norm(pdf_path: Path) -> list[dict]:
     """拡大PDFから重なり除去した矩形のみ（分類・カウントに使わない）"""
     if fitz is None or not pdf_path.is_file():
@@ -62,11 +105,7 @@ def load_geometry_norm(pdf_path: Path) -> list[dict]:
         fill = d.get("fill")
         if not r or fill is None:
             continue
-        if 13.4 <= r.width <= 13.85 and 13.4 <= r.height <= 13.85:
-            pass
-        elif 15.5 <= r.width <= 16.8 and 15.5 <= r.height <= 16.8:
-            pass
-        else:
+        if not (13.4 <= r.width <= 13.85 and 13.4 <= r.height <= 13.85):
             continue
         raw.append((fitz.Rect(r), tuple(fill)))
     items = dedupe_rects(raw, pw, ph)
@@ -93,7 +132,7 @@ def _logical_key(log: dict) -> tuple:
 def assign_geometry(
     logical: list[dict], geom: list[dict], defn: dict
 ) -> list[dict]:
-    """定義席 (ブロック,列,番) ↔ ブロック帯内の PDF 矩形"""
+    """定義席 ↔ スタンド分割した PDF 矩形（ブロック幅で 1:1）"""
     by_key = assign_all_geometry(geom, logical)
     seats: list[dict] = []
     for log in logical:
@@ -152,11 +191,13 @@ def _merge_log_geometry(log: dict, box: dict) -> dict:
 def build_ota_catalog(slug: str, pdf_path: Path | None) -> dict:
     defn = load_definition()
     logical = expand_all_logical(defn)
-    geom = load_geometry_norm(pdf_path) if pdf_path else []
-    seats = assign_geometry(logical, geom, defn) if geom else [
-        _merge_log_geometry(log, _synthetic_box(log, i, log["stand"]))
-        for i, log in enumerate(logical)
-    ]
+    seats = build_png_seats(slug, pdf_path, defn)
+    if not seats:
+        geom = load_geometry_norm(pdf_path) if pdf_path else []
+        seats = assign_geometry(logical, geom, defn) if geom else [
+            _merge_log_geometry(log, _synthetic_box(log, i, log["stand"]))
+            for i, log in enumerate(logical)
+        ]
     rev_src = json.dumps(
         [(s["id"], s.get("label"), s.get("zone")) for s in seats],
         ensure_ascii=False,
