@@ -672,11 +672,10 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         refine_komori_12_11_zones(seats)
         apply_komori_seat_labels(seats, page, pw, ph)
     elif slug in ("2025-12-12", "2025-12-13"):
-        refine_ota_team_zones(seats, pw, ph)
-        apply_ota_seat_labels(seats)
-        refine_ota_sellable_from_png(seats, slug, pw, ph)
-        refine_ota_gray_goal_blocks(seats)
-        refine_ota_q_team_gray(seats)
+        raise RuntimeError(
+            "大田 12/12–13 は拡大PDFから席数を取らない。"
+            " python scripts/generate_ota_seats.py を使う"
+        )
     doc.close()
     rev_src = json.dumps(
         [(s["id"], s.get("label"), s.get("zone")) for s in seats],
@@ -697,6 +696,9 @@ def main() -> None:
     for pdf in sorted(PDF_DIR.glob("*.pdf")):
         slug = slug_from_name(pdf.stem)
         if not slug:
+            continue
+        if slug in ("2025-12-12", "2025-12-13"):
+            print(f"skip Ota (use generate_ota_seats.py): {pdf.name}")
             continue
         data = extract_page(pdf, slug)
         out = OUT_DIR / f"{slug}.json"

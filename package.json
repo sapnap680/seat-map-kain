@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "convert-pdfs": "python scripts/extract_seats_from_pdf.py && python scripts/convert_pdfs.py",
+    "generate-ota-seats": "python scripts/generate_ota_seats.py",
+    "convert-pdfs": "python scripts/generate_ota_seats.py && python scripts/extract_seats_from_pdf.py && python scripts/convert_pdfs.py",
     "convert-pdfs-legacy": "python scripts/extract_seats_from_pdf.py && set SEAT_MAP_LEGACY_CONVERT=1&& python scripts/convert_pdfs.py",
     "extract-seats": "python scripts/extract_seats_from_pdf.py",
     "copy-pdfs": "python scripts/copy_pdfs.py"

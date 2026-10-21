@@ -1,4 +1,4 @@
-"""大田 12/12–13: 公式席数表との照合（1階1533＋2階1952）"""
+"""大田: 座席定義（data/ota-seat-definition.json）と生成 JSON の照合"""
 from __future__ import annotations
 
 import json
@@ -8,70 +8,47 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SEATS = ROOT / "public" / "seats"
 
-# ユーザー提供の公式（1階座席表）
-TARGET = {
-    "1階指定席（I〜E）": 399,
-    "ゴール裏（M・K・A）": 252,
-    "コートサイドA": 24,
-    "コートサイドB": 34,
-    "コートエンド": 20,
-    "スペシャルシート": 6,
-    "前売り小計": 735,
-    "チーム券席（緑）": 420,
-    "販売合計1階": 1155,
-    "非販売 L": 119,
-    "非販売 B": 119,
-    "非販売 C": 84,
-    "非販売 LBC計": 322,
-    "非販売 Q灰色": 56,
-    "1階座席表計": 1533,
-    "2階自由席": 1952,
-    "会場販売席計": 3107,
-}
+from ota_seat_definition import inventory_counts, load_definition  # noqa: E402
+
+TARGET = inventory_counts()
 
 
-def count_slug(path: Path) -> dict[str, int]:
+def count_json(path: Path) -> dict[str, int]:
     data = json.loads(path.read_text(encoding="utf-8"))
     seats = data["seats"]
     out: dict[str, int] = {}
 
-    def inc(key: str, n: int = 1) -> None:
-        out[key] = out.get(key, 0) + n
+    def inc(k: str, n: int = 1) -> None:
+        out[k] = out.get(k, 0) + n
 
     for s in seats:
-        cat = s.get("category") or ""
         sec = (s.get("section") or "").strip()
+        cat = s.get("category") or ""
         zone = s["zone"]
         sell = bool(s.get("sellable"))
 
-        if cat == "1階指定席" and sec in ("I", "H", "G", "F", "E", None):
-            if sec in ("I", "H", "G", "F", "E"):
-                inc("1階指定席（I〜E）")
-            continue
-        if cat == "1階指定席（ゴール裏）" and sec in ("K", "M", "A") and sell:
+        if cat == "1階指定席":
+            inc("1階指定席（I〜E）")
+        elif cat == "1階指定席（ゴール裏）" and sec in ("K", "M", "A"):
             inc("ゴール裏（M・K・A）")
-        elif sec in ("K", "M", "A") and sell and zone == "floor1":
-            inc("ゴール裏（M・K・A）")
-        if sec == "L" and (not sell or "非販売" in cat or "灰色" in cat):
+        elif sec == "L" and not sell:
             inc("非販売 L")
-        if sec == "B" and (not sell or "非販売" in cat or "灰色" in cat):
+        elif sec == "B" and not sell:
             inc("非販売 B")
-        if sec == "C" and (not sell or "非販売" in cat or "灰色" in cat):
+        elif sec == "C" and not sell:
             inc("非販売 C")
-        if cat == "チーム券席（非販売・灰色）":
+        elif cat == "チーム券席（非販売・灰色）":
             inc("非販売 Q灰色")
-        if zone == "team_ticket" and sell:
+        elif cat == "チーム券席" and zone == "team_ticket":
             inc("チーム券席（緑）")
-        if cat == "コートサイドA":
+        elif cat == "コートサイドA":
             inc("コートサイドA")
-        if cat == "コートサイドB":
+        elif cat == "コートサイドB":
             inc("コートサイドB")
-        if cat == "コートエンド":
+        elif cat == "コートエンド":
             inc("コートエンド")
-        if cat == "スペシャルシート" and s.get("label", "") != "—":
+        elif cat == "スペシャルシート":
             inc("スペシャルシート")
-        if cat == "2階自由席" and sell:
-            inc("2階自由席")
 
     out["前売り小計"] = (
         out.get("1階指定席（I〜E）", 0)
@@ -90,24 +67,36 @@ def count_slug(path: Path) -> dict[str, int]:
         + out.get("非販売 LBC計", 0)
         + out.get("非販売 Q灰色", 0)
     )
-    out["会場販売席計"] = out.get("販売合計1階", 0) + out.get("2階自由席", 0)
-    out["総席数"] = len(seats)
+    out["2階自由席"] = data.get("floor2_free_capacity") or 0
+    out["会場販売席計"] = out.get("販売合計1階", 0) + out["2階自由席"]
+    out["総席数（1階マップ）"] = len(seats)
     return out
 
 
 def main() -> None:
     slug = sys.argv[1] if len(sys.argv) > 1 else "2025-12-13"
+    defn = load_definition()
+    print(
+        f"=== 公式定義（{defn.get('eventDisplayYear')}年12月 / slug={slug}） ==="
+    )
+    for key, target in TARGET.items():
+        if key == "総席数（1階座席表）":
+            continue
+        print(f"  {key}: {target}")
+
     path = SEATS / f"{slug}.json"
     if not path.is_file():
-        print(f"Missing {path}", file=sys.stderr)
+        print(f"\nMissing {path} — run: python scripts/generate_ota_seats.py", file=sys.stderr)
         sys.exit(1)
-    got = count_slug(path)
-    print(f"=== {slug} vs 公式 ===")
+    got = count_json(path)
+    print(f"\n=== 生成 JSON ({slug}.json) vs 定義 ===")
     for key, target in TARGET.items():
+        if key == "総席数（1階座席表）":
+            continue
         g = got.get(key, 0)
         mark = "OK" if g == target else f"Δ{g - target:+d}"
         print(f"  {key}: {g} / {target}  {mark}")
-    print(f"  （PDF矩形 総席数）: {got.get('総席数', 0)}")
+    print(f"  1階マップ上の席矩形: {got.get('総席数（1階マップ）', 0)}（定義 1533）")
 
 
 if __name__ == "__main__":

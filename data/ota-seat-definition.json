@@ -1,0 +1,90 @@
+{
+  "eventDisplayYear": 2026,
+  "eventMonthDaySlugs": ["2025-12-12", "2025-12-13"],
+  "comment": "slug はファイル名由来のキー。大会は 2026年12月。",
+  "rows": 7,
+  "blocks": {
+    "I": { "width": 3, "category": "1階指定席", "zone": "floor1", "sellable": true },
+    "H": { "width": 17, "category": "1階指定席", "zone": "floor1", "sellable": true },
+    "G": { "width": 17, "category": "1階指定席", "zone": "floor1", "sellable": true },
+    "F": { "width": 17, "category": "1階指定席", "zone": "floor1", "sellable": true },
+    "E": { "width": 3, "category": "1階指定席", "zone": "floor1", "sellable": true },
+    "K": {
+      "width": 12,
+      "category": "1階指定席（ゴール裏）",
+      "zone": "floor1",
+      "sellable": true,
+      "numbering": "desc"
+    },
+    "L": {
+      "width": 17,
+      "category": "1階（販売なし・灰色）",
+      "zone": "floor2",
+      "sellable": false
+    },
+    "M": {
+      "width": 12,
+      "category": "1階指定席（ゴール裏）",
+      "zone": "floor1",
+      "sellable": true,
+      "numbering": "desc"
+    },
+    "C": {
+      "width": 12,
+      "category": "1階（販売なし・灰色）",
+      "zone": "floor2",
+      "sellable": false
+    },
+    "B": {
+      "width": 17,
+      "category": "1階（販売なし・灰色）",
+      "zone": "floor2",
+      "sellable": false
+    },
+    "A": {
+      "width": 12,
+      "category": "1階指定席（ゴール裏）",
+      "zone": "floor1",
+      "sellable": true
+    },
+    "O": { "width": 13, "category": "チーム券席", "zone": "team_ticket", "sellable": false },
+    "P": { "width": 17, "category": "チーム券席", "zone": "team_ticket", "sellable": false },
+    "Q": {
+      "width": 17,
+      "category": "チーム券席",
+      "zone": "team_ticket",
+      "sellable": false,
+      "nonsellNums": [1, 2, 3, 4, 14, 15, 16, 17],
+      "comment": "5–13番は通路（席なし）。1–4・14–17は灰色非販売"
+    },
+    "R": { "width": 17, "category": "チーム券席", "zone": "team_ticket", "sellable": false },
+    "S": { "width": 13, "category": "チーム券席", "zone": "team_ticket", "sellable": false }
+  },
+  "stands": {
+    "left": { "blocks": ["I", "H", "G", "F", "E"], "rowAxis": "y", "along": "y" },
+    "topGoal": {
+      "blocks": ["K", "L", "M"],
+      "rowAxis": "y",
+      "along": "x",
+      "cyMax": 0.17,
+      "cxMin": 0.21,
+      "cxMax": 0.8
+    },
+    "botGoal": {
+      "blocks": ["C", "B", "A"],
+      "rowAxis": "y",
+      "along": "x",
+      "cyMin": 0.88,
+      "cxMin": 0.28,
+      "cxMax": 0.85
+    },
+    "team": { "blocks": ["O", "P", "Q", "R", "S"], "rowAxis": "y", "along": "x" }
+  },
+  "premium": {
+    "コートサイドA": { "count": 24, "zone": "courtside", "sellable": true },
+    "コートサイドB": { "count": 34, "zone": "courtside", "sellable": true },
+    "コートエンド": { "count": 20, "zone": "end", "sellable": true },
+    "スペシャルシート": { "count": 6, "zone": "special", "sellable": true }
+  },
+  "free2F": 1952
+}

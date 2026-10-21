@@ -13,7 +13,7 @@ export const DEMO_EVENTS: VenueEvent[] = [
   {
     id: 'evt-12-12',
     slug: '2025-12-12',
-    title: '12/12',
+    title: '12/12（2026）',
     pdf_path: '/pdfs/2025-12-12.pdf',
     background_path: '/backgrounds/2025-12-12.png',
     map_width: 1583,
@@ -22,7 +22,7 @@ export const DEMO_EVENTS: VenueEvent[] = [
   {
     id: 'evt-12-13',
     slug: '2025-12-13',
-    title: '12/13',
+    title: '12/13（2026）',
     pdf_path: '/pdfs/2025-12-13.pdf',
     background_path: '/backgrounds/2025-12-13.png',
     map_width: 1583,
