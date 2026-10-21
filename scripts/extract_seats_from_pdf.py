@@ -37,8 +37,10 @@ def seat_size_ok(slug: str, w: float, h: float) -> bool:
         # 通常PDF (~8.6pt) / 横_拡大 (~12.2pt) / 横_拡大最新 (~14pt)
         if 7.5 <= w <= 10.5 and 7.5 <= h <= 10.5:
             return True
-        if 13.9 <= w <= 14.5 and 13.9 <= h <= 14.5:
+        if 13.4 <= w <= 13.85 and 13.4 <= h <= 13.85:
             return True
+        if 13.9 <= w <= 14.5 and 13.9 <= h <= 14.5:
+            return False
         if 11 <= w <= 19 and 11 <= h <= 23:
             return False
         if 24 <= w <= 42 and 24 <= h <= 42:
@@ -69,15 +71,166 @@ def dedupe_ota_items(
     items: list[tuple[fitz.Rect, tuple]], pw: float, ph: float
 ) -> list[tuple[fitz.Rect, tuple]]:
     """拡大PDFなど: 同じ位置の多重矩形を格子で1席にまとめる"""
-    cell = max(14.0 / ph, 0.004)
+    cell_x = max(13.6 / pw, 0.003)
+    cell_y = max(13.6 / ph, 0.003)
     cells: dict[tuple[int, int], tuple[fitz.Rect, tuple]] = {}
     for r, fill in sorted(items, key=lambda x: x[0].width * x[0].height, reverse=True):
         cx = (r.x0 + r.x1) / 2 / pw
         cy = (r.y0 + r.y1) / 2 / ph
-        key = (round(cx / cell), round(cy / cell))  # int だと隣席が同一セルになり得る
+        key = (round(cx / cell_x), round(cy / cell_y))
         if key not in cells:
             cells[key] = (r, fill)
     return list(cells.values())
+
+
+def _pix_rgb(pix: fitz.Pixmap, x: int, y: int) -> tuple[int, int, int]:
+    x = max(0, min(pix.width - 1, x))
+    y = max(0, min(pix.height - 1, y))
+    i = (y * pix.width + x) * pix.n
+    s = pix.samples
+    return s[i], s[i + 1], s[i + 2]
+
+
+def is_display_gray(r8: int, g8: int, b8: int) -> bool:
+    spread = max(r8, g8, b8) - min(r8, g8, b8)
+    avg = (r8 + g8 + b8) / 3
+    return spread <= 28 and 145 <= avg <= 215
+
+
+def is_display_pink(r8: int, g8: int, b8: int) -> bool:
+    return r8 >= 195 and g8 >= 115 and g8 <= 195 and b8 >= 150 and b8 <= 220
+
+
+def is_display_ota_floor1_blue(r8: int, g8: int, b8: int) -> bool:
+    """convert_pdfs と同じ水色 1階席（PDF そのまま PNG）"""
+    if b8 < 200 or g8 < 165:
+        return False
+    if r8 > 200:
+        return False
+    return b8 >= g8 >= r8
+
+
+def is_display_ota_magenta(r8: int, g8: int, b8: int) -> bool:
+    """拡大PDF 1階 #CC4990 系（G が低いマゼンタ）"""
+    if r8 >= 175 and b8 >= 110 and g8 <= 135 and r8 > g8 + 35:
+        return True
+    return r8 >= 185 and 60 <= g8 <= 105 and b8 >= 125
+
+
+def is_display_courtside(r8: int, g8: int, b8: int) -> bool:
+    return b8 >= 130 and r8 <= 140 and b8 > g8 + 15
+
+
+def is_display_gold(r8: int, g8: int, b8: int) -> bool:
+    return r8 >= 215 and g8 >= 150 and b8 <= 90
+
+
+def is_display_team_green(r8: int, g8: int, b8: int) -> bool:
+    return g8 >= 165 and 90 <= r8 <= 220 and b8 <= 130 and g8 >= r8 + 20
+
+
+def is_display_ota_sellable_pixel(r8: int, g8: int, b8: int) -> bool:
+    if is_display_gray(r8, g8, b8) or is_display_team_green(r8, g8, b8):
+        return False
+    return (
+        is_display_pink(r8, g8, b8)
+        or is_display_ota_magenta(r8, g8, b8)
+        or is_display_ota_floor1_blue(r8, g8, b8)
+        or is_display_courtside(r8, g8, b8)
+        or is_display_gold(r8, g8, b8)
+    )
+
+
+_OTA_SAMPLE_FRAC = (
+    (0.5, 0.5),
+    (0.4, 0.5),
+    (0.6, 0.5),
+    (0.5, 0.4),
+    (0.5, 0.6),
+    (0.42, 0.42),
+    (0.58, 0.58),
+)
+
+
+def _ota_seat_render_votes(
+    s: dict, pix: fitz.Pixmap
+) -> tuple[int, int, int]:
+    """席矩形内を複数点サンプル（枠の白抜け対策）"""
+    gray = pink = white = 0
+    for fx, fy in (
+        (0.5, 0.5),
+        (0.35, 0.5),
+        (0.65, 0.5),
+        (0.5, 0.35),
+        (0.5, 0.65),
+    ):
+        px = int((s["x"] + s["w"] * fx) * pix.width)
+        py = int((s["y"] + s["h"] * fy) * pix.height)
+        r8, g8, b8 = _pix_rgb(pix, px, py)
+        if r8 >= 250 and g8 >= 250 and b8 >= 250:
+            white += 1
+        elif is_display_gray(r8, g8, b8):
+            gray += 1
+        elif is_display_pink(r8, g8, b8):
+            pink += 1
+    return gray, pink, white
+
+
+def _ota_sample_rgb(
+    im, s: dict
+) -> tuple[int, int, int, int, int]:
+    """public/backgrounds PNG 上で複数点サンプル → gray,sell,team,white 票数"""
+    w, h = im.size
+    gray = sell = team = white = 0
+    for fx, fy in _OTA_SAMPLE_FRAC:
+        px = max(0, min(w - 1, int((s["x"] + s["w"] * fx) * w)))
+        py = max(0, min(h - 1, int((s["y"] + s["h"] * fy) * h)))
+        r8, g8, b8 = im.getpixel((px, py))
+        if r8 >= 250 and g8 >= 250 and b8 >= 250:
+            white += 1
+        elif is_display_team_green(r8, g8, b8):
+            team += 1
+        elif is_display_gray(r8, g8, b8):
+            gray += 1
+        elif is_display_ota_sellable_pixel(r8, g8, b8):
+            sell += 1
+    return gray, sell, team, white, w, h
+
+
+def refine_ota_sellable_from_png(
+    seats: list[dict], slug: str, pw: float, ph: float
+) -> None:
+    """会場PNG（アプリ表示と同一）で灰色=販売なし / ピンク=販売可 に補正"""
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    png = ROOT / "public" / "backgrounds" / f"{slug}.png"
+    if not png.is_file():
+        return
+    im = Image.open(png).convert("RGB")
+    for s in seats:
+        cx = s["x"] + s["w"] / 2
+        cy = s["y"] + s["h"] / 2
+        gray, sell, team, white, _, _ = _ota_sample_rgb(im, s)
+        if white >= 5 and sell == 0 and gray == 0 and team == 0:
+            continue
+        if is_ota_team_zone(cx, cy, page_w=pw, page_h=ph):
+            s["zone"] = "team_ticket"
+            s["sellable"] = False
+            continue
+        if team >= 2 and team >= sell:
+            s["zone"] = "team_ticket"
+            s["sellable"] = False
+            continue
+        if sell >= 1 and sell >= gray:
+            if s["zone"] in ("floor2", None):
+                s["zone"] = "floor1"
+            s["sellable"] = True
+        elif not s["sellable"] and gray >= 2 and sell == 0:
+            s["zone"] = "floor2"
+            s["sellable"] = False
+    im.close()
 
 
 def is_gray_fill(r: float, g: float, b: float) -> bool:
@@ -168,9 +321,9 @@ def classify_ota_seat(
 
     if is_team_green_fill(r, g, b):
         return "team_ticket", False
-    if is_pink_floor1(r, g, b):
-        return "floor1", True
     if is_ota_goal_magenta(r, g, b):
+        return "floor1", True
+    if is_pink_floor1(r, g, b):
         return "floor1", True
     if is_ota_courtside_purple(r, g, b):
         return "courtside", True
@@ -431,6 +584,13 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
         raw.append((fitz.Rect(r), tuple(fill)))
 
     if slug in ("2025-12-12", "2025-12-13"):
+        # 14pt 外枠のみ（内側 ~11pt は重複レイヤー）
+        # 拡大PDF: 内側 ~13.6pt が表示色と一致（外側 ~14pt は白枠）
+        raw = [
+            (r, fill)
+            for r, fill in raw
+            if 13.4 <= r.width <= 13.85 and 13.4 <= r.height <= 13.85
+        ]
         items = dedupe_ota_items(raw, pw, ph)
     else:
         items = dedupe_items(raw)
@@ -458,6 +618,7 @@ def extract_page(pdf_path: Path, slug: str) -> dict:
     elif slug in ("2025-12-12", "2025-12-13"):
         refine_ota_team_zones(seats, pw, ph)
         apply_ota_seat_labels(seats)
+        refine_ota_sellable_from_png(seats, slug, pw, ph)
     doc.close()
     rev_src = json.dumps(
         [(s["id"], s.get("label"), s.get("zone")) for s in seats],
