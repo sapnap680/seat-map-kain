@@ -56,7 +56,8 @@ export function SeatMap({
   const otaLandscape = otaMapLandscapeLayout(event)
   const { layoutW, layoutH } = otaLayoutSize(mapW, mapH, otaLandscape)
   const otaVenue = eventHasOtaSeatView(event)
-  const maxPinchScale = 2
+  /** 全体表示から、駒沢図面（2300px）を3倍にした画面上の幅まで */
+  const maxPinchScale = (2300 * 3) / layoutW
 
   const framePad = otaVenue ? 8 : 16
 
