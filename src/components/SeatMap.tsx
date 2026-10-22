@@ -57,20 +57,23 @@ export function SeatMap({
   const { layoutW, layoutH } = otaLayoutSize(mapW, mapH, otaLandscape)
   const otaVenue = eventHasOtaSeatView(event)
   const maxPinchScale = 2
-  /** 大田12/12・12/13: 幅フィットより少し大きく（はみ出しはパンで） */
-  const otaFitBoost = otaVenue ? 1.22 : 1
+
+  const framePad = otaVenue ? 8 : 16
 
   const computeFitView = useCallback(() => {
     const vp = viewportRef.current
-    if (!vp) return { scale: 1, x: 0, y: 0 }
+    if (!vp) return { scale: 1, x: 0, y: 0, height: 240 }
     const availW = Math.max(1, vp.clientWidth)
-    const fit = Math.min(1, (availW / layoutW) * otaFitBoost)
+    const top = vp.getBoundingClientRect().top
+    const availH = Math.max(120, window.innerHeight - top - framePad - 8)
+    const fit = Math.min(1, availW / layoutW, availH / layoutH)
     return {
       scale: fit,
       x: (availW - layoutW * fit) / 2,
       y: 0,
+      height: Math.ceil(layoutH * fit + framePad),
     }
-  }, [layoutW, otaFitBoost])
+  }, [framePad, layoutH, layoutW])
 
   const clampPan = useCallback(
     (x: number, y: number, s: number) => {
@@ -109,11 +112,11 @@ export function SeatMap({
   )
 
   const resetView = useCallback(() => {
-    const { scale: fit, x, y } = computeFitView()
+    const { scale: fit, x, y, height } = computeFitView()
     fitScaleRef.current = fit
-    setViewportHeight(Math.ceil(layoutH * fit + (otaVenue ? 8 : 16)))
+    setViewportHeight(height)
     applyPanScale(fit, { x, y })
-  }, [applyPanScale, computeFitView, layoutH, otaVenue])
+  }, [applyPanScale, computeFitView])
 
   const zoomAt = useCallback(
     (focalClientX: number, focalClientY: number, newScale: number) => {
@@ -149,13 +152,18 @@ export function SeatMap({
   useEffect(() => {
     const vp = viewportRef.current
     if (!vp) return
-    const ro = new ResizeObserver(() => {
+    const onResize = () => {
       if (scaleRef.current <= fitScaleRef.current + 0.001) {
         resetView()
       }
-    })
+    }
+    const ro = new ResizeObserver(onResize)
     ro.observe(vp)
-    return () => ro.disconnect()
+    window.addEventListener('resize', onResize)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', onResize)
+    }
   }, [resetView])
 
   useEffect(() => {
