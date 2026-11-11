@@ -22,7 +22,7 @@ export function isSold(status: SeatStatus): boolean {
   return status === 'presold' || status === 'daysold'
 }
 
-/** 空席は一切色を付けない。案内モードのみピンク枠。販売済は薄灰 */
+/** 空席は色を付けない。案内モードのみピンク枠。販売済は座席の色を隠す灰色 */
 export function seatOverlayClass(
   seat: Pick<Seat, 'sellable' | 'zone'>,
   status: SeatStatus,
@@ -42,7 +42,7 @@ export function seatOverlayClass(
   }
 
   if (highlightAvailableOnly && isSold(status)) {
-    return `${visible} border-0 bg-[rgba(127,127,127,0.35)] opacity-35`
+    return `${visible} border-0 bg-[#4a4a4a] opacity-100`
   }
 
   switch (status) {
@@ -50,7 +50,7 @@ export function seatOverlayClass(
       return `${hit} border-0 bg-transparent opacity-0`
     case 'presold':
     case 'daysold':
-      return `${visible} border-0 bg-[rgba(127,127,127,0.55)] opacity-100`
+      return `${visible} border-0 bg-[#4a4a4a] opacity-100`
     case 'hold':
       return `${visible} border border-amber-600/70 bg-amber-500/30 opacity-100`
     case 'blocked':
@@ -66,7 +66,7 @@ export function legendSwatchClass(status: SeatStatus): string {
       return 'border border-dashed border-incare-floor1 bg-incare-floor1/15'
     case 'presold':
     case 'daysold':
-      return 'bg-[rgba(127,127,127,0.55)] border-0'
+      return 'bg-[#4a4a4a] border-0'
     case 'hold':
       return 'bg-amber-500/30 border-amber-600'
     case 'blocked':
