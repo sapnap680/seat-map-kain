@@ -33,6 +33,48 @@ import type {
   VenueEvent,
 } from '../types'
 
+const PAGE_SIZE = 1000
+
+/** Supabase は1回の取得が1000件で切れる。切れたまま図面JSONに差し替えると、保存先に無い席番号になる。 */
+async function fetchAllSeats(eventId: string): Promise<Seat[]> {
+  if (!supabase) return []
+  const rows: Seat[] = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('seats')
+      .select('*')
+      .eq('event_id', eventId)
+      .range(from, from + PAGE_SIZE - 1)
+    if (error) {
+      console.error(error)
+      break
+    }
+    const chunk = (data as Seat[]) ?? []
+    rows.push(...chunk)
+    if (chunk.length < PAGE_SIZE) break
+  }
+  return rows
+}
+
+async function fetchAllSeatStates(): Promise<SeatState[]> {
+  if (!supabase) return []
+  const rows: SeatState[] = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('seat_states')
+      .select('*')
+      .range(from, from + PAGE_SIZE - 1)
+    if (error) {
+      console.error(error)
+      break
+    }
+    const chunk = (data as SeatState[]) ?? []
+    rows.push(...chunk)
+    if (chunk.length < PAGE_SIZE) break
+  }
+  return rows
+}
+
 export function useEvents() {
   const [events, setEvents] = useState<VenueEvent[]>([])
   const [loading, setLoading] = useState(true)
@@ -89,26 +131,17 @@ export function useSeatMap(
       setSeats(await loadCatalogSeats(eventSlug, eventId))
       return
     }
-    const { data, error } = await supabase
-      .from('seats')
-      .select('*')
-      .eq('event_id', eventId)
-    if (error) console.error(error)
-    let list = ((data as Seat[]) ?? []).map((s) => ({
+    const data = await fetchAllSeats(eventId)
+    let list = data.map((s) => ({
       ...s,
       zone: s.zone ?? 'floor1',
     }))
     const catalog = await loadSeatCatalog(eventSlug)
     const catalogList = catalog
-      ? (await loadCatalogSeats(eventSlug, eventId))
+      ? await loadCatalogSeats(eventSlug, eventId)
       : []
-    if (
-      catalogList.length > 0 &&
-      (list.length === 0 || list.length < catalogList.length)
-    ) {
+    if (list.length === 0 && catalogList.length > 0) {
       list = mergeLayoutOverrides(catalogList)
-    } else if (list.length === 0) {
-      list = catalogList
     } else {
       list = mergeLayoutOverrides(list)
     }
@@ -171,12 +204,9 @@ export function useSeatMap(
 
     void reloadSeats().then(() => setLoading(false))
 
-    Promise.all([
-      supabase.from('seat_states').select('*'),
-    ]).then(([statesRes]) => {
-      if (statesRes.error) console.error(statesRes.error)
+    void fetchAllSeatStates().then((rows) => {
       const map: Record<string, SeatState> = {}
-      for (const s of (statesRes.data as SeatState[]) ?? []) {
+      for (const s of rows) {
         const allocation = s.allocation ?? 'all_day'
         map[stateStorageKey(s.seat_id, allocation)] = { ...s, allocation }
       }
