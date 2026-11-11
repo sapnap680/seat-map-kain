@@ -15,7 +15,7 @@
     "copy-pdfs": "python scripts/copy_pdfs.py"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0",
+    "firebase": "^13.1.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

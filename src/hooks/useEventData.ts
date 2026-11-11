@@ -10,10 +10,7 @@ import {
   loadDemoStates,
   saveDemoState,
 } from '../lib/demoStates'
-import {
-  defaultSeatState,
-  isSeatSellable,
-} from '../lib/seatStatus'
+import { isFirebaseConfigured } from '../lib/firebase'
 import {
   applyCatalogToEvent,
   addManualSeat,
@@ -22,8 +19,16 @@ import {
   saveLayoutOverride,
   seatsForEvent,
 } from '../lib/seatCatalog'
-import { isDemoStaffSession } from '../lib/staffSession'
-import { isSupabaseConfigured, supabase } from '../lib/supabase'
+import {
+  clearSoldEntry,
+  soldToSeatStates,
+  subscribeSeatStatus,
+  writeSoldEntry,
+} from '../lib/seatStatusDoc'
+import {
+  defaultSeatState,
+  isSeatSellable,
+} from '../lib/seatStatus'
 import type {
   GenderView,
   Seat,
@@ -33,68 +38,14 @@ import type {
   VenueEvent,
 } from '../types'
 
-const PAGE_SIZE = 1000
-
-/** Supabase は1回の取得が1000件で切れる。切れたまま図面JSONに差し替えると、保存先に無い席番号になる。 */
-async function fetchAllSeats(eventId: string): Promise<Seat[]> {
-  if (!supabase) return []
-  const rows: Seat[] = []
-  for (let from = 0; ; from += PAGE_SIZE) {
-    const { data, error } = await supabase
-      .from('seats')
-      .select('*')
-      .eq('event_id', eventId)
-      .range(from, from + PAGE_SIZE - 1)
-    if (error) {
-      console.error(error)
-      break
-    }
-    const chunk = (data as Seat[]) ?? []
-    rows.push(...chunk)
-    if (chunk.length < PAGE_SIZE) break
-  }
-  return rows
-}
-
-async function fetchAllSeatStates(): Promise<SeatState[]> {
-  if (!supabase) return []
-  const rows: SeatState[] = []
-  for (let from = 0; ; from += PAGE_SIZE) {
-    const { data, error } = await supabase
-      .from('seat_states')
-      .select('*')
-      .range(from, from + PAGE_SIZE - 1)
-    if (error) {
-      console.error(error)
-      break
-    }
-    const chunk = (data as SeatState[]) ?? []
-    rows.push(...chunk)
-    if (chunk.length < PAGE_SIZE) break
-  }
-  return rows
-}
-
 export function useEvents() {
   const [events, setEvents] = useState<VenueEvent[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      let base = isSupabaseConfigured
-        ? await (async () => {
-            if (!supabase) return DEMO_EVENTS
-            const { data, error } = await supabase
-              .from('events')
-              .select('*')
-              .order('slug')
-            if (error) console.error(error)
-            return (data as VenueEvent[]) ?? DEMO_EVENTS
-          })()
-        : DEMO_EVENTS
-
       const enriched = await Promise.all(
-        base.map(async (ev) => {
+        DEMO_EVENTS.map(async (ev) => {
           const catalog = await loadSeatCatalog(ev.slug)
           const merged = catalog ? applyCatalogToEvent(ev, catalog) : ev
           return {
@@ -125,29 +76,6 @@ export function useSeatMap(
     return seatsForEvent(eid, slug)
   }, [])
 
-  const reloadSeats = useCallback(async () => {
-    if (!eventId || !eventSlug) return
-    if (!isSupabaseConfigured || !supabase) {
-      setSeats(await loadCatalogSeats(eventSlug, eventId))
-      return
-    }
-    const data = await fetchAllSeats(eventId)
-    let list = data.map((s) => ({
-      ...s,
-      zone: s.zone ?? 'floor1',
-    }))
-    const catalog = await loadSeatCatalog(eventSlug)
-    const catalogList = catalog
-      ? await loadCatalogSeats(eventSlug, eventId)
-      : []
-    if (list.length === 0 && catalogList.length > 0) {
-      list = mergeLayoutOverrides(catalogList)
-    } else {
-      list = mergeLayoutOverrides(list)
-    }
-    setSeats(list)
-  }, [eventId, eventSlug, loadCatalogSeats])
-
   useEffect(() => {
     if (!eventId || !eventSlug) {
       setSeats([])
@@ -156,15 +84,22 @@ export function useSeatMap(
       return
     }
 
+    let cancelled = false
     setLoading(true)
-    setSeats([])
 
-    if (!isSupabaseConfigured || !supabase) {
-      void loadCatalogSeats(eventSlug, eventId).then((s) => {
-        setSeats(s)
-        setStates(loadDemoStates())
-        setLoading(false)
+    const applySeats = () => {
+      void loadCatalogSeats(eventSlug, eventId).then((list) => {
+        if (!cancelled) setSeats(mergeLayoutOverrides(list))
       })
+    }
+    applySeats()
+
+    const onLayout = () => applySeats()
+    window.addEventListener('seat-map-layout-changed', onLayout)
+
+    if (!isFirebaseConfigured) {
+      setStates(loadDemoStates())
+      setLoading(false)
 
       const onState = (e: globalThis.Event) => {
         const st = (e as CustomEvent<SeatState>).detail
@@ -183,102 +118,41 @@ export function useSeatMap(
           return next
         })
       }
-      const onLayout = () => {
-        void loadCatalogSeats(eventSlug, eventId).then(setSeats)
-      }
       const onStorage = (e: StorageEvent) => {
         if (e.key === 'seat-map-demo-states') setStates(loadDemoStates())
         if (e.key === 'seat-map-layout-overrides') onLayout()
       }
       window.addEventListener('seat-map-demo-update', onState)
       window.addEventListener('seat-map-demo-clear', onClear)
-      window.addEventListener('seat-map-layout-changed', onLayout)
       window.addEventListener('storage', onStorage)
       return () => {
+        cancelled = true
+        window.removeEventListener('seat-map-layout-changed', onLayout)
         window.removeEventListener('seat-map-demo-update', onState)
         window.removeEventListener('seat-map-demo-clear', onClear)
-        window.removeEventListener('seat-map-layout-changed', onLayout)
         window.removeEventListener('storage', onStorage)
       }
     }
 
-    void reloadSeats().then(() => setLoading(false))
-
-    void fetchAllSeatStates().then((rows) => {
-      const map: Record<string, SeatState> = {}
-      for (const s of rows) {
-        const allocation = s.allocation ?? 'all_day'
-        map[stateStorageKey(s.seat_id, allocation)] = { ...s, allocation }
-      }
-      if (isDemoStaffSession()) {
-        Object.assign(map, loadDemoStates())
-      }
-      setStates(map)
-    })
-
-    const onDemoState = (e: globalThis.Event) => {
-      const st = (e as CustomEvent<SeatState>).detail
-      const key = stateStorageKey(st.seat_id, st.allocation)
-      setStates((prev) => ({ ...prev, [key]: st }))
-    }
-    const onDemoClear = (e: globalThis.Event) => {
-      const { seatId, allocation } = (
-        e as CustomEvent<{ seatId: string; allocation: SeatState['allocation'] }>
-      ).detail
-      const key = stateStorageKey(seatId, allocation)
-      setStates((prev) => {
-        if (!(key in prev)) return prev
-        const next = { ...prev }
-        delete next[key]
-        return next
-      })
-    }
-    window.addEventListener('seat-map-demo-update', onDemoState)
-    window.addEventListener('seat-map-demo-clear', onDemoClear)
-
-    const channel = supabase
-      .channel(`seat-states-${eventId}`)
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'seat_states' },
-        (payload) => {
-          if (payload.eventType === 'DELETE') {
-            const row = payload.old as SeatState
-            if (row?.seat_id) {
-              const allocation = row.allocation ?? 'all_day'
-              const key = stateStorageKey(row.seat_id, allocation)
-              setStates((prev) => {
-                if (!(key in prev)) return prev
-                const next = { ...prev }
-                delete next[key]
-                return next
-              })
-            }
-            return
-          }
-          const row = payload.new as SeatState
-          if (row?.seat_id) {
-            const allocation = row.allocation ?? 'all_day'
-            const key = stateStorageKey(row.seat_id, allocation)
-            setStates((prev) => ({ ...prev, [key]: { ...row, allocation } }))
-          }
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'seats' },
-        () => {
-          void reloadSeats()
-        },
-      )
-      .subscribe()
+    const unsub = subscribeSeatStatus(
+      eventSlug,
+      (sold) => {
+        if (cancelled) return
+        setStates(soldToSeatStates(sold))
+        setLoading(false)
+      },
+      (error) => {
+        console.error(error)
+        if (!cancelled) setLoading(false)
+      },
+    )
 
     return () => {
-      window.removeEventListener('seat-map-demo-update', onDemoState)
-      window.removeEventListener('seat-map-demo-clear', onDemoClear)
-      void supabase!.removeChannel(channel)
+      cancelled = true
+      unsub()
+      window.removeEventListener('seat-map-layout-changed', onLayout)
     }
-  }, [eventId, eventSlug, loadCatalogSeats, reloadSeats])
+  }, [eventId, eventSlug, loadCatalogSeats])
 
   const slug = eventSlug ?? ''
 
@@ -320,42 +194,54 @@ export function useSeatMap(
         note,
         updated_at: new Date().toISOString(),
       }
+      const key = stateStorageKey(seatId, allocation)
 
-      if (!isSupabaseConfigured || !supabase || isDemoStaffSession()) {
+      if (!isFirebaseConfigured || !eventSlug) {
         saveDemoState(updated)
-        const key = stateStorageKey(seatId, allocation)
         setStates((prev) => ({ ...prev, [key]: updated }))
         return { error: null }
       }
 
-      const key = stateStorageKey(seatId, allocation)
+      const seat = seats.find((s) => s.id === seatId)
       let previous: SeatState | undefined
       setStates((prev) => {
         previous = prev[key]
         return { ...prev, [key]: updated }
       })
 
-      const { error } = await supabase
-        .from('seat_states')
-        .upsert(updated, { onConflict: 'seat_id,allocation' })
-      if (error) {
+      try {
+        if (status === 'available' || status === 'blocked') {
+          await clearSoldEntry(eventSlug, key)
+        } else {
+          await writeSoldEntry(eventSlug, key, {
+            status,
+            note,
+            label: seat?.label ?? '',
+            category: seat?.category ?? null,
+            zone: seat?.zone ?? 'floor1',
+          })
+        }
+        return { error: null }
+      } catch (error) {
         setStates((prev) => {
           const next = { ...prev }
           if (previous) next[key] = previous
           else delete next[key]
           return next
         })
+        return {
+          error: error instanceof Error ? error : new Error(String(error)),
+        }
       }
-      return { error }
     },
-    [],
+    [eventSlug, seats],
   )
 
   const clearSeatState = useCallback(
     async (seatId: string, allocation: SeatState['allocation']) => {
-      if (!isSupabaseConfigured || !supabase || isDemoStaffSession()) {
+      const key = stateStorageKey(seatId, allocation)
+      if (!isFirebaseConfigured || !eventSlug) {
         clearDemoState(seatId, allocation)
-        const key = stateStorageKey(seatId, allocation)
         setStates((prev) => {
           if (!(key in prev)) return prev
           const next = { ...prev }
@@ -365,88 +251,58 @@ export function useSeatMap(
         return { error: null }
       }
 
-      const { error } = await supabase
-        .from('seat_states')
-        .delete()
-        .eq('seat_id', seatId)
-        .eq('allocation', allocation)
-      if (!error) {
-        const key = stateStorageKey(seatId, allocation)
+      try {
+        await clearSoldEntry(eventSlug, key)
         setStates((prev) => {
           if (!(key in prev)) return prev
           const next = { ...prev }
           delete next[key]
           return next
         })
+        return { error: null }
+      } catch (error) {
+        return {
+          error: error instanceof Error ? error : new Error(String(error)),
+        }
       }
-      return { error }
     },
-    [],
+    [eventSlug],
   )
 
   const updateSeatGeometry = useCallback(
     async (seatId: string, geom: Pick<Seat, 'x' | 'y' | 'w' | 'h'>) => {
       const seat = seats.find((s) => s.id === seatId)
       if (!seat) return { error: new Error('seat not found') }
-
-      if (!isSupabaseConfigured || !supabase) {
-        saveLayoutOverride(seatId, geom)
-        setSeats((prev) =>
-          prev.map((s) => (s.id === seatId ? { ...s, ...geom } : s)),
-        )
-        return { error: null }
-      }
-
-      const { error } = await supabase
-        .from('seats')
-        .update(geom)
-        .eq('id', seatId)
-      if (!error) void reloadSeats()
-      return { error }
+      saveLayoutOverride(seatId, geom)
+      setSeats((prev) =>
+        prev.map((s) => (s.id === seatId ? { ...s, ...geom } : s)),
+      )
+      return { error: null }
     },
-    [seats, reloadSeats],
+    [seats],
   )
 
   const insertSeat = useCallback(
     async (seat: Omit<Seat, 'id'> & { id?: string }) => {
       const id = seat.id ?? crypto.randomUUID()
       const row: Seat = { ...seat, id, zone: seat.zone ?? 'floor1' } as Seat
-
-      if (!isSupabaseConfigured || !supabase) {
-        addManualSeat(row)
-        const slugForSeat =
-          DEMO_EVENTS.find((e) => e.id === row.event_id)?.slug ?? ''
-        for (const allocation of initialAllocationsForSeat(
-          slugForSeat,
-          row.zone,
-        )) {
-          saveDemoState(defaultSeatState(id, allocation))
-        }
-        void reloadSeats()
-        setStates(loadDemoStates())
-        return { error: null, seat: row }
+      addManualSeat(row)
+      const slugForSeat =
+        DEMO_EVENTS.find((e) => e.id === row.event_id)?.slug ?? eventSlug ?? ''
+      for (const allocation of initialAllocationsForSeat(slugForSeat, row.zone)) {
+        saveDemoState(defaultSeatState(id, allocation))
       }
-
-      const { error } = await supabase.from('seats').insert(row)
-      if (!error) {
-        const { data: ev } = await supabase
-          .from('events')
-          .select('slug')
-          .eq('id', row.event_id)
-          .single()
-        const eventSlugForSeat = (ev?.slug as string) ?? ''
-        const rows = initialAllocationsForSeat(eventSlugForSeat, row.zone).map(
-          (a) => defaultSeatState(id, a),
-        )
-        await supabase.from('seat_states').upsert(rows, {
-          onConflict: 'seat_id,allocation',
-        })
-        void reloadSeats()
-      }
-      return { error, seat: row }
+      setSeats((prev) => mergeLayoutOverrides([...prev, row]))
+      if (!isFirebaseConfigured) setStates(loadDemoStates())
+      return { error: null, seat: row }
     },
-    [reloadSeats],
+    [eventSlug],
   )
+
+  const reloadSeats = useCallback(async () => {
+    if (!eventId || !eventSlug) return
+    setSeats(mergeLayoutOverrides(await loadCatalogSeats(eventSlug, eventId)))
+  }, [eventId, eventSlug, loadCatalogSeats])
 
   return {
     seats,
