@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import { allocationDisplayLabel, seatDisplayTitle } from '../lib/allocation'
+import {
+  allocationDisplayLabel,
+  courtsidePublicName,
+  seatDisplayTitle,
+} from '../lib/allocation'
 import { isSeatSellable, statusLabelForDisplay } from '../lib/seatStatus'
 import {
   formatTicketPrice,
@@ -76,7 +80,9 @@ export function SeatDetailModal({
               {seatDisplayTitle(seat, eventSlug)}
             </h2>
             {seat.category && (
-              <p className="truncate text-sm text-slate-500">{seat.category}</p>
+              <p className="truncate text-sm text-slate-500">
+                {courtsidePublicName(seat.category)}
+              </p>
             )}
             <p className="text-sm text-violet-700">
               {allocationDisplayLabel(

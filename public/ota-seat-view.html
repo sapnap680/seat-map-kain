@@ -93,8 +93,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     <div class="legend" id="legend">
       <span><i style="background:#e48bb4"></i>1階指定席</span>
       <span><i style="background:#cc4d90"></i>1階指定席（ゴール裏）</span>
-      <span><i style="background:#7030a0"></i>コートサイドA</span>
-      <span><i style="background:#b07ee0"></i>コートサイドB</span>
+      <span><i style="background:#7030a0"></i>コートサイド1列目</span>
+      <span><i style="background:#b07ee0"></i>コートサイド2列目</span>
       <span><i style="background:#4f81bd"></i>コートエンド</span>
       <span><i style="background:#bf9000"></i>スペシャルシート</span>
     </div>
@@ -704,7 +704,8 @@ function showSeat(s){
   rowBtns.forEach((b,i)=>b.setAttribute('aria-pressed',String(isStand&&i+1===s.row)));
   { const L=rowList(s), i=L.indexOf(s); document.getElementById('prev').disabled=i<=0; document.getElementById('next').disabled=i>=L.length-1; }
   card.innerHTML='';
-  const b=document.createElement('b'); b.textContent=isStand?`${s.cat}　${s.block}ブロック ${s.row}列 ${s.num}番`:`${s.cat}　${s.num}番`;
+  const catName=String(s.cat||'').replaceAll('コートサイドA','コートサイド1列目').replaceAll('コートサイドB','コートサイド2列目');
+  const b=document.createElement('b'); b.textContent=isStand?`${catName}　${s.block}ブロック ${s.row}列 ${s.num}番`:`${catName}　${s.num}番`;
   card.append(b);
   const yen=ticketYen(s);
   if(yen!=null){

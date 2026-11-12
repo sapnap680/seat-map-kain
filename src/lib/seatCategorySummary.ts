@@ -1,6 +1,10 @@
+import { courtsidePublicName } from './allocation'
+
 export const SEAT_CATEGORY_SORT = [
   'スペシャルシート',
   'コートエンド',
+  'コートサイド1列目',
+  'コートサイド2列目',
   'コートサイドA',
   'コートサイドB',
   '1階指定席',
@@ -12,7 +16,7 @@ export const SEAT_CATEGORY_SORT = [
 
 export function seatCategoryLabel(category: string | null | undefined): string {
   const c = category?.trim()
-  if (c) return c
+  if (c) return courtsidePublicName(c)
   return '（券種未設定）'
 }
 

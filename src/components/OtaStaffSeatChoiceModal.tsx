@@ -1,4 +1,4 @@
-import { seatDisplayTitle } from '../lib/allocation'
+import { courtsidePublicName, seatDisplayTitle } from '../lib/allocation'
 import { statusLabelForDisplay } from '../lib/seatStatus'
 import {
   formatTicketPrice,
@@ -44,7 +44,9 @@ export function OtaStaffSeatChoiceModal({
               {seatDisplayTitle(seat, eventSlug)}
             </h2>
             {seat.category && (
-              <p className="truncate text-sm text-slate-500">{seat.category}</p>
+              <p className="truncate text-sm text-slate-500">
+                {courtsidePublicName(seat.category)}
+              </p>
             )}
             {price != null && (
               <p className="mt-2 text-xl font-bold tabular-nums text-slate-900">

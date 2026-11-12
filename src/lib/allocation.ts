@@ -66,9 +66,16 @@ export const GENDER_VIEW_LABELS: Record<GenderView, string> = {
   women: '女子',
 }
 
+/** コートに近い列が1列目（旧コートサイドA）、その後ろが2列目（旧コートサイドB） */
+export function courtsidePublicName(text: string): string {
+  return text
+    .replaceAll('コートサイドA', 'コートサイド1列目')
+    .replaceAll('コートサイドB', 'コートサイド2列目')
+}
+
 /** モーダル・ツールチップ用（1行・短い表記） */
 export function seatDisplayTitle(seat: Seat, _eventSlug: string): string {
-  if (seat.label && seat.label !== '—') return seat.label
+  if (seat.label && seat.label !== '—') return courtsidePublicName(seat.label)
   return seat.label
 }
 
