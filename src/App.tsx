@@ -44,7 +44,6 @@ function App() {
     clearSeatState,
   } = useSeatMap(activeEvent?.id ?? null, activeEvent?.slug ?? null, genderView)
 
-  const [highlightAvailable, setHighlightAvailable] = useState(false)
   const [selectedSeat, setSelectedSeat] = useState<SeatWithState | null>(null)
   const [otaStaffChoiceSeat, setOtaStaffChoiceSeat] =
     useState<SeatWithState | null>(null)
@@ -223,15 +222,6 @@ function App() {
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-600">
-            <label className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 py-1">
-              <input
-                type="checkbox"
-                checked={highlightAvailable}
-                onChange={(e) => setHighlightAvailable(e.target.checked)}
-                className="h-3.5 w-3.5 rounded border-slate-300"
-              />
-              残席のみ
-            </label>
             <div className="ml-auto flex flex-wrap items-center gap-1.5">
               <span className="rounded-md bg-slate-100 px-2 py-0.5 tabular-nums">
                 案内可 {stats.available}
@@ -264,7 +254,6 @@ function App() {
           <SeatMap
             event={activeEvent}
             seats={seatsWithState}
-            highlightAvailableOnly={highlightAvailable}
             isStaff={isStaff}
             onSeatClick={handleSeatClick}
             onOtaBlockPick={undefined}

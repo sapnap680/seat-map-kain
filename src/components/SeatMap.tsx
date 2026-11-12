@@ -18,7 +18,6 @@ import type { SeatWithState, VenueEvent } from '../types'
 type Props = {
   event: VenueEvent
   seats: SeatWithState[]
-  highlightAvailableOnly: boolean
   isStaff: boolean
   onSeatClick: (seat: SeatWithState) => void
   onOtaBlockPick?: (block: string) => void
@@ -27,7 +26,6 @@ type Props = {
 export function SeatMap({
   event,
   seats,
-  highlightAvailableOnly,
   isStaff,
   onSeatClick,
   onOtaBlockPick,
@@ -421,14 +419,8 @@ export function SeatMap({
                   return null
                 }
 
-                const sellable = isSeatSellable(seat)
                 const status = seat.state.status
-                const overlay = seatOverlayClass(
-                  seat,
-                  status,
-                  highlightAvailableOnly,
-                  isStaff,
-                )
+                const overlay = seatOverlayClass(seat, status, isStaff)
 
                 const showVisibleOverlay =
                   isSold(status) || status === 'hold'
@@ -465,11 +457,7 @@ export function SeatMap({
                   },
                 }
 
-                if (
-                  status === 'available' &&
-                  !highlightAvailableOnly &&
-                  !showVisibleOverlay
-                ) {
+                if (status === 'available' && !showVisibleOverlay) {
                   return (
                     <div
                       key={seat.id}
@@ -482,23 +470,6 @@ export function SeatMap({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') onSeatClick(seat)
                       }}
-                    />
-                  )
-                }
-
-                if (
-                  status === 'available' &&
-                  highlightAvailableOnly &&
-                  sellable
-                ) {
-                  return (
-                    <div
-                      key={seat.id}
-                      role="button"
-                      tabIndex={0}
-                      className={`seat-hit-expand pointer-events-auto absolute cursor-pointer touch-manipulation ${overlay}`}
-                      {...hitProps}
-                      style={seatBoxStyle(seat)}
                     />
                   )
                 }

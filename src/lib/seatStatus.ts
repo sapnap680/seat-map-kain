@@ -22,11 +22,10 @@ export function isSold(status: SeatStatus): boolean {
   return status === 'presold' || status === 'daysold'
 }
 
-/** 空席は色を付けない。案内モードのみピンク枠。販売済は座席の色を隠す灰色 */
+/** 空席は色を付けない。販売済は座席の色を隠す灰色 */
 export function seatOverlayClass(
   seat: Pick<Seat, 'sellable' | 'zone'>,
   status: SeatStatus,
-  highlightAvailableOnly: boolean,
   _isStaff: boolean,
 ): string {
   /** 透明クリック用（.seat-hit-target が border/bg を消すため、見える席には付けない） */
@@ -35,14 +34,6 @@ export function seatOverlayClass(
 
   if (!isSeatSellable(seat)) {
     return `${hit} pointer-events-none opacity-0`
-  }
-
-  if (highlightAvailableOnly && status === 'available') {
-    return `${visible} z-20 border-2 border-incare-floor1 bg-incare-floor1/10 opacity-100`
-  }
-
-  if (highlightAvailableOnly && isSold(status)) {
-    return `${visible} border-0 bg-[#4a4a4a] opacity-100`
   }
 
   switch (status) {
